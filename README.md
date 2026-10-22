@@ -1,10 +1,10 @@
-# MS8AT8DWiar
+# MS8AT8DEwiar
 
 **Открытая концепция DEwiar + Future Flow**
 
 [![Мир меняется — мир становится связанным](assets/connected-world-comic.png)](assets/connected-world-comic.png)
 
-Публичный проект: <https://github.com/MS8AT/MS8AT8DWiar>
+Публичный проект: <https://github.com/MS8AT/MS8AT8DEwiar>
 
 Мир меняется и становится связанным. Компьютеры, локальные и облачные модели,
 сервисы и люди соединяются невидимыми цифровыми нитями. DEwiar задуман как
