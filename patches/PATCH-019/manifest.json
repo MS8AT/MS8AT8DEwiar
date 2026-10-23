@@ -1,0 +1,48 @@
+{
+  "schema": 1,
+  "id": "PATCH-019",
+  "title": {
+    "ru": "Локальный транспорт Human Memory",
+    "en": "Local Human Memory transport",
+    "zh": "Human Memory 本地传输"
+  },
+  "publication_mode": "separate_patch_kit_without_upstream_redistribution",
+  "files": [
+    {
+      "path": "PROMPT.md",
+      "sha256": "eaae7dc3a0bb4b7af33292681298a20f0e36b9ef50ed16216e60bb2f6fa16168"
+    },
+    {
+      "path": "README.md",
+      "sha256": "51d6c5edd2605b6022623862b1942982d5c9f7003209f3e91624e396eb263710"
+    },
+    {
+      "path": "src/core/human_memory_stdio.py",
+      "sha256": "318f9760b87638c719a83b21534cee1b3d911d3688dd1fc126e5e850e18cd0f0"
+    },
+    {
+      "path": "tests/public_contract_test.py",
+      "sha256": "795545ac4681aff0daa7b75839228853b715413a7997e48dd6560595fb608a78"
+    },
+    {
+      "path": "verify.py",
+      "sha256": "cb622cf5d159d9576d10d99fa4b8797a752b42dc6cbbb34e63566025ca345b43"
+    },
+    {
+      "path": "src/tools/stage_human_memory.py",
+      "sha256": "de5b6f0711ba3f6516f39e457beaab6bec1839a36a8cebb2a4b81d6e140c287f"
+    },
+    {
+      "path": "tests/stage_human_memory_test.py",
+      "sha256": "b52aed88ee943af4f6ab84cec0a2a05e58e316e1b3f51eaa047bef6a8cded8b6"
+    }
+  ],
+  "integration_targets": [
+    "core/human_memory_contour.py",
+    "settings.mcp.servers"
+  ],
+  "verification": {
+    "public_contract_tests": "PASS",
+    "live_model_calls": 0
+  }
+}
