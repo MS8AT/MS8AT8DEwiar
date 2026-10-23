@@ -10,6 +10,7 @@
 Не принимай finish без успешного чтения и при незакрытом плане. Самопроверка изучения не требует diff.
 Добавь tasks.local_only в UI и запрет cloud fallback в brain_routes.
 При обновлении llm.profiles передавай полный словарь профилей: Dewiar заменяет его целиком.
+Учитывай read_limits(): небольшие порции чтения и истории для окна 8K; соблюдай end и не учитывай пустой фрагмент.
 Проверь автономный блок, затем полный local_task_mode_test.py приложения.
 
 ## ENG
@@ -19,6 +20,7 @@ Preserve Codex audit metadata and archive stale history on a fresh local context
 Enforce the study-mode READ_TOOLS allowlist at dispatch, protect source paths and block finish before successful reads or an unfinished plan.
 Use a study-specific review prompt. Add tasks.local_only and reject cloud inheritance.
 Always preserve the full llm.profiles mapping when saving settings. Run standalone and application flow tests.
+Apply read_limits() to source fragments and history; honor end and reject empty evidence.
 
 ## CH
 
@@ -27,3 +29,4 @@ Always preserve the full llm.profiles mapping when saving settings. Run standalo
 在执行层验证只读研究工具白名单，保护源码路径；未成功读取或计划未完成时拒绝 finish。
 复查研究任务时不要要求修改代码。添加 tasks.local_only，禁止继承云端模型。
 保存设置时保留完整 llm.profiles 映射。运行独立测试和应用流程测试。
+按 read_limits() 限制读取与历史，遵守 end，空片段不算证据。
