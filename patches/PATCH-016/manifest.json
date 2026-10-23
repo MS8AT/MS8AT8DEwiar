@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "id": "PATCH-016",
+  "title": {
+    "ru": "Защищённые корни проекта",
+    "en": "Protected project roots",
+    "zh": "受保护的项目根目录"
+  },
+  "publication_mode": "separate_patch_kit_without_upstream_redistribution",
+  "files": [
+    {
+      "path": "PROMPT.md",
+      "sha256": "713f2f98fda756da133575b5a8e6e23ab3b1fc5610e3f3333040977a410295a8"
+    },
+    {
+      "path": "README.md",
+      "sha256": "cd364a9999c8d49165c4ff611482b737f5437e4bd8cb49d330ca7b8c2b8cd789"
+    },
+    {
+      "path": "src/core/project_scope.py",
+      "sha256": "8fc4aedda410e66247f1ca0f2cef0b47a94cadb96ee34c789437541a98eb5024"
+    },
+    {
+      "path": "tests/public_contract_test.py",
+      "sha256": "b0c6e50bf78e9d783a42eaf7f894a21770cd9ee00c3c599f21a2d3dbab315221"
+    },
+    {
+      "path": "verify.py",
+      "sha256": "cb622cf5d159d9576d10d99fa4b8797a752b42dc6cbbb34e63566025ca345b43"
+    }
+  ],
+  "integration_targets": [
+    "core/codework.py"
+  ],
+  "verification": {
+    "public_contract_tests": "PASS",
+    "live_model_calls": 0
+  }
+}
