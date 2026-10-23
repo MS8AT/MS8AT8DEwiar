@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "id": "PATCH-018",
+  "title": {
+    "ru": "Локальное продолжение изучения",
+    "en": "Local task continuation",
+    "zh": "本地任务继续执行"
+  },
+  "publication_mode": "separate_patch_kit_without_upstream_redistribution",
+  "files": [
+    {
+      "path": "PROMPT.md",
+      "sha256": "4619ab478ca061d7791565bf97deb4e84e153c62bffd97bfde75f4a69ae34ff2"
+    },
+    {
+      "path": "README.md",
+      "sha256": "74f40ae34b7aba48deb0a99a55fbff2214174007acc4c95aee7e458a684cdd19"
+    },
+    {
+      "path": "src/core/local_task_mode.py",
+      "sha256": "d763dbe32190c42f0b6d14956291dd8771588e5150ff4a0c5be310130aafad2b"
+    },
+    {
+      "path": "tests/public_contract_test.py",
+      "sha256": "2d7f9e013d169e7ea7ddd5b3958711fd6ab1733e2a32bdc8317b1027c61c563b"
+    },
+    {
+      "path": "verify.py",
+      "sha256": "cb622cf5d159d9576d10d99fa4b8797a752b42dc6cbbb34e63566025ca345b43"
+    }
+  ],
+  "integration_targets": [
+    "core/tasks.py",
+    "core/brain_routes.py",
+    "core/engine_commands.py",
+    "core/subscription_context.py",
+    "ui/settings.html",
+    "ui/studio/tasks.js"
+  ],
+  "verification": {
+    "public_contract_tests": "PASS",
+    "live_model_calls": 0
+  }
+}
