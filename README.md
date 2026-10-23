@@ -65,6 +65,13 @@ models, keeps plans and journals, and leaves risky actions subject to human conf
 
 ## Публичные патчи · Public patches · 公开补丁
 
+`PATCH-010` превращает каждый патч в независимый проверяемый блок: `inspect` проверяет SHA без исполнения,
+`test` запускает только выбранный блок, `pack` собирает проверенный ZIP, а `new` создаёт минимальную заготовку.
+В комплект входит skill для агентов и краткий стиль кода Dewiar. / `PATCH-010` adds an inspect-test-pack-new
+workflow and a project-contained agent skill. / `PATCH-010` 提供 inspect、test、pack、new 工作流以及项目内 Agent Skill。
+
+- [PATCH-010: независимые блоки и agent skill](patches/PATCH-010/README.md)
+
 `PATCH-007…009` добавляют переключатель ответа и голоса `RU / ENG / CH`, надёжные Windows-команды фоновых задач
 и локальное окно отключения профиля без системного JavaScript `confirm`. Каждый комплект содержит ТЗ, интеграционный
 prompt, standalone-модуль, автономный тест и SHA-256 manifest. / `PATCH-007…009` add RU/ENG/CH response-and-voice

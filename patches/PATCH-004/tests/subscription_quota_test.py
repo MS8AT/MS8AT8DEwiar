@@ -6,9 +6,28 @@ import types
 import unittest
 from unittest.mock import Mock, patch
 
-CORE = Path(__file__).resolve().parents[1] / "core"
+CORE = Path(__file__).resolve().parents[1] / "src" / "core"
 sys.path.insert(0, str(CORE))
-import subscription_context as context
+
+# Публичный блок не тянет всё приложение. Узкий синтетический контракт повторяет
+# только те границы subscription_context/brain_watch, которые вызывает quota.
+context = types.ModuleType("subscription_context")
+class ContextError(ValueError):
+    pass
+context.ContextError = ContextError
+SNAPSHOT_KEYS = ("kind", "subscription_transport", "model", "subscription_profile_id",
+                 "subscription_export", "subscription_usage_reviewed", "subscription_tasks",
+                 "subscription_task_limit")
+context.snapshot = lambda profile: {key: profile.get(key) for key in SNAPSHOT_KEYS}
+context.codex = lambda profile: profile.get("kind") == "chatgpt_subscription" and profile.get("subscription_transport") == "codex"
+context.enabled = lambda profile, feature: profile.get("subscription_" + feature) is True
+context.task_profile = lambda host: host.llm_profile()
+context.confirm_local = lambda *_: False
+sys.modules["subscription_context"] = context
+
+brain = types.ModuleType("brain_watch")
+brain.safe = Mock()
+sys.modules["brain_watch"] = brain
 import subscription_quota as quota
 
 

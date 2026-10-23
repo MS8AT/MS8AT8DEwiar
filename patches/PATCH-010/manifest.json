@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "id": "PATCH-010",
+  "title": {
+    "ru": "Независимые проверяемые блоки и skill для агентов",
+    "en": "Independent verifiable blocks and an agent skill",
+    "zh": "独立可验证模块与 Agent Skill"
+  },
+  "upstream": {
+    "project": "dwr-git/dewiar-app",
+    "version": "0.39.8",
+    "commit": "62e7446e686dfd9d901e82dee72b5731f6d70829",
+    "permission_required": true
+  },
+  "candidate_commit": null,
+  "kind": "source_only_developer_tool",
+  "publication_mode": "separate_patch_kit_without_upstream_redistribution",
+  "files": [
+    {"path": "ARCHITECTURE.md", "sha256": "447d749ceaaad7d4504cfcf1415a1ea464402a59df1be03f75685c1eac2536de"},
+    {"path": "PROMPT.md", "sha256": "1888f53cc02ef1bb45b48bd35c6cbaa4ce2bec096c6f05ae6cbb645d0281b987"},
+    {"path": "README.md", "sha256": "f3c9a789f69059ab0c71dc92797f8d5ba878d40b1bd7aa8b95c8fb3939164761"},
+    {"path": "skill/dewiar-block-worker/agents/openai.yaml", "sha256": "4e793bc42c0faaa71c04e37acb49ff1b326bd6e97c439b830c26df7c71894627"},
+    {"path": "skill/dewiar-block-worker/references/block-contract.md", "sha256": "276821202c80b8e33b1a9cf2d4d6850af935b25f61c51cde784dc4c360e2ad64"},
+    {"path": "skill/dewiar-block-worker/references/code-style.md", "sha256": "4d3be54e9a00feba6e21102f9d5fa678817fffb57974548abbd1e7686d806f30"},
+    {"path": "skill/dewiar-block-worker/SKILL.md", "sha256": "b19627511cfff43b543cf7af37b84f016c8713a31b385d128056fab21c6742cd"},
+    {"path": "src/tools/patch_block.py", "sha256": "09c512d614d912118a23ecff9f37decc281bf1b6a8cf3c408358674557a5798a"},
+    {"path": "tests/patch_block_test.py", "sha256": "cc1ae3e48efd024ca1245c1c75fcf3507a249aef4ccd58c0506ff6d5a8b9ddbe"},
+    {"path": "verify.py", "sha256": "4af018fa9036f86d717faddc98bd6afe849cc4b42416046f8e6f1d4965fb3ce1"}
+  ],
+  "integration_targets": [],
+  "verification": {
+    "hash_inspection": "PASS",
+    "tool_lifecycle_tests": 4,
+    "skill_validation": "PASS",
+    "deterministic_package": "PASS",
+    "network_calls": 0,
+    "live_model_calls": 0,
+    "runtime_integration": "NOT_APPLICABLE",
+    "installation": "NOT_RUN"
+  }
+}
