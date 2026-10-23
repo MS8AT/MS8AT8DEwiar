@@ -65,6 +65,16 @@ models, keeps plans and journals, and leaves risky actions subject to human conf
 
 ## Публичные патчи · Public patches · 公开补丁
 
+`PATCH-005` добавляет отдельные контуры Human Memory, одноуровневое делегирование Codex-задач и безопасный
+API/лог прямо в карточке задачи. Память включается отдельно для каждой задачи, принимает только привязанный к
+task/revision/scope пакет и не даёт модели MCP-инструмент. / `PATCH-005` adds task-scoped Human Memory, confirmed
+one-level Codex delegation, and an immediately visible safe task API/log. / `PATCH-005` 增加按任务启用的 Human Memory、
+经确认的一层 Codex 子任务委派，以及任务卡片中立即可见的安全 API/日志。
+
+- [ТЗ и описание / Specification / 规格](patches/PATCH-005/README.md)
+- [Интеграционный промпт / Integration prompt / 集成提示词](patches/PATCH-005/PROMPT.md)
+- [Manifest и самостоятельные модули / Manifest and standalone modules / 清单与独立模块](patches/PATCH-005/manifest.json)
+
 `PATCH-004` исправляет тупик после исчерпания лимита фоновой задачи Codex. Пользователь может отдельно и явно
 выдать ещё 1–20 запросов (до общего предела 100), после локального подтверждения. Выдача не сбрасывает историю,
 не вызывает модель и не запускает задачу автоматически. / `PATCH-004` adds an explicit confirmed quota grant for
