@@ -65,6 +65,13 @@ models, keeps plans and journals, and leaves risky actions subject to human conf
 
 ## Публичные патчи · Public patches · 公开补丁
 
+`PATCH-012` убирает ложные ошибки выбора модели подписки: активный Codex-профиль больше не проходит несовместимую
+фоновую проверку tools, а список моделей остаётся только за явной кнопкой пользователя. / `PATCH-012` prevents the
+generic tools probe from running against the isolated subscription brain. / `PATCH-012` 禁止对独立订阅模型运行通用
+tools 探测；模型列表仍由用户明确请求。
+
+- [PATCH-012: safe subscription model selection](patches/PATCH-012/README.md)
+
 `PATCH-011` исправляет ложный FAIL «Мозга» в общей самопроверке для отдельного Codex по подписке и публикует
 модульный план API/CLI/SLI T1–T9. Проверка подписки остаётся локальной: без `/models`, inference и расхода лимита;
 WebSocket-ответы сопоставляются по request `id`. / `PATCH-011` adds a zero-inference subscription self-check and a

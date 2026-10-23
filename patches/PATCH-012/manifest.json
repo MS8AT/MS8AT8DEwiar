@@ -1,0 +1,53 @@
+{
+  "schema": 1,
+  "id": "PATCH-012",
+  "title": {
+    "ru": "Безопасный выбор модели подписки",
+    "en": "Safe subscription model selection",
+    "zh": "安全的订阅模型选择"
+  },
+  "upstream": {
+    "project": "dwr-git/dewiar-app",
+    "version": "0.40.0",
+    "commit": "0e5917abf71e6d92a67b013c6fe5031f22a8af74",
+    "permission_required": true
+  },
+  "candidate_commit": "ef9f0be6df1f7f210bff827133dcb5431e393335",
+  "publication_mode": "separate_patch_kit_without_upstream_redistribution",
+  "files": [
+    {
+      "path": "PROMPT.md",
+      "sha256": "8425b33b8a819cb31359d630d29d35c691126e06b27ce8e0f26101843b57b0e4"
+    },
+    {
+      "path": "README.md",
+      "sha256": "1add4156e6bb7ce1c33fc36c76fe1449dddb16471478b72ed3c5800be8eec9e1"
+    },
+    {
+      "path": "src/core/subscription_model_probe_guard.py",
+      "sha256": "ac5dcdf995168ddb1469914ba44d4c2809b0ba46dcee66e4293ba6abd99033b4"
+    },
+    {
+      "path": "tests/public_contract_test.py",
+      "sha256": "9ffd6759a8048ac72b740d5dc0e64b34cba041f60ea43af76ac2ee00c624d587"
+    },
+    {
+      "path": "verify.py",
+      "sha256": "cb622cf5d159d9576d10d99fa4b8797a752b42dc6cbbb34e63566025ca345b43"
+    }
+  ],
+  "integration_targets": [
+    "core/engine_answer.py",
+    "tests/subscription_brain_probe_test.py"
+  ],
+  "verification": {
+    "public_contract_tests": "PASS",
+    "subscription_suite": "PASS",
+    "overlay_build": 14,
+    "installed_build": 14,
+    "live_model_list": "7 models; saved selection present",
+    "fresh_log": "PASS",
+    "live_model_calls": 0,
+    "live_human_memory": "NOT_RUN"
+  }
+}
