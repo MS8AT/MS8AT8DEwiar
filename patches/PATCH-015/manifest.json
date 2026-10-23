@@ -10,19 +10,19 @@
   "files": [
     {
       "path": "PROMPT.md",
-      "sha256": "1c1cea0421cbcdf7ef49967ca1e2a7012439aa2518f306de050f1c1ea02d4e0b"
+      "sha256": "e14a3651290232fc75c5b5b3ba34d785b1e48bbef44e63c0ba814df16606cd30"
     },
     {
       "path": "README.md",
-      "sha256": "16a42da5bb525f2decf571f9f0481802a1086b57367cd8b0a0a9870dad1620fa"
+      "sha256": "3aafbc4b24a7c94892c3ee92ae7227306eb7c516e8403d319bd04818e8f814e3"
     },
     {
       "path": "src/core/model_purpose.py",
-      "sha256": "377420068cf9648b370e64905306a053a4e12d22d80048d735ab8d628e8c6fc1"
+      "sha256": "2af3e4f6c8dbe5110e528b1af2198fb9550a69a552cb737a9402ce0ac7905eb5"
     },
     {
       "path": "tests/public_contract_test.py",
-      "sha256": "870ce0f4f00b2e4b2a97053d50d5f4185d48bdec1254738cb2806141b9510142"
+      "sha256": "f21f59dcfd524ef64ef17527f7c808d6961c246eb3a95f222c147f674b094ad2"
     },
     {
       "path": "verify.py",

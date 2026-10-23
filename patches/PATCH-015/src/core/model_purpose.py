@@ -40,6 +40,8 @@ def _task_score(name):
         score -= 200
     if re.search(r"instruct", name, re.I):
         score += 20
+    if re.search(r"(?:^|[-_/])wb-node\d+", name, re.I):
+        score += 10
     return score + min(size, 60)
 
 
