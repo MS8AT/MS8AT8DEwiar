@@ -65,6 +65,21 @@ models, keeps plans and journals, and leaves risky actions subject to human conf
 
 ## Публичные патчи · Public patches · 公开补丁
 
+`PATCH-016…019` исправляют подготовку рабочей копии и завершение Codex-задачи, добавляют явное продолжение изучения
+на своей LAN-модели и локальный read-only транспорт Human Memory. У каждого блока есть ТЗ и prompt RU/ENG/CH,
+самостоятельные исходники, тесты и SHA-256 manifest. / Independent protected-root, final-budget, local-task and
+Human Memory transport blocks, with trilingual specs and verified ZIPs. / 独立的目录保护、收尾预算、本地任务和
+Human Memory 传输模块，附三语规格、测试与验证 ZIP。
+
+| Блок / Block / 模块 | Что делает / Purpose / 用途 | Файлы / Files / 文件 |
+|---|---|---|
+| [PATCH-016](patches/PATCH-016/README.md) | Защищённые корни проекта / Protected roots / 受保护目录 | [ZIP](dist/PATCH-016.zip) · [Prompt](patches/PATCH-016/PROMPT.md) |
+| [PATCH-017](patches/PATCH-017/README.md) | Резерв запросов на итог / Final request reserve / 收尾请求预留 | [ZIP](dist/PATCH-017.zip) · [Prompt](patches/PATCH-017/PROMPT.md) |
+| [PATCH-018](patches/PATCH-018/README.md) | Продолжение на своей модели / Local task continuation / 本地任务继续 | [ZIP](dist/PATCH-018.zip) · [Prompt](patches/PATCH-018/PROMPT.md) |
+| [PATCH-019](patches/PATCH-019/README.md) | Read-only Human Memory stdio / Human Memory 只读传输 | [ZIP](dist/PATCH-019.zip) · [Prompt](patches/PATCH-019/PROMPT.md) |
+
+Проверки и ограничения: [validation 2026-10-23](VALIDATION_2026-10-23.md).
+
 `PATCH-015` выбирает модель по назначению, если человек не выбрал её явно: обычный чат остаётся лёгким, а фоновые
 задачи предпочитают tool-friendly 7–14B и не берут embedding/1.5B. / `PATCH-015` adds purpose-aware automatic model
 selection without overriding an explicit choice. / `PATCH-015` 按用途自动选择模型，且不会覆盖用户的明确选择。
