@@ -65,6 +65,14 @@ models, keeps plans and journals, and leaves risky actions subject to human conf
 
 ## Публичные патчи · Public patches · 公开补丁
 
+`PATCH-013` добавляет ограниченного AI-доктора переполнения контекста фоновых задач: после штатного сокращения
+истории он готовит один компактный повтор с инструментами нужного типа, пишет безопасную диагностику и
+останавливается после второй ошибки. / `PATCH-013` adds one bounded compact retry for task context overflow. /
+`PATCH-013` 为后台任务上下文溢出增加一次有界的精简重试。
+
+- [PATCH-013: task context overflow AI doctor](patches/PATCH-013/README.md)
+- [PATCH-013 verified ZIP](dist/PATCH-013.zip)
+
 `PATCH-012` убирает ложные ошибки выбора модели подписки: активный Codex-профиль больше не проходит несовместимую
 фоновую проверку tools, а список моделей остаётся только за явной кнопкой пользователя. / `PATCH-012` prevents the
 generic tools probe from running against the isolated subscription brain. / `PATCH-012` 禁止对独立订阅模型运行通用

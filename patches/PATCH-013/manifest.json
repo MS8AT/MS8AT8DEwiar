@@ -1,0 +1,54 @@
+{
+  "schema": 1,
+  "id": "PATCH-013",
+  "title": {
+    "ru": "AI-доктор переполнения контекста задач",
+    "en": "Task context overflow AI doctor",
+    "zh": "任务上下文溢出 AI 医生"
+  },
+  "upstream": {
+    "project": "dwr-git/dewiar-app",
+    "version": "0.40.0",
+    "commit": "0e5917abf71e6d92a67b013c6fe5031f22a8af74",
+    "permission_required": true
+  },
+  "candidate_commit": "f3204473974cb6bd0a8dc4234b5ece137c9999f6",
+  "publication_mode": "separate_patch_kit_without_upstream_redistribution",
+  "files": [
+    {
+      "path": "PROMPT.md",
+      "sha256": "35320af545aa04fbfa0ab706c69f208490369cc960d72f4aba7912c6776b9bf4"
+    },
+    {
+      "path": "README.md",
+      "sha256": "5de61ee3abc1a52974c5e5f372fcd0e43e7a98a41d5a73972324f03a123ab698"
+    },
+    {
+      "path": "src/core/task_doctor.py",
+      "sha256": "4935064be815898138b54ed50cda12aeea7fa4d7470df3fb55df5c689040191b"
+    },
+    {
+      "path": "tests/public_contract_test.py",
+      "sha256": "a7512dc94b8c3d0b3da87c17499570c3ed9b05cdeccce84a3a1bb0d2e5a7561a"
+    },
+    {
+      "path": "verify.py",
+      "sha256": "cb622cf5d159d9576d10d99fa4b8797a752b42dc6cbbb34e63566025ca345b43"
+    }
+  ],
+  "integration_targets": [
+    "core/tasks.py",
+    "tests/task_doctor_flow_test.py",
+    "integrations/ms8at/overlay.json"
+  ],
+  "verification": {
+    "public_contract_tests": "PASS",
+    "subscription_suite": "PASS: 231 Python + 49 Node.js",
+    "overlay_build": 15,
+    "runtime_files": 49,
+    "installed_build": 14,
+    "live_model_calls": 0,
+    "live_human_memory": "NOT_RUN",
+    "installed_build_15": "NOT_RUN"
+  }
+}

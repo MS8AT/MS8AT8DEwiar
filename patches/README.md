@@ -7,6 +7,7 @@ specification, prompt, hashes, and tests. Publication is not installation. / 每
 
 | ID | Что делает / Purpose / 用途 | Комплект / Kit / 补丁包 |
 |---|---|---|
+| PATCH-013 | AI-доктор переполнения контекста / Context overflow AI doctor / 上下文溢出 AI 医生 | [ТЗ](PATCH-013/README.md) · [prompt](PATCH-013/PROMPT.md) · [manifest](PATCH-013/manifest.json) · [ZIP](../dist/PATCH-013.zip) |
 | PATCH-012 | Безопасный выбор модели подписки / Safe subscription model selection / 安全的订阅模型选择 | [ТЗ](PATCH-012/README.md) · [prompt](PATCH-012/PROMPT.md) · [manifest](PATCH-012/manifest.json) |
 | PATCH-011 | Самопроверка подписки и API/CLI/SLI / Subscription self-check and API/CLI/SLI / 订阅自检与 API/CLI/SLI | [ТЗ](PATCH-011/README.md) · [prompt](PATCH-011/PROMPT.md) · [manifest](PATCH-011/manifest.json) |
 | PATCH-010 | Независимые блоки и skill агентов / Independent blocks and agent skill / 独立模块与 Agent Skill | [ТЗ](PATCH-010/README.md) · [prompt](PATCH-010/PROMPT.md) · [manifest](PATCH-010/manifest.json) |
@@ -16,8 +17,8 @@ specification, prompt, hashes, and tests. Publication is not installation. / 每
 | PATCH-005 | Human Memory, дерево Codex-задач и API/лог / Human Memory, Codex task tree and API/log / Human Memory、Codex 子任务树与 API/日志 | [ТЗ](PATCH-005/README.md) · [prompt](PATCH-005/PROMPT.md) · [manifest](PATCH-005/manifest.json) |
 | PATCH-004 | Подтверждаемое продление квоты задач Codex / Confirmed Codex task quota grant / 经确认的 Codex 任务配额扩展 | [ТЗ и промпт](PATCH-004/README.md) · [manifest](PATCH-004/manifest.json) |
 
-База PATCH-011…012: официальный Dewiar `0.40.0`, commit `0e5917abf71e6d92a67b013c6fe5031f22a8af74`.
-Интегрированный кандидат MS8AT: commit `ef9f0be6df1f7f210bff827133dcb5431e393335`.
+База PATCH-011…013: официальный Dewiar `0.40.0`, commit `0e5917abf71e6d92a67b013c6fe5031f22a8af74`.
+Интегрированный кандидат MS8AT: commit `f3204473974cb6bd0a8dc4234b5ece137c9999f6`.
 
 База PATCH-007…010: официальный Dewiar `0.39.8`, commit `62e7446e686dfd9d901e82dee72b5731f6d70829`.
 Интегрированный кандидат MS8AT: commit `2c9343a3ffe9081219fc9d2eb8ceec66a6fc7ee5`.
