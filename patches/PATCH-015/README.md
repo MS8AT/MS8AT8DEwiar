@@ -31,6 +31,11 @@ python verify.py
 python tests/public_contract_test.py
 ```
 
-- PASS: pure selection contract.
-- NOT_RUN: live model, installed Dewiar, network, accounts.
+- PASS: pure selection contract; standalone tests do not call a model, network, account, or user file.
+- LIVE PASS (integration, outside this standalone block): Dewiar build 18 selected
+  `wb-node21-qwen3.5-9b` independently of `/models` order, returned native
+  `code_list` in 2.28 s, and the original failing task executed one allowed
+  `update_plan` before it was stopped without an error.
+- NOT_RUN: paid Codex request, live Human Memory MCP, production acceptance.
+- 中文：独立测试不调用模型或网络；集成后的 build 18 已自动选择工作节点并成功执行一个受限工具动作。
 - Rollback: remove this block and restore the previous `pick_model/resolve_model` adapter.
