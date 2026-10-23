@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "id": "PATCH-015",
+  "title": {
+    "ru": "Автовыбор модели по назначению",
+    "en": "Purpose-aware model selection",
+    "zh": "按用途自动选择模型"
+  },
+  "publication_mode": "separate_patch_kit_without_upstream_redistribution",
+  "files": [
+    {
+      "path": "PROMPT.md",
+      "sha256": "1c1cea0421cbcdf7ef49967ca1e2a7012439aa2518f306de050f1c1ea02d4e0b"
+    },
+    {
+      "path": "README.md",
+      "sha256": "16a42da5bb525f2decf571f9f0481802a1086b57367cd8b0a0a9870dad1620fa"
+    },
+    {
+      "path": "src/core/model_purpose.py",
+      "sha256": "377420068cf9648b370e64905306a053a4e12d22d80048d735ab8d628e8c6fc1"
+    },
+    {
+      "path": "tests/public_contract_test.py",
+      "sha256": "870ce0f4f00b2e4b2a97053d50d5f4185d48bdec1254738cb2806141b9510142"
+    },
+    {
+      "path": "verify.py",
+      "sha256": "cb622cf5d159d9576d10d99fa4b8797a752b42dc6cbbb34e63566025ca345b43"
+    }
+  ],
+  "integration_targets": [
+    "core/model_purpose.py",
+    "core/llm.py"
+  ],
+  "verification": {
+    "public_contract_tests": "PASS",
+    "live_model_calls": 0
+  }
+}

@@ -65,6 +65,13 @@ models, keeps plans and journals, and leaves risky actions subject to human conf
 
 ## Публичные патчи · Public patches · 公开补丁
 
+`PATCH-015` выбирает модель по назначению, если человек не выбрал её явно: обычный чат остаётся лёгким, а фоновые
+задачи предпочитают tool-friendly 7–14B и не берут embedding/1.5B. / `PATCH-015` adds purpose-aware automatic model
+selection without overriding an explicit choice. / `PATCH-015` 按用途自动选择模型，且不会覆盖用户的明确选择。
+
+- [PATCH-015: purpose-aware model selection](patches/PATCH-015/README.md)
+- [PATCH-015 verified ZIP](dist/PATCH-015.zip)
+
 `PATCH-014` безопасно восстанавливает один вызов инструмента, когда локальная модель печатает его Markdown-текстом
 вместо native `tool_calls`: только известное имя, только JSON-объект, весь выдуманный результат после вызова
 отбрасывается. / `PATCH-014` strictly recovers one known Markdown tool call and discards fictional results. /
