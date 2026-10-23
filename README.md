@@ -65,6 +65,13 @@ models, keeps plans and journals, and leaves risky actions subject to human conf
 
 ## Публичные патчи · Public patches · 公开补丁
 
+`PATCH-011` исправляет ложный FAIL «Мозга» в общей самопроверке для отдельного Codex по подписке и публикует
+модульный план API/CLI/SLI T1–T9. Проверка подписки остаётся локальной: без `/models`, inference и расхода лимита;
+WebSocket-ответы сопоставляются по request `id`. / `PATCH-011` adds a zero-inference subscription self-check and a
+modular API/CLI/SLI plan. / `PATCH-011` 增加零推理订阅自检以及模块化 API/CLI/SLI 测试计划。
+
+- [PATCH-011: subscription self-check and API/CLI/SLI](patches/PATCH-011/README.md)
+
 `PATCH-010` превращает каждый патч в независимый проверяемый блок: `inspect` проверяет SHA без исполнения,
 `test` запускает только выбранный блок, `pack` собирает проверенный ZIP, а `new` создаёт минимальную заготовку.
 В комплект входит skill для агентов и краткий стиль кода Dewiar. / `PATCH-010` adds an inspect-test-pack-new
