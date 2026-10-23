@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "id": "PATCH-004",
+  "title": {
+    "ru": "Подтверждаемое продление квоты задач Codex",
+    "en": "Confirmed Codex task quota extension",
+    "zh": "经确认的 Codex 任务配额扩展"
+  },
+  "upstream": {
+    "project": "dwr-git/dewiar-app",
+    "version": "0.39.6",
+    "commit": "4a72b8bdbca52810c42a32a871dd8252d913036e",
+    "permission_required": true
+  },
+  "candidate_commit": "b117dcaa31b456a8ff5ce559434b8ba46c75cad1",
+  "publication_mode": "separate_patch_kit_without_upstream_redistribution",
+  "files": [
+    {"path": "README.md", "sha256": "b9a6546610f1c365f83be1203e0e1cc51d6392063fbe9b736286a82862687852"},
+    {"path": "verify.py", "sha256": "d59e25dcbd3e8507d1881b92b868ab43e2bd5291d8509d391a5ab7f2a603a53f"},
+    {"path": "src/core/subscription_quota.py", "sha256": "911f7fb86429363b7ab8c5a8669636b777bffe2dae706b3c95284bd64f93f58d"},
+    {"path": "src/ui/task_quota.js", "sha256": "396b7052cce01227dc1a9c9d047f307571340bb27d0b761d892aca613967cd9a"},
+    {"path": "tests/subscription_quota_test.py", "sha256": "7d6cb2f494bc0a3d38d6e99b44342a1b3fb756abd7a1b3845c213d0e884c9baf"},
+    {"path": "tests/task_quota_ui.test.mjs", "sha256": "05f631c86804128c766fb8e6cc60010a0b619479db0de88f0ae84540d6dd8d4f"}
+  ],
+  "integration_targets": [
+    "core/subscription_context.py",
+    "core/engine_commands.py",
+    "core/tasks.py",
+    "core/brain_watch.py",
+    "core/diagnostics.py",
+    "ui/settings.html",
+    "ui/studio/tasks.js"
+  ],
+  "verification": {
+    "subscription_suite": "PASS",
+    "overlay": "PASS",
+    "runtime_files_verified": 42,
+    "live_model_calls": 0,
+    "installation": "NOT_RUN"
+  }
+}

@@ -1,10 +1,27 @@
 # MS8AT8DEwiar
 
+## Что такое Dewiar · What is Dewiar · 什么是 Dewiar
+
+**RU.** Dewiar — голосовой AI-помощник с персонажами, памятью и фоновыми задачами. Он подключает локальные и
+облачные модели, ведёт планы и журналы, а рискованные действия оставляет под подтверждением человека.
+
+**EN.** Dewiar is a voice AI assistant with characters, memory, and background tasks. It connects local and cloud
+models, keeps plans and journals, and leaves risky actions subject to human confirmation.
+
+**中文.** Dewiar 是一款具有角色、记忆和后台任务能力的语音 AI 助手。它可以连接本地与云端模型、记录计划和日志，
+并把高风险操作交给用户确认。
+
 **Открытая концепция DEwiar + Future Flow**
 
 [![Мир меняется — мир становится связанным](assets/connected-world-comic.png)](assets/connected-world-comic.png)
 
+[![Карта проекта: ветка реальности](assets/project-reality-branch-map-ru.png)](assets/project-reality-branch-map-ru.png)
+
 Публичный проект: <https://github.com/MS8AT/MS8AT8DEwiar>
+
+[Идея на трёх языках / Idea in three languages / 三语项目理念](IDEA.md) ·
+[Патчи и ТЗ / Patches and specifications / 补丁与规格](patches/README.md) ·
+[Промпты / Prompts / 提示词](prompts/README.md)
 
 Мир меняется и становится связанным. Компьютеры, локальные и облачные модели,
 сервисы и люди соединяются невидимыми цифровыми нитями. DEwiar задуман как
@@ -45,6 +62,24 @@
 ## Открытая демонстрация
 
 - Future Flow: <https://futureflow.ms8at.by/>
+
+## Публичные патчи · Public patches · 公开补丁
+
+`PATCH-004` исправляет тупик после исчерпания лимита фоновой задачи Codex. Пользователь может отдельно и явно
+выдать ещё 1–20 запросов (до общего предела 100), после локального подтверждения. Выдача не сбрасывает историю,
+не вызывает модель и не запускает задачу автоматически. / `PATCH-004` adds an explicit confirmed quota grant for
+an exhausted Codex task without calling or resuming the model. / `PATCH-004` 为配额耗尽的 Codex 任务增加独立的人工确认扩展；
+它不会调用模型，也不会自动恢复任务。
+
+- [ТЗ, интеграционный промпт и проверки / Spec, prompt and tests / 规格、提示词与测试](patches/PATCH-004/README.md)
+- [Проверяемый manifest / Verifiable manifest / 可验证清单](patches/PATCH-004/manifest.json)
+- [Самостоятельные исходники патча / Standalone patch sources / 独立补丁源文件](patches/PATCH-004/src/)
+
+Публикуется именно отдельный patch-kit, а не копия Dewiar. Официальная база:
+[dwr-git/dewiar-app](https://github.com/dwr-git/dewiar-app). Её `LICENSE` требует письменного разрешения владельца
+на копирование, изменение и распространение. Интегрировать этот patch-kit в Dewiar можно только при наличии такого
+разрешения. / This repository does not redistribute Dewiar; upstream permission remains required. /
+本仓库不重新分发 Dewiar；集成补丁仍须遵守上游许可并取得所需授权。
 
 ## Статус
 
