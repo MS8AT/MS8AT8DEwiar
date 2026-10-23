@@ -65,6 +65,14 @@ models, keeps plans and journals, and leaves risky actions subject to human conf
 
 ## Публичные патчи · Public patches · 公开补丁
 
+`PATCH-014` безопасно восстанавливает один вызов инструмента, когда локальная модель печатает его Markdown-текстом
+вместо native `tool_calls`: только известное имя, только JSON-объект, весь выдуманный результат после вызова
+отбрасывается. / `PATCH-014` strictly recovers one known Markdown tool call and discards fictional results. /
+`PATCH-014` 严格恢复一个已知的 Markdown 工具调用，并丢弃模型虚构的工具结果。
+
+- [PATCH-014: strict Markdown tool-call recovery](patches/PATCH-014/README.md)
+- [PATCH-014 verified ZIP](dist/PATCH-014.zip)
+
 `PATCH-013` добавляет ограниченного AI-доктора переполнения контекста фоновых задач: после штатного сокращения
 истории он готовит один компактный повтор с инструментами нужного типа, пишет безопасную диагностику и
 останавливается после второй ошибки. / `PATCH-013` adds one bounded compact retry for task context overflow. /

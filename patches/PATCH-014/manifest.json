@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "id": "PATCH-014",
+  "title": {
+    "ru": "Строгое восстановление Markdown-вызова",
+    "en": "Strict Markdown tool-call recovery",
+    "zh": "严格恢复 Markdown 工具调用"
+  },
+  "publication_mode": "separate_patch_kit_without_upstream_redistribution",
+  "files": [
+    {
+      "path": "PROMPT.md",
+      "sha256": "4f165603db59a9b15613d3eac8428bda4153aa78aaee26e524ae3547c7da496f"
+    },
+    {
+      "path": "README.md",
+      "sha256": "15d7b69ed55f03b1ceab0c665a0b17f5fa9df3b34dcfb76a047f99848aea338d"
+    },
+    {
+      "path": "src/core/tool_call_recovery.py",
+      "sha256": "4f8e126435be7fc7fc7e18dcae63a5e4149e56cf689b0ea9fbdf04d3e98a0aaf"
+    },
+    {
+      "path": "tests/public_contract_test.py",
+      "sha256": "55fa67956414bfec082d1e2e10bd9837ac3facce0c288f8b309ce73545b4a897"
+    },
+    {
+      "path": "verify.py",
+      "sha256": "cb622cf5d159d9576d10d99fa4b8797a752b42dc6cbbb34e63566025ca345b43"
+    }
+  ],
+  "integration_targets": [
+    "core/tool_call_recovery.py",
+    "core/tasks.py"
+  ],
+  "verification": {
+    "public_contract_tests": "PASS",
+    "live_model_calls": 0
+  }
+}
