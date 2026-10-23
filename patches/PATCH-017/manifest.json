@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "id": "PATCH-017",
+  "title": {
+    "ru": "Резерв финального запроса",
+    "en": "Final request reserve",
+    "zh": "最终请求预留"
+  },
+  "publication_mode": "separate_patch_kit_without_upstream_redistribution",
+  "files": [
+    {
+      "path": "PROMPT.md",
+      "sha256": "a3af680ed101eeaafc69258bea2134f0af3f94d9e7a2ce63548e7ea5a9b7de20"
+    },
+    {
+      "path": "README.md",
+      "sha256": "ff1450363b1bfa9aec98fb01cfdaaaf0e4dbcdb97c3c74d349d9a3721accb416"
+    },
+    {
+      "path": "src/core/task_budget.py",
+      "sha256": "da1f18feb916fafbf8a678f62e37fe3c7543ae19493713160a21b852650877a3"
+    },
+    {
+      "path": "tests/public_contract_test.py",
+      "sha256": "9e5ed1034c8891ea216050279cb87bec54f99547021f28925fa6e09b0fb6816a"
+    },
+    {
+      "path": "verify.py",
+      "sha256": "cb622cf5d159d9576d10d99fa4b8797a752b42dc6cbbb34e63566025ca345b43"
+    }
+  ],
+  "integration_targets": [
+    "core/subscription_context.py"
+  ],
+  "verification": {
+    "public_contract_tests": "PASS",
+    "live_model_calls": 0
+  }
+}
