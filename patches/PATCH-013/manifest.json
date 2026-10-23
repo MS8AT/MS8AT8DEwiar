@@ -21,7 +21,7 @@
     },
     {
       "path": "README.md",
-      "sha256": "5de61ee3abc1a52974c5e5f372fcd0e43e7a98a41d5a73972324f03a123ab698"
+      "sha256": "d6dc5285d67a60c031eb1ccc12c8c92fef555a64b462ecb3acb6e654bb22c0fb"
     },
     {
       "path": "src/core/task_doctor.py",
@@ -46,9 +46,10 @@
     "subscription_suite": "PASS: 231 Python + 49 Node.js",
     "overlay_build": 15,
     "runtime_files": 49,
-    "installed_build": 14,
-    "live_model_calls": 0,
+    "installed_build": 15,
+    "live_model_calls": 3,
+    "live_model_verification": "PASS: two context-overflow requests, one compact request accepted; task then stopped",
     "live_human_memory": "NOT_RUN",
-    "installed_build_15": "NOT_RUN"
+    "live_task_completion": "NOT_RUN"
   }
 }

@@ -36,7 +36,10 @@ network, settings or file side effects. The adapter must allow one repair only a
 - PASS: standalone contract and SHA verification.
 - PASS: integrated synthetic flow: full request rejected, compact request accepted; second-overflow path stops.
 - PASS: integrated suite: 231 Python + 49 Node.js checks; overlay build 15, 49 runtime files.
-- NOT_RUN: live model inference, live Human Memory MCP, installation of build 15.
+- PASS: installed build 15; local CLI/API/SLI/journal and feature declaration are available.
+- LIVE PASS: the original failed task recovered with `14941→787` system characters and `74→22` tools. The task was
+  stopped immediately after `doctor.last_result=recovered`, so completion of its project goal is not claimed.
+- NOT_RUN: live Human Memory MCP and completion of the live task after treatment.
 
 ## Commands
 
