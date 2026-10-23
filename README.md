@@ -65,6 +65,17 @@ models, keeps plans and journals, and leaves risky actions subject to human conf
 
 ## Публичные патчи · Public patches · 公开补丁
 
+`PATCH-007…009` добавляют переключатель ответа и голоса `RU / ENG / CH`, надёжные Windows-команды фоновых задач
+и локальное окно отключения профиля без системного JavaScript `confirm`. Каждый комплект содержит ТЗ, интеграционный
+prompt, standalone-модуль, автономный тест и SHA-256 manifest. / `PATCH-007…009` add RU/ENG/CH response-and-voice
+selection, reliable Windows task commands, and a local disconnect dialog. / `PATCH-007…009` 增加 RU/ENG/CH 回答与
+语音选择、可靠的 Windows 任务命令以及本地断开对话框。
+
+- [PATCH-007: RU / ENG / CH](patches/PATCH-007/README.md)
+- [PATCH-008: Windows task commands](patches/PATCH-008/README.md)
+- [PATCH-009: local disconnect dialog](patches/PATCH-009/README.md)
+- [Official Dewiar pull request #9](https://github.com/dwr-git/dewiar-app/pull/9)
+
 `PATCH-005` добавляет отдельные контуры Human Memory, одноуровневое делегирование Codex-задач и безопасный
 API/лог прямо в карточке задачи. Память включается отдельно для каждой задачи, принимает только привязанный к
 task/revision/scope пакет и не даёт модели MCP-инструмент. / `PATCH-005` adds task-scoped Human Memory, confirmed

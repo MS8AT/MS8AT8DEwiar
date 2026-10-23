@@ -7,8 +7,14 @@ specification, prompt, hashes, and tests. Publication is not installation. / 每
 
 | ID | Что делает / Purpose / 用途 | Комплект / Kit / 补丁包 |
 |---|---|---|
+| PATCH-009 | Локальное окно отключения / Local disconnect dialog / 本地断开对话框 | [ТЗ](PATCH-009/README.md) · [prompt](PATCH-009/PROMPT.md) · [manifest](PATCH-009/manifest.json) |
+| PATCH-008 | Команды задач Windows / Windows task commands / Windows 任务命令 | [ТЗ](PATCH-008/README.md) · [prompt](PATCH-008/PROMPT.md) · [manifest](PATCH-008/manifest.json) |
+| PATCH-007 | Язык ответа и голоса RU/ENG/CH / Response and voice language / 回答和语音语言 | [ТЗ](PATCH-007/README.md) · [prompt](PATCH-007/PROMPT.md) · [manifest](PATCH-007/manifest.json) |
 | PATCH-005 | Human Memory, дерево Codex-задач и API/лог / Human Memory, Codex task tree and API/log / Human Memory、Codex 子任务树与 API/日志 | [ТЗ](PATCH-005/README.md) · [prompt](PATCH-005/PROMPT.md) · [manifest](PATCH-005/manifest.json) |
 | PATCH-004 | Подтверждаемое продление квоты задач Codex / Confirmed Codex task quota grant / 经确认的 Codex 任务配额扩展 | [ТЗ и промпт](PATCH-004/README.md) · [manifest](PATCH-004/manifest.json) |
+
+База PATCH-007…009: официальный Dewiar `0.39.8`, commit `62e7446e686dfd9d901e82dee72b5731f6d70829`.
+Интегрированный кандидат MS8AT: commit `2c9343a3ffe9081219fc9d2eb8ceec66a6fc7ee5`.
 
 База PATCH-005: официальный Dewiar `0.39.7`, commit `24a3d6c22142b623081478a121d396d7e42741c1`.
 Кандидат MS8AT: merge commit `48587e55ab52cb5b596046b30ee306e3979f1ccd`.

@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "id": "PATCH-007",
+  "title": {
+    "ru": "Язык ответа и голоса RU/ENG/CH",
+    "en": "RU/ENG/CH response and voice mode",
+    "zh": "RU/ENG/CH 回答和语音模式"
+  },
+  "upstream": {
+    "project": "dwr-git/dewiar-app",
+    "version": "0.39.8",
+    "commit": "62e7446e686dfd9d901e82dee72b5731f6d70829",
+    "permission_required": true
+  },
+  "candidate_commit": "2c9343a3ffe9081219fc9d2eb8ceec66a6fc7ee5",
+  "publication_mode": "separate_patch_kit_without_upstream_redistribution",
+  "files": [
+    {"path": "README.md", "sha256": "ea5b071a75743de600ef8f6d585a3959ea5f159ad4edb346929b7b08c674a85b"},
+    {"path": "PROMPT.md", "sha256": "64845e9799d24136becd140e0fd4616bc2969fe4c91ddb74fda693fdc81be165"},
+    {"path": "verify.py", "sha256": "0fff7b5e8aff5e635798fa9dc1c3fb40b2ea7a537dd86b64f75e776ac01da4ba"},
+    {"path": "src/core/language_mode.py", "sha256": "414588e24f2b6db6a401ce910ebc8606424aa133610b07b85951420ecd5dad94"},
+    {"path": "tests/public_contract_test.py", "sha256": "f8b1d80366367dbc9dbeb4899a61b8dc51134e621dc7048563ee0ef47b13a0eb"}
+  ],
+  "integration_targets": [
+    "core/settings.py", "core/engine_answer.py", "core/subscription_context.py", "core/engine_commands.py",
+    "core/engine_remote.py", "core/tts.py", "ui/hud.html"
+  ],
+  "verification": {
+    "public_contract_tests": "PASS",
+    "integrated_language_tests": "PASS",
+    "subscription_suite": "PASS",
+    "overlay": "PASS",
+    "live_model_calls": 0,
+    "voice_downloads": "NOT_RUN",
+    "installation": "NOT_RUN"
+  }
+}

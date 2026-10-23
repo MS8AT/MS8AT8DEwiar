@@ -1,0 +1,34 @@
+{
+  "schema": 1,
+  "id": "PATCH-009",
+  "title": {
+    "ru": "Локальное окно отключения профиля",
+    "en": "Local disconnect confirmation dialog",
+    "zh": "本地断开确认对话框"
+  },
+  "upstream": {
+    "project": "dwr-git/dewiar-app",
+    "version": "0.39.8",
+    "commit": "62e7446e686dfd9d901e82dee72b5731f6d70829",
+    "permission_required": true
+  },
+  "candidate_commit": "2c9343a3ffe9081219fc9d2eb8ceec66a6fc7ee5",
+  "publication_mode": "separate_patch_kit_without_upstream_redistribution",
+  "files": [
+    {"path": "README.md", "sha256": "40e8e7efd49271ca61b47f1f5200a12474ee12fcebd01a8d720881fbc0faa470"},
+    {"path": "PROMPT.md", "sha256": "63af6bbc0fa9814ad8cc1099be045fe066491185c42121fed946a92cd92cd1c0"},
+    {"path": "verify.py", "sha256": "31771e70528f7a9cc33c45e1f420f620660857bc231413da2795fad30bab8a21"},
+    {"path": "src/ui/subscription_disconnect.mjs", "sha256": "60a02cb6491681ddd5a91d946d0efee8672c53fdde31ba7f41c3f232cba1c587"},
+    {"path": "tests/public_contract.test.mjs", "sha256": "e8cea20288860eb151940105ea32ba35ca10c7a085c3ccd08efe9e3376c19272"}
+  ],
+  "integration_targets": ["ui/studio/subscription.js"],
+  "verification": {
+    "public_contract_tests": "PASS",
+    "native_dialog_regression": "PASS",
+    "hold_dictation_regression": "PASS",
+    "overlay": "PASS",
+    "account_calls": 0,
+    "live_model_calls": 0,
+    "installation": "NOT_RUN"
+  }
+}
