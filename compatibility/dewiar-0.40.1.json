@@ -6,7 +6,10 @@
     "commit": "616e70afada2ca3ebe95d894cb7d836592366aed"
   },
   "overlay": {"product": "MS8AT8DWiar", "build": 24, "runtime_files": 55},
-  "integration_pr": "https://github.com/dwr-git/dewiar-app/pull/9",
+  "integration_repository": "MS8AT/dewiar-app",
+  "integration_branch": "ms8at/codex-local-context",
+  "historical_pr": "https://github.com/dwr-git/dewiar-app/pull/9",
+  "historical_pr_state": "closed_by_upstream_maintainer",
   "integration_commit": "b3102d7fe19f6c49805944e0bda3c7af56c70fd2",
   "prompt": "prompts/DEWIAR_0401.md",
   "codex_cli": {

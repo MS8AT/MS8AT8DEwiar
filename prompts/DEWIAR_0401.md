@@ -3,7 +3,9 @@
 [RU](#ru) | [ENG](#eng) | [CH](#ch)
 
 Official base: `dwr-git/dewiar-app@616e70afada2ca3ebe95d894cb7d836592366aed`.
-Integration review: [PR #9](https://github.com/dwr-git/dewiar-app/pull/9).
+Current source: [MS8AT integration branch](https://github.com/MS8AT/dewiar-app/tree/ms8at/codex-local-context).
+Historical [PR #9](https://github.com/dwr-git/dewiar-app/pull/9) was closed by the maintainer on 2026-10-24.
+Its frozen diff is not the current build. Upstream requested small problem-focused issues instead of a full PR.
 Payload metadata: [compatibility](../compatibility/dewiar-0.40.1.json).
 Next adapter: [AI20 plan / план / 计划](AI20_ADAPTER_PLAN.md).
 

@@ -3,10 +3,14 @@
 [RU](#ru) | [ENG](#eng) | [CH](#ch)
 
 Base: `616e70afada2ca3ebe95d894cb7d836592366aed`.
+Current implementation: [MS8AT source commit](https://github.com/MS8AT/dewiar-app/commit/b3102d7fe19f6c49805944e0bda3c7af56c70fd2).
 [Per-test JSON](https://github.com/MS8AT/MS8AT8DEwiar/blob/main/compatibility/dewiar-0.40.1-tests.json)
 · [Integration prompt](https://github.com/MS8AT/MS8AT8DEwiar/blob/main/prompts/DEWIAR_0401.md).
 
 ## RU
+
+Публикация — в MS8AT. Автор закрыл [PR #9](https://github.com/dwr-git/dewiar-app/pull/9)
+24.10.2026 и предложил небольшие issues; PR не переоткрывался, merge не выполнен.
 
 - **PASS:** subscription_suite — `ALL OK`; overlay — 55 runtime-файлов с точными SHA-256.
 - **PASS:** восемь новых сценариев 0.40.1; Python syntax и 32 JS syntax checks.
@@ -43,6 +47,9 @@ mock-серверы. Новых модельных запросов — 0. До�
 
 ## ENG
 
+Published under MS8AT. The upstream maintainer closed PR #9 on 2026-10-24 and
+requested small issues. The PR was not reopened or merged.
+
 PASS: focused subscription suite, 55-file overlay hashes, all eight new 0.40.1
 scenarios, Python and 32 JS syntax checks, three extra required tests, Android
 turn-bound consent tests, HUD language/resize and screenshot contrast checks.
@@ -63,6 +70,8 @@ Android and exhaustive manual UI acceptance were not performed. Automatic
 installer releases and AI20 execution remain disabled.
 
 ## CH
+
+发布在 MS8AT。上游维护者于 2026-10-24 关闭 PR #9，建议提交小范围问题说明；未重新打开或合并该 PR。
 
 通过：订阅集成测试、55 文件 overlay 哈希、0.40.1 的八项新测试、Python 和 32 项 JS
 语法检查、三个附加必需测试、Android 当前回合授权、窄 HUD 语言切换和截图对比度测试。
