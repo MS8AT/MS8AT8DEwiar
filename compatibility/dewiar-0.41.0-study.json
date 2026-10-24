@@ -1,0 +1,87 @@
+{
+  "schema": 1,
+  "kind": "source_comparison_not_release",
+  "date": "2026-10-24",
+  "original": {
+    "version": "0.41.0",
+    "commit": "ade7a0f0cb3cee7ff6f8cdc01c46a02e64101f61"
+  },
+  "integration": {
+    "version": "0.40.1",
+    "build": 24,
+    "commit": "b3102d7fe19f6c49805944e0bda3c7af56c70fd2"
+  },
+  "patchkit_reviewed_commit": "f32f0c79bf85147cfe8ef67758af1af8bad6c0a3",
+  "upstream_changed_files": 87,
+  "overlay_runtime_files": 55,
+  "overlap_runtime": [
+    "core/engine_commands.py",
+    "ui/hud.html",
+    "ui/settings.html",
+    "ui/studio/brain.js",
+    "ui/studio/tasks.js",
+    "core/settings.py",
+    "ui/app.py"
+  ],
+  "overlap_full_branch_count": 11,
+  "overlap_means_merge_conflict": false,
+  "tests": [
+    {
+      "name": "upstream plugins1020_test",
+      "status": "PASS",
+      "checks": 28
+    },
+    {
+      "name": "own memory/context/observability suites",
+      "status": "PASS",
+      "tests": 69
+    },
+    {
+      "name": "own diagnostic_cli_test",
+      "status": "PASS",
+      "tests": 12
+    },
+    {
+      "name": "own diagnostics_test",
+      "status": "PASS",
+      "tests": 25
+    },
+    {
+      "name": "own task_directory_safety_test",
+      "status": "PASS",
+      "tests": 2
+    },
+    {
+      "name": "own 0.40.1 overlay verifier",
+      "status": "PASS",
+      "runtime_files": 55
+    },
+    {
+      "name": "same-title same-minute task directories",
+      "original": "FAIL",
+      "integration": "PASS",
+      "type": "synthetic"
+    },
+    {
+      "name": "own local-task background reflection route",
+      "status": "FAIL",
+      "type": "synthetic",
+      "real_model_calls": 0
+    }
+  ],
+  "not_run": [
+    "0.41.0 integrated build/install",
+    "rollback",
+    "live model inference",
+    "live Human Memory",
+    "live authentication",
+    "physical Android",
+    "exhaustive UI tests"
+  ],
+  "automatic_installation_enabled": false,
+  "current_upstream_proposals": [
+    "https://github.com/dwr-git/dewiar-app/issues/10",
+    "https://github.com/dwr-git/dewiar-app/issues/11",
+    "https://github.com/dwr-git/dewiar-app/issues/12"
+  ]
+}

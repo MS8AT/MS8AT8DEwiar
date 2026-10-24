@@ -27,6 +27,8 @@ models, keeps plans and journals, and leaves risky actions subject to human conf
 
 [Порядок развития и обновлений / Integration direction / 集成方向](ARCHITECTURE_RU_EN_ZH.md)
 
+[Разбор оригинала 0.41.0 и план модулей / Upstream 0.41.0 study and module plan / 原版 0.41.0 分析与模块计划](UPSTREAM_0410_REVIEW_RU_EN_ZH.md)
+
 Мир меняется и становится связанным. Компьютеры, локальные и облачные модели,
 сервисы и люди соединяются невидимыми цифровыми нитями. DEwiar задуман как
 понятный человеку помощник: он принимает цель, собирает контекст, выбирает
