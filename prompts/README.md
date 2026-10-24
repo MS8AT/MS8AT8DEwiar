@@ -6,6 +6,7 @@ is not executed by the app and grants no authority. / 此处的提示词是把�
 执行它，它也不授予模型任何权限。
 
 - [Шаблон патча / Patch template / 补丁模板](PATCH_PROMPT_TEMPLATE.md)
+- [Решение по архитектуре / Architecture decision / 架构决策](../ARCHITECTURE_RU_EN_ZH.md)
 - [Dewiar 0.40.1: интеграция / integration / 集成](DEWIAR_0401.md)
 - [AI20: следующий адаптер / next adapter / 下一适配器](AI20_ADAPTER_PLAN.md)
 - [PATCH-004: квота задач Codex / Codex task quota / Codex 任务配额](../patches/PATCH-004/README.md)

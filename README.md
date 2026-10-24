@@ -25,6 +25,8 @@ models, keeps plans and journals, and leaves risky actions subject to human conf
 [Патчи и ТЗ / Patches and specifications / 补丁与规格](patches/README.md) ·
 [Промпты / Prompts / 提示词](prompts/README.md)
 
+[Порядок развития и обновлений / Integration direction / 集成方向](ARCHITECTURE_RU_EN_ZH.md)
+
 Мир меняется и становится связанным. Компьютеры, локальные и облачные модели,
 сервисы и люди соединяются невидимыми цифровыми нитями. DEwiar задуман как
 понятный человеку помощник: он принимает цель, собирает контекст, выбирает
