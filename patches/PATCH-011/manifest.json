@@ -15,9 +15,9 @@
   "candidate_commit": "16bcf9396c1dd229a4bcea5ac385bbfe39b93a3b",
   "publication_mode": "separate_patch_kit_without_upstream_redistribution",
   "files": [
-    {"path": "README.md", "sha256": "564bfef081ff776288101097f17cdc92770663ed46e4381de0f0d36f0ab2430d"},
-    {"path": "PROMPT.md", "sha256": "f9ceb13a11c6c4fad4d9bcf56dc0ebb5960dd044c7fb1410f6f73a0385480e86"},
-    {"path": "TEST_PLAN.md", "sha256": "2c4b64ee38d7dc211b1742ef26b3b9c1673e21759d7dc15aa23d8a8e958a78d7"},
+    {"path": "README.md", "sha256": "9464323ce7ebcdb5da4c87ba20518504538983a0f10b5fafa2c5ea0020f4ed4c"},
+    {"path": "PROMPT.md", "sha256": "7e4e1178c716f233017a82b86ac9ee82b43ff1feac366819a0a1c0ea5683d8ee"},
+    {"path": "TEST_PLAN.md", "sha256": "6d37b74dc015e6e21987e8ae75d6734b0660146c46d64864e02ecaa6cdd5cf70"},
     {"path": "verify.py", "sha256": "13b66a88ec5228137354db46310f988044ef9e83df7940dac36859c70e63d977"},
     {"path": "src/core/subscription_self_check.py", "sha256": "0158425e9fa2b366fe76f53323b0a607bf4784f941c32333f85b5d2f74adc024"},
     {"path": "tests/public_contract_test.py", "sha256": "d9eafac73ada8326e854f03aa1bd7e7138ee3ed05f2bd868a53b850cf9562653"}

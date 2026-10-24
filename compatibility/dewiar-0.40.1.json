@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "upstream": {
+    "repository": "dwr-git/dewiar-app",
+    "version": "0.40.1",
+    "commit": "616e70afada2ca3ebe95d894cb7d836592366aed"
+  },
+  "overlay": {"product": "MS8AT8DWiar", "build": 24, "runtime_files": 55},
+  "integration_pr": "https://github.com/dwr-git/dewiar-app/pull/9",
+  "integration_commit": "b3102d7fe19f6c49805944e0bda3c7af56c70fd2",
+  "prompt": "prompts/DEWIAR_0401.md",
+  "codex_cli": {
+    "version": "0.164.0-alpha.11.1",
+    "sha256": "1103e9e09c71fa2cd0afd6d8f3b9a2d63174fe8efd7cb5bd09f1cb14ef58a098",
+    "distribution": "existing signed OpenAI desktop CLI, not included"
+  },
+  "automatic_installer_enabled": false,
+  "ai20_live_binding": false,
+  "user_data_included": false
+}

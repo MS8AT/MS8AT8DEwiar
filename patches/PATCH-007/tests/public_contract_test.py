@@ -22,4 +22,14 @@ try:
     raise AssertionError("unknown language accepted")
 except ValueError:
     pass
+assert language.public("ENG", False, "male") == {
+    "code": "en", "label": "ENG", "name": "English", "voice_id": "en_US-ryan-medium", "voice_ready": False,
+}
+assert language.public("RU") == {"code": "ru", "label": "RU", "name": "Русский", "voice_id": ""}
+assert language.public("CH", True)["voice_ready"] is True
+assert language.status_text("en", True) == "Response language: English."
+assert language.status_text("en", False) == "English selected. Preparing the local voice; text is ready now."
+assert language.status_text("zh", True) == "回答和语音语言：简体中文。"
+assert language.status_text("zh", False) == "已选择简体中文。正在准备本地语音，文本现在即可使用。"
+assert language.status_text("ru", False) == "Язык ответа и голоса: русский."
 print("ALL OK: PATCH-007 public contract; network=0; model_calls=0")

@@ -24,6 +24,7 @@ def _chat(models):
 
 
 def _task_score(name):
+    """Tool-friendly семейство и 7–14B выше: достаточно для действий без тяжёлого 35B по умолчанию."""
     size = _size(name)
     score = 300 if _TASK_FAMILY.search(name) else 0
     if re.search(r"coder|tool|function", name, re.I):
@@ -41,12 +42,12 @@ def _task_score(name):
     if re.search(r"instruct", name, re.I):
         score += 20
     if re.search(r"(?:^|[-_/])wb-node\d+", name, re.I):
-        score += 10
+        score += 10                         # явный рабочий узел стабильнее локального алиаса той же модели
     return score + min(size, 60)
 
 
 def choose(models, purpose="chat"):
-    """Выбрать имя из списка без capability-probe и побочных действий."""
+    """Выбрать имя из списка. Явных capability-claims не создаёт: это только безопасный приоритет."""
     suitable = [str(name) for name in (models or ()) if name and not _NOT_CHAT.search(str(name))]
     if not suitable:
         return str(models[0]) if models else ""

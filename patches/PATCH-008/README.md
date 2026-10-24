@@ -2,8 +2,8 @@
 
 [Русский](#ru) · [English](#en) · [中文](#zh)
 
-Separate MS8AT patch kit for authorized Dewiar `0.39.8` commit
-`62e7446e686dfd9d901e82dee72b5731f6d70829`. It does not redistribute upstream code or execute commands.
+Separate MS8AT patch kit for authorized Dewiar `0.40.1` commit
+`616e70afada2ca3ebe95d894cb7d836592366aed`. It does not redistribute upstream code or execute commands.
 
 <a id="ru"></a>
 ## RU — ТЗ

@@ -18,7 +18,7 @@
     },
     {
       "path": "src/core/tool_call_recovery.py",
-      "sha256": "4f8e126435be7fc7fc7e18dcae63a5e4149e56cf689b0ea9fbdf04d3e98a0aaf"
+      "sha256": "476788dd5d00dc98abbe4628c28eca4b3f61631ed34c225a86fda320d78cc887"
     },
     {
       "path": "tests/public_contract_test.py",

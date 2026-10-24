@@ -1,8 +1,8 @@
 # PATCH-005 — Human Memory, Codex task tree, API/log
 
 This is a separate MS8AT patch kit, not a redistribution of Dewiar. Run `python verify.py` first. Full integration
-requires an authorized exact checkout of upstream Dewiar `0.39.7` at commit
-`24a3d6c22142b623081478a121d396d7e42741c1`. Publication is not installation and does not grant access to accounts,
+requires an authorized exact checkout of upstream Dewiar `0.40.1` at commit
+`616e70afada2ca3ebe95d894cb7d836592366aed`. Publication is not installation and does not grant access to accounts,
 memory, models, networks, or paid requests.
 
 ## RU — ТЗ
@@ -40,12 +40,23 @@ Human Memory 时必须走普通 Codex 路径。子任务创建与首次启动必
 
 ## Files and integration targets
 
-- Standalone MS8AT modules: `src/core/human_memory_contour.py`, `src/core/task_observability.py`.
+- MS8AT modules: `src/core/human_memory_contour.py`, `src/core/task_observability.py`.
 - Integration prompt: `PROMPT.md`.
 - Offline public contract test: `tests/public_contract_test.py`.
 - Dewiar integration targets: `core/subscription_context.py`, `core/engine_commands.py`, `core/tasks.py`,
   `core/brain_watch.py`, `core/diagnostics.py`, `ui/settings.html`, `ui/studio/subscription.js`,
   `ui/studio/tasks.js`.
+
+`task_observability.py` — адаптер приложения с импортами `brain_watch`, `subscription_quota` и `human_memory_contour`,
+а не чистый модуль stdlib. Автономные тесты используют синтетические зависимости. Поле `local` содержит только
+`enabled`, хешированный `profile_ref` и `read_only`; исходный ID локального профиля не публикуется.
+
+`task_observability.py` is an application adapter importing `brain_watch`, `subscription_quota` and `human_memory_contour`,
+not a pure stdlib module. Standalone tests use synthetic dependencies. The `local` projection contains only
+`enabled`, a hashed `profile_ref` and `read_only`; the raw local-profile ID is excluded.
+
+`task_observability.py` 是应用适配器，导入 `brain_watch`、`subscription_quota` 和 `human_memory_contour`，
+不是纯标准库模块。独立测试使用模拟依赖。`local` 仅包含 `enabled`、哈希化的 `profile_ref` 和 `read_only`，不暴露原始本地配置 ID。
 
 ## Acceptance
 

@@ -1,5 +1,7 @@
 # MS8AT8DEwiar
 
+[RU](#что-такое-dewiar--what-is-dewiar--什么是-dewiar) · [ENG](prompts/DEWIAR_0401.md#eng) · [CH](prompts/DEWIAR_0401.md#ch)
+
 ## Что такое Dewiar · What is Dewiar · 什么是 Dewiar
 
 **RU.** Dewiar — голосовой AI-помощник с персонажами, памятью и фоновыми задачами. Он подключает локальные и
@@ -64,6 +66,10 @@ models, keeps plans and journals, and leaves risky actions subject to human conf
 - Future Flow: <https://futureflow.ms8at.by/>
 
 ## Публичные патчи · Public patches · 公开补丁
+
+**Dewiar 0.40.1 / MS8AT build 24:** [интеграционный промпт RU/ENG/CH](prompts/DEWIAR_0401.md) ·
+[точная база и совместимость](compatibility/dewiar-0.40.1.json) ·
+[результаты проверок](VALIDATION_2026-10-24.md).
 
 `PATCH-016…019` исправляют подготовку рабочей копии и завершение Codex-задачи, добавляют явное продолжение изучения
 на своей LAN-модели и локальный read-only транспорт Human Memory. У каждого блока есть ТЗ и prompt RU/ENG/CH,

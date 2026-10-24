@@ -17,5 +17,5 @@ Each block is independent. T1–T8 are read-only and require zero model calls. T
 SLI is a retained sample, not current availability or SLA. `completed` is not result acceptance. Report every run as
 PASS, PARTIAL or NOT_RUN and keep live inference separate from offline acceptance.
 
-2026-10-23 integrated result: T1–T8 PASS on Dewiar 0.40.0 + MS8AT build 13; six CLI commands returned schema 1;
+Historical 2026-10-23 integrated result: T1–T8 PASS on Dewiar 0.40.0 + MS8AT build 13; six CLI commands returned schema 1;
 the retained SLI sample contained 25 completed, 72 failed and 3 interrupted calls (`25/97`); T9 NOT_RUN.

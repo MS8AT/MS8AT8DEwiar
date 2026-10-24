@@ -15,7 +15,7 @@
   "candidate_commit": "2c9343a3ffe9081219fc9d2eb8ceec66a6fc7ee5",
   "publication_mode": "separate_patch_kit_without_upstream_redistribution",
   "files": [
-    {"path": "README.md", "sha256": "40e8e7efd49271ca61b47f1f5200a12474ee12fcebd01a8d720881fbc0faa470"},
+    {"path": "README.md", "sha256": "bcb84ec1a9947852d54cab4ec1c4a6778d129f2bc174a294ca9d026754321b50"},
     {"path": "PROMPT.md", "sha256": "63af6bbc0fa9814ad8cc1099be045fe066491185c42121fed946a92cd92cd1c0"},
     {"path": "verify.py", "sha256": "31771e70528f7a9cc33c45e1f420f620660857bc231413da2795fad30bab8a21"},
     {"path": "src/ui/subscription_disconnect.mjs", "sha256": "60a02cb6491681ddd5a91d946d0efee8672c53fdde31ba7f41c3f232cba1c587"},

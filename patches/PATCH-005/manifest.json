@@ -15,12 +15,12 @@
   "candidate_commit": "48587e55ab52cb5b596046b30ee306e3979f1ccd",
   "publication_mode": "separate_patch_kit_without_upstream_redistribution",
   "files": [
-    {"path": "README.md", "sha256": "98da0b5d22d88b46b5e920648bbb3b693b1a3ec65aa4744a3bc53bfa1d570356"},
-    {"path": "PROMPT.md", "sha256": "e163ad854368bb564678289fa6b968f66156f7665b4b4b82d68250f8da1979f3"},
+    {"path": "README.md", "sha256": "f7284f07e390c8145ac85bb71da7e2ae542999d7dbf36bb186afcb8ea67e400f"},
+    {"path": "PROMPT.md", "sha256": "3bf9c86066255a783cb13b78c9cda7e989b7207e09e063321e6424223c2347e8"},
     {"path": "verify.py", "sha256": "4bb7572f4ea92cde6f6d23abdea6f3c298703a7d5b93d81c885ac87b97af8af6"},
     {"path": "src/core/human_memory_contour.py", "sha256": "55740324af852e62c8e37a121bc4580115774a27452e00bb2359e4e46897c92a"},
-    {"path": "src/core/task_observability.py", "sha256": "665a972ffe99b27810fb32f2ac83809274dee34e5ae06d338e49ab484a84118a"},
-    {"path": "tests/public_contract_test.py", "sha256": "78d8021bf5ceb2138397dae47155c73ba9386c6f75a1bac6c566e5f3748ebcb1"}
+    {"path": "src/core/task_observability.py", "sha256": "7809eb6ff3ab9560cd12d11e26eb10af93d48565c698886cafce65fc858ef2c9"},
+    {"path": "tests/public_contract_test.py", "sha256": "a8769227706651e12e247a95c35054ed2b91a0c1690d5aa0a4ea0902e75d5721"}
   ],
   "integration_targets": [
     "core/subscription_context.py",

@@ -15,11 +15,11 @@
   "candidate_commit": "2c9343a3ffe9081219fc9d2eb8ceec66a6fc7ee5",
   "publication_mode": "separate_patch_kit_without_upstream_redistribution",
   "files": [
-    {"path": "README.md", "sha256": "ea5b071a75743de600ef8f6d585a3959ea5f159ad4edb346929b7b08c674a85b"},
-    {"path": "PROMPT.md", "sha256": "64845e9799d24136becd140e0fd4616bc2969fe4c91ddb74fda693fdc81be165"},
+    {"path": "README.md", "sha256": "4485feaddaa43b060c148492a9cd051b40d543896fe7d3ccedbcd2dd7b81915d"},
+    {"path": "PROMPT.md", "sha256": "e58483cec1e920072dabc5e14a9a66475eaab9b6e525aa61dc7f166653ab5273"},
     {"path": "verify.py", "sha256": "0fff7b5e8aff5e635798fa9dc1c3fb40b2ea7a537dd86b64f75e776ac01da4ba"},
-    {"path": "src/core/language_mode.py", "sha256": "414588e24f2b6db6a401ce910ebc8606424aa133610b07b85951420ecd5dad94"},
-    {"path": "tests/public_contract_test.py", "sha256": "f8b1d80366367dbc9dbeb4899a61b8dc51134e621dc7048563ee0ef47b13a0eb"}
+    {"path": "src/core/language_mode.py", "sha256": "97b9015aebcc54ff9c3fdef8c12ae32f02e379c383742651829ed4555e6a08b4"},
+    {"path": "tests/public_contract_test.py", "sha256": "2e403bcd6040115c3f977bd6c16e559a11390cb61e125504bbc6235abac77db5"}
   ],
   "integration_targets": [
     "core/settings.py", "core/engine_answer.py", "core/subscription_context.py", "core/engine_commands.py",

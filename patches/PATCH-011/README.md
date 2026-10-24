@@ -1,8 +1,8 @@
 # PATCH-011 — subscription self-check, API/CLI and SLI validation
 
 This is a separate MS8AT patch kit, not a redistribution of Dewiar. Run `python verify.py` first. Integration
-requires an authorized exact checkout of upstream Dewiar `0.40.0` at commit
-`0e5917abf71e6d92a67b013c6fe5031f22a8af74`. No account, token, prompt, response, or Dewiar source tree is included.
+requires an authorized exact checkout of upstream Dewiar `0.40.1` at commit
+`616e70afada2ca3ebe95d894cb7d836592366aed`. No account, token, prompt, response, or Dewiar source tree is included.
 
 ## RU — ТЗ
 

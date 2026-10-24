@@ -17,11 +17,11 @@
   "files": [
     {
       "path": "PROMPT.md",
-      "sha256": "8425b33b8a819cb31359d630d29d35c691126e06b27ce8e0f26101843b57b0e4"
+      "sha256": "fc19e4d6d9778c0aa1ca73c4ce93a2ab0e1942743dba68f74efd5e59e8fa75b9"
     },
     {
       "path": "README.md",
-      "sha256": "1add4156e6bb7ce1c33fc36c76fe1449dddb16471478b72ed3c5800be8eec9e1"
+      "sha256": "702cd46f7f62f83173b40badd240d6e4d51e1933257b322d72d38b5d815bab13"
     },
     {
       "path": "src/core/subscription_model_probe_guard.py",

@@ -1,0 +1,1395 @@
+{
+  "candidate": "Dewiar 0.40.1 MS8AT build 24",
+  "baseline_commit": "616e70afada2ca3ebe95d894cb7d836592366aed",
+  "runtime": "installed Dewiar Python 3.12.14, existing Git Bash, Node, JDK17 and cached Playwright/Chromium",
+  "scope": "Offline synthetic suite with isolated per-test homes/workspaces/config/state, local mocks only, external Python sockets denied and browser external proxy disabled",
+  "pass_rule": "exit code 0 AND no negative marker AND positive marker/ALL OK/standalone OK",
+  "summary": {
+    "quick_unique_total": 165,
+    "strict_upstream_pass": 151,
+    "strict_upstream_nonpass": 14,
+    "coverage_pass": 150,
+    "baseline_failures": 13,
+    "not_run": 2,
+    "new_unresolved_failures": 0
+  },
+  "checks": [
+    {
+      "test": "unit_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 0,
+      "evidence": "quick-run-1/unit_test.py.log"
+    },
+    {
+      "test": "version_read_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 8,
+      "evidence": "quick-run-1/version_read_test.py.log"
+    },
+    {
+      "test": "llm_compat_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 9,
+      "evidence": "quick-run-1/llm_compat_test.py.log"
+    },
+    {
+      "test": "subscription_suite_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "evidence": "dewiar-subscription-suite-0401-build24-final.log (coordinator run; final ALL OK verified)"
+    },
+    {
+      "test": "ms8at_overlay_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 0,
+      "evidence": "quick-run-1/ms8at_overlay_test.py.log"
+    },
+    {
+      "test": "reasoning_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 35,
+      "evidence": "quick-run-1/reasoning_test.py.log"
+    },
+    {
+      "test": "tools_unit_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 9,
+      "evidence": "quick-run-1/tools_unit_test.py.log"
+    },
+    {
+      "test": "prompt_tools_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 5,
+      "evidence": "quick-run-1/prompt_tools_test.py.log"
+    },
+    {
+      "test": "stage5_unit_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 31,
+      "evidence": "quick-run-1/stage5_unit_test.py.log"
+    },
+    {
+      "test": "workspace_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 23,
+      "evidence": "quick-run-1/workspace_test.py.log"
+    },
+    {
+      "test": "tasks_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 19,
+      "evidence": "required-extra-and-tasks-1/tasks_test.py.log"
+    },
+    {
+      "test": "task_parts_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 20,
+      "evidence": "quick-run-1/task_parts_test.py.log"
+    },
+    {
+      "test": "bare_calls_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 19,
+      "evidence": "quick-run-1/bare_calls_test.py.log"
+    },
+    {
+      "test": "tts_proc_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 9,
+      "evidence": "quick-run-1/tts_proc_test.py.log"
+    },
+    {
+      "test": "tts_eleven_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 8,
+      "evidence": "quick-run-1/tts_eleven_test.py.log"
+    },
+    {
+      "test": "speak_text_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 2,
+      "evidence": "quick-run-1/speak_text_test.py.log"
+    },
+    {
+      "test": "lessons_talk_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 10,
+      "evidence": "quick-run-1/lessons_talk_test.py.log"
+    },
+    {
+      "test": "welcome_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 21,
+      "evidence": "quick-run-1/welcome_test.py.log"
+    },
+    {
+      "test": "intro_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 23,
+      "evidence": "quick-run-1/intro_test.py.log"
+    },
+    {
+      "test": "pause_learn_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 12,
+      "evidence": "quick-run-1/pause_learn_test.py.log"
+    },
+    {
+      "test": "speak_prefetch_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 4,
+      "evidence": "quick-run-1/speak_prefetch_test.py.log"
+    },
+    {
+      "test": "boundaries_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 7,
+      "evidence": "quick-run-1/boundaries_test.py.log"
+    },
+    {
+      "test": "personas_templates_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 11,
+      "evidence": "quick-run-1/personas_templates_test.py.log"
+    },
+    {
+      "test": "night_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 20,
+      "evidence": "quick-run-1/night_test.py.log"
+    },
+    {
+      "test": "memory_pressure_test.py",
+      "status": "BASELINE_FAILURE",
+      "strict_upstream_pass": false,
+      "exit_code": 1,
+      "positive_marker_lines": 24,
+      "evidence": "quick-run-1/memory_pressure_test.py.log",
+      "reason": "Windows process memory result differs from Linux proc-based assertion",
+      "baseline_evidence": "baseline-memory-1/memory_pressure_test.py.log"
+    },
+    {
+      "test": "memcap_test.py",
+      "status": "BASELINE_FAILURE",
+      "strict_upstream_pass": false,
+      "exit_code": 1,
+      "positive_marker_lines": 4,
+      "evidence": "quick-run-1/memcap_test.py.log",
+      "reason": "systemd executable and POSIX PATH fixture unsupported on Windows",
+      "baseline_evidence": "baseline-memory-1/memcap_test.py.log"
+    },
+    {
+      "test": "turn_cue_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 10,
+      "evidence": "quick-run-1/turn_cue_test.py.log"
+    },
+    {
+      "test": "android_attach_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 23,
+      "evidence": "quick-run-1/android_attach_test.py.log"
+    },
+    {
+      "test": "hud_paste_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 5,
+      "evidence": "quick-run-1/hud_paste_test.py.log"
+    },
+    {
+      "test": "hud_tight_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 11,
+      "evidence": "quick-run-1/hud_tight_test.py.log"
+    },
+    {
+      "test": "hud_subscription_confirm_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 7,
+      "evidence": "quick-run-1/hud_subscription_confirm_test.py.log"
+    },
+    {
+      "test": "think_auto_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 9,
+      "evidence": "quick-run-1/think_auto_test.py.log"
+    },
+    {
+      "test": "look_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 28,
+      "evidence": "quick-run-1/look_test.py.log"
+    },
+    {
+      "test": "android_sound_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 16,
+      "evidence": "quick-run-1/android_sound_test.py.log"
+    },
+    {
+      "test": "close_crypto_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 11,
+      "evidence": "quick-run-1/close_crypto_test.py.log"
+    },
+    {
+      "test": "close_robust_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 8,
+      "evidence": "quick-run-1/close_robust_test.py.log"
+    },
+    {
+      "test": "android_safety_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 10,
+      "evidence": "final-ui-and-guard-1/android_safety_test.py.log"
+    },
+    {
+      "test": "tts_client_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 4,
+      "evidence": "quick-run-1/tts_client_test.py.log"
+    },
+    {
+      "test": "refs_section_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 21,
+      "evidence": "quick-run-1/refs_section_test.py.log"
+    },
+    {
+      "test": "voice_cache_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 7,
+      "evidence": "voice-cache-rerun-1/voice_cache_test.py.log"
+    },
+    {
+      "test": "prompter_end_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 8,
+      "evidence": "quick-run-1/prompter_end_test.py.log"
+    },
+    {
+      "test": "android_tablet_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 6,
+      "evidence": "quick-run-1/android_tablet_test.py.log"
+    },
+    {
+      "test": "studio_polish_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 8,
+      "evidence": "quick-run-1/studio_polish_test.py.log"
+    },
+    {
+      "test": "engine_names_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 4,
+      "evidence": "quick-run-1/engine_names_test.py.log"
+    },
+    {
+      "test": "android_dictation_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 8,
+      "evidence": "quick-run-1/android_dictation_test.py.log"
+    },
+    {
+      "test": "team_window_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 8,
+      "evidence": "quick-run-1/team_window_test.py.log"
+    },
+    {
+      "test": "route_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 28,
+      "evidence": "quick-run-1/route_test.py.log"
+    },
+    {
+      "test": "personas_talk_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 14,
+      "evidence": "quick-run-1/personas_talk_test.py.log"
+    },
+    {
+      "test": "news_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 20,
+      "evidence": "quick-run-1/news_test.py.log"
+    },
+    {
+      "test": "task_honest_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 14,
+      "evidence": "quick-run-1/task_honest_test.py.log"
+    },
+    {
+      "test": "radio_silent_test.py",
+      "status": "NOT_RUN",
+      "strict_upstream_pass": false,
+      "exit_code": 0,
+      "positive_marker_lines": 0,
+      "evidence": "quick-run-1/radio_silent_test.py.log",
+      "reason": "Explicit Windows skip"
+    },
+    {
+      "test": "voices_service_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 66,
+      "evidence": "quick-run-1/voices_service_test.py.log"
+    },
+    {
+      "test": "android_voice_fallback_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 8,
+      "evidence": "quick-run-1/android_voice_fallback_test.py.log"
+    },
+    {
+      "test": "android_calendar_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 23,
+      "evidence": "quick-run-1/android_calendar_test.py.log"
+    },
+    {
+      "test": "lipsync_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 9,
+      "evidence": "quick-run-1/lipsync_test.py.log"
+    },
+    {
+      "test": "hold_dictation_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 20,
+      "evidence": "quick-run-1/hold_dictation_test.py.log"
+    },
+    {
+      "test": "android_first_phrase_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 5,
+      "evidence": "quick-run-1/android_first_phrase_test.py.log"
+    },
+    {
+      "test": "studio_chat_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 15,
+      "evidence": "quick-run-1/studio_chat_test.py.log"
+    },
+    {
+      "test": "android_btmic_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 10,
+      "evidence": "quick-run-1/android_btmic_test.py.log"
+    },
+    {
+      "test": "exam1014_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 19,
+      "evidence": "quick-run-1/exam1014_test.py.log"
+    },
+    {
+      "test": "zoom_test.py",
+      "status": "BASELINE_FAILURE",
+      "strict_upstream_pass": false,
+      "exit_code": 1,
+      "positive_marker_lines": 18,
+      "evidence": "quick-run-1/zoom_test.py.log",
+      "reason": "upstream resize-call fixture assertion, correct size tuple but missing expected call",
+      "baseline_evidence": "baseline-zoom-1/zoom_test.py.log"
+    },
+    {
+      "test": "tilt_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 14,
+      "evidence": "quick-run-1/tilt_test.py.log"
+    },
+    {
+      "test": "tray_start_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 11,
+      "evidence": "quick-run-1/tray_start_test.py.log"
+    },
+    {
+      "test": "tester1014_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 10,
+      "evidence": "quick-run-1/tester1014_test.py.log"
+    },
+    {
+      "test": "mute_quiet_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 8,
+      "evidence": "quick-run-1/mute_quiet_test.py.log"
+    },
+    {
+      "test": "phone_boot_look_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 8,
+      "evidence": "quick-resumed-2/phone_boot_look_test.py.log"
+    },
+    {
+      "test": "task_guard_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 19,
+      "evidence": "quick-resumed-2/task_guard_test.py.log"
+    },
+    {
+      "test": "tester1015_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 31,
+      "evidence": "quick-resumed-2/tester1015_test.py.log"
+    },
+    {
+      "test": "tester1015b_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 19,
+      "evidence": "quick-resumed-2/tester1015b_test.py.log"
+    },
+    {
+      "test": "tester1015c_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 11,
+      "evidence": "quick-resumed-2/tester1015c_test.py.log"
+    },
+    {
+      "test": "tester1015d_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 12,
+      "evidence": "quick-resumed-2/tester1015d_test.py.log"
+    },
+    {
+      "test": "vosk_path1020_test.py",
+      "status": "BASELINE_FAILURE",
+      "strict_upstream_pass": false,
+      "exit_code": 1,
+      "positive_marker_lines": 0,
+      "evidence": "quick-resumed-2/vosk_path1020_test.py.log",
+      "reason": "Windows short 8.3 path accepted by runtime; fixture requires copy completion marker",
+      "baseline_evidence": "baseline-windows-fixtures-1/vosk_path1020_test.py.log"
+    },
+    {
+      "test": "lmstudio_start1020_test.py",
+      "status": "BASELINE_FAILURE",
+      "strict_upstream_pass": false,
+      "exit_code": 1,
+      "positive_marker_lines": 1,
+      "evidence": "quick-resumed-2/lmstudio_start1020_test.py.log",
+      "reason": "POSIX fake lms shell executable, HOME/PATH and pkill fixture on Windows",
+      "baseline_evidence": "baseline-windows-fixtures-1/lmstudio_start1020_test.py.log"
+    },
+    {
+      "test": "phone_brains1020_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 16,
+      "evidence": "bash-fix-preflight-2/phone_brains1020_test.py.log"
+    },
+    {
+      "test": "slow_tools1020_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 4,
+      "evidence": "quick-resumed-2/slow_tools1020_test.py.log"
+    },
+    {
+      "test": "jobs_world1020_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 24,
+      "evidence": "shell-fixtures-rerun-1/jobs_world1020_test.py.log"
+    },
+    {
+      "test": "design1020_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 19,
+      "evidence": "shell-fixtures-rerun-1/design1020_test.py.log"
+    },
+    {
+      "test": "plugins1020_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 28,
+      "evidence": "quick-resumed-2/plugins1020_test.py.log"
+    },
+    {
+      "test": "hud_window1020_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 3,
+      "evidence": "quick-resumed-2/hud_window1020_test.py.log"
+    },
+    {
+      "test": "pack1020d_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 9,
+      "evidence": "shell-fixtures-rerun-1/pack1020d_test.py.log"
+    },
+    {
+      "test": "hide1020_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 6,
+      "evidence": "quick-resumed-2/hide1020_test.py.log"
+    },
+    {
+      "test": "providers1020_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 10,
+      "evidence": "shell-fixtures-rerun-1/providers1020_test.py.log"
+    },
+    {
+      "test": "pad1020_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 38,
+      "evidence": "quick-resumed-2/pad1020_test.py.log"
+    },
+    {
+      "test": "dialogs1021_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 10,
+      "evidence": "quick-resumed-2/dialogs1021_test.py.log"
+    },
+    {
+      "test": "pad_reopen1021_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 2,
+      "evidence": "quick-resumed-2/pad_reopen1021_test.py.log",
+      "limitation": "Static checks pass; live GTK subcheck skipped because Xvfb/mutter/xdotool/python3.12 unavailable"
+    },
+    {
+      "test": "tray_pad1023_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 6,
+      "evidence": "quick-resumed-2/tray_pad1023_test.py.log"
+    },
+    {
+      "test": "phone_settings1023_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 19,
+      "evidence": "final-ui-and-guard-1/phone_settings1023_test.py.log"
+    },
+    {
+      "test": "tries1023_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 17,
+      "evidence": "quick-resumed-2/tries1023_test.py.log"
+    },
+    {
+      "test": "brain_hint1023_test.py",
+      "status": "BASELINE_FAILURE",
+      "strict_upstream_pass": false,
+      "exit_code": 1,
+      "positive_marker_lines": 6,
+      "evidence": "quick-resumed-2/brain_hint1023_test.py.log",
+      "reason": "closed loopback port raises ConnectTimeout; fixture catches only ConnectError",
+      "baseline_evidence": "baseline-remaining-1/brain_hint1023_test.py.log"
+    },
+    {
+      "test": "tts_en1023_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 11,
+      "evidence": "quick-resumed-2/tts_en1023_test.py.log"
+    },
+    {
+      "test": "pad_sync1023_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 6,
+      "evidence": "quick-resumed-2/pad_sync1023_test.py.log"
+    },
+    {
+      "test": "two_keys1023_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 5,
+      "evidence": "quick-resumed-2/two_keys1023_test.py.log"
+    },
+    {
+      "test": "note_folders1023_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 13,
+      "evidence": "quick-resumed-2/note_folders1023_test.py.log"
+    },
+    {
+      "test": "phone_persona1023_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 5,
+      "evidence": "quick-resumed-2/phone_persona1023_test.py.log"
+    },
+    {
+      "test": "widget_light1024_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 8,
+      "evidence": "new-0401-select-1/widget_light1024_test.py.log"
+    },
+    {
+      "test": "pad_tabs1024_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 9,
+      "evidence": "new-0401-select-1/pad_tabs1024_test.py.log"
+    },
+    {
+      "test": "call_pstn1024_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 10,
+      "evidence": "new-0401-select-1/call_pstn1024_test.py.log"
+    },
+    {
+      "test": "stt_net1024_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 8,
+      "evidence": "new-0401-select-1/stt_net1024_test.py.log"
+    },
+    {
+      "test": "remind_date1024_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 19,
+      "evidence": "new-0401-select-1/remind_date1024_test.py.log"
+    },
+    {
+      "test": "torch1024_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 14,
+      "evidence": "new-0401-select-1/torch1024_test.py.log"
+    },
+    {
+      "test": "pc_fixes1024_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 16,
+      "evidence": "new-0401-select-1/pc_fixes1024_test.py.log"
+    },
+    {
+      "test": "above1024_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 4,
+      "evidence": "new-0401-select-1/above1024_test.py.log"
+    },
+    {
+      "test": "pad_size1022_test.py",
+      "status": "BASELINE_FAILURE",
+      "strict_upstream_pass": false,
+      "exit_code": 1,
+      "positive_marker_lines": 22,
+      "evidence": "quick-resumed-2/pad_size1022_test.py.log",
+      "reason": "upstream drag-call fixture expects different native call sequence",
+      "baseline_evidence": "baseline-remaining-1/pad_size1022_test.py.log"
+    },
+    {
+      "test": "mic_hotplug1022_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 9,
+      "evidence": "quick-resumed-2/mic_hotplug1022_test.py.log"
+    },
+    {
+      "test": "pack1022_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 16,
+      "evidence": "quick-resumed-2/pack1022_test.py.log"
+    },
+    {
+      "test": "studio1022_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 10,
+      "evidence": "quick-resumed-2/studio1022_test.py.log"
+    },
+    {
+      "test": "core_watch1022_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 11,
+      "evidence": "quick-resumed-2/core_watch1022_test.py.log"
+    },
+    {
+      "test": "net_heal1022_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 5,
+      "evidence": "quick-resumed-2/net_heal1022_test.py.log"
+    },
+    {
+      "test": "update_now1022_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 14,
+      "evidence": "quick-resumed-2/update_now1022_test.py.log"
+    },
+    {
+      "test": "facts1022_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 12,
+      "evidence": "quick-resumed-2/facts1022_test.py.log"
+    },
+    {
+      "test": "tts_en1022_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 12,
+      "evidence": "quick-resumed-2/tts_en1022_test.py.log"
+    },
+    {
+      "test": "meet_pc1022_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 20,
+      "evidence": "quick-resumed-2/meet_pc1022_test.py.log"
+    },
+    {
+      "test": "radar_studio1020_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 8,
+      "evidence": "quick-resumed-2/radar_studio1020_test.py.log"
+    },
+    {
+      "test": "tester1015e_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 16,
+      "evidence": "quick-resumed-2/tester1015e_test.py.log"
+    },
+    {
+      "test": "phone_topbar_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 12,
+      "evidence": "quick-resumed-2/phone_topbar_test.py.log"
+    },
+    {
+      "test": "silent_voice_test.py",
+      "status": "BASELINE_FAILURE",
+      "strict_upstream_pass": false,
+      "exit_code": 1,
+      "positive_marker_lines": 0,
+      "evidence": "quick-resumed-2/silent_voice_test.py.log",
+      "reason": "Linux-oriented mock lacks Windows _win_muted method",
+      "baseline_evidence": "baseline-remaining-1/silent_voice_test.py.log"
+    },
+    {
+      "test": "ach_card_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 7,
+      "evidence": "quick-resumed-2/ach_card_test.py.log"
+    },
+    {
+      "test": "phone_capture_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 15,
+      "evidence": "quick-resumed-2/phone_capture_test.py.log"
+    },
+    {
+      "test": "pc_capture_test.py",
+      "status": "BASELINE_FAILURE",
+      "strict_upstream_pass": false,
+      "exit_code": 1,
+      "positive_marker_lines": 2,
+      "evidence": "quick-resumed-2/pc_capture_test.py.log",
+      "reason": "GNOME schema fixture unavailable on Windows",
+      "baseline_evidence": "baseline-remaining-1/pc_capture_test.py.log"
+    },
+    {
+      "test": "report69_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 9,
+      "evidence": "quick-resumed-2/report69_test.py.log"
+    },
+    {
+      "test": "timer_sources_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 30,
+      "evidence": "quick-resumed-2/timer_sources_test.py.log"
+    },
+    {
+      "test": "exam_new_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 11,
+      "evidence": "quick-resumed-2/exam_new_test.py.log"
+    },
+    {
+      "test": "speechnorm_js_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 5,
+      "evidence": "quick-resumed-2/speechnorm_js_test.py.log"
+    },
+    {
+      "test": "report70_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 6,
+      "evidence": "quick-resumed-2/report70_test.py.log"
+    },
+    {
+      "test": "reminder_clock_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 12,
+      "evidence": "quick-resumed-2/reminder_clock_test.py.log"
+    },
+    {
+      "test": "exam_isolation_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 2,
+      "evidence": "quick-resumed-2/exam_isolation_test.py.log"
+    },
+    {
+      "test": "examtrace_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 8,
+      "evidence": "quick-resumed-2/examtrace_test.py.log"
+    },
+    {
+      "test": "exam1016_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 9,
+      "evidence": "quick-resumed-2/exam1016_test.py.log"
+    },
+    {
+      "test": "phone1017_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 12,
+      "evidence": "quick-resumed-2/phone1017_test.py.log"
+    },
+    {
+      "test": "studio1017_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 25,
+      "evidence": "quick-resumed-2/studio1017_test.py.log"
+    },
+    {
+      "test": "creative1017_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 7,
+      "evidence": "quick-resumed-2/creative1017_test.py.log"
+    },
+    {
+      "test": "hud1017_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 6,
+      "evidence": "quick-resumed-2/hud1017_test.py.log"
+    },
+    {
+      "test": "mic_heal_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 15,
+      "evidence": "quick-resumed-2/mic_heal_test.py.log"
+    },
+    {
+      "test": "voice_lead_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 3,
+      "evidence": "quick-resumed-2/voice_lead_test.py.log"
+    },
+    {
+      "test": "repeat1017_test.py",
+      "status": "BASELINE_FAILURE",
+      "strict_upstream_pass": false,
+      "exit_code": 1,
+      "positive_marker_lines": 12,
+      "evidence": "quick-resumed-2/repeat1017_test.py.log",
+      "reason": "Linux browser launch fixture returns xdg-open on Windows",
+      "baseline_evidence": "baseline-final-1/repeat1017_test.py.log"
+    },
+    {
+      "test": "phone_photo_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 5,
+      "evidence": "quick-resumed-2/phone_photo_test.py.log"
+    },
+    {
+      "test": "dayplan1017_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 26,
+      "evidence": "quick-resumed-2/dayplan1017_test.py.log"
+    },
+    {
+      "test": "neu1018_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 11,
+      "evidence": "quick-resumed-2/neu1018_test.py.log"
+    },
+    {
+      "test": "contrast1018_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 15,
+      "evidence": "final-contrast-cache-1/contrast1018_test.py.log"
+    },
+    {
+      "test": "android1018_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 16,
+      "evidence": "quick-resumed-2/android1018_test.py.log"
+    },
+    {
+      "test": "life1018_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 9,
+      "evidence": "quick-resumed-2/life1018_test.py.log"
+    },
+    {
+      "test": "tricks1018_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 7,
+      "evidence": "quick-resumed-2/tricks1018_test.py.log"
+    },
+    {
+      "test": "video1018_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 11,
+      "evidence": "quick-resumed-2/video1018_test.py.log"
+    },
+    {
+      "test": "reports1019_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 42,
+      "evidence": "quick-resumed-2/reports1019_test.py.log"
+    },
+    {
+      "test": "persona_phone1019_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 11,
+      "evidence": "quick-resumed-2/persona_phone1019_test.py.log"
+    },
+    {
+      "test": "security1019_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 16,
+      "evidence": "quick-resumed-2/security1019_test.py.log"
+    },
+    {
+      "test": "reports1019b_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 6,
+      "evidence": "shell-fixtures-rerun-1/reports1019b_test.py.log"
+    },
+    {
+      "test": "hearing_nonames_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 20,
+      "evidence": "quick-resumed-2/hearing_nonames_test.py.log"
+    },
+    {
+      "test": "widget_resize1019_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 13,
+      "evidence": "final-ui-and-guard-1/widget_resize1019_test.py.log"
+    },
+    {
+      "test": "prompt_cache1019_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 13,
+      "evidence": "final-contrast-cache-1/prompt_cache1019_test.py.log"
+    },
+    {
+      "test": "models_ui1019_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 8,
+      "evidence": "quick-resumed-2/models_ui1019_test.py.log"
+    },
+    {
+      "test": "linux_install1019_test.py",
+      "status": "BASELINE_FAILURE",
+      "strict_upstream_pass": false,
+      "exit_code": 1,
+      "positive_marker_lines": 8,
+      "evidence": "shell-fixtures-rerun-1/linux_install1019_test.py.log",
+      "reason": "Ubuntu/Debian apt branch assertion on Windows Git Bash",
+      "baseline_evidence": "baseline-remaining-1/linux_install1019_test.py.log"
+    },
+    {
+      "test": "wake_listen_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 36,
+      "evidence": "quick-resumed-2/wake_listen_test.py.log"
+    },
+    {
+      "test": "exam1013_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 11,
+      "evidence": "quick-resumed-2/exam1013_test.py.log"
+    },
+    {
+      "test": "android_notes_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 18,
+      "evidence": "quick-resumed-2/android_notes_test.py.log"
+    },
+    {
+      "test": "studio_notes_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 18,
+      "evidence": "quick-resumed-2/studio_notes_test.py.log"
+    },
+    {
+      "test": "voice_short_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 7,
+      "evidence": "quick-resumed-2/voice_short_test.py.log"
+    },
+    {
+      "test": "server_setup_test.py",
+      "status": "BASELINE_FAILURE",
+      "strict_upstream_pass": false,
+      "exit_code": 1,
+      "positive_marker_lines": 0,
+      "evidence": "quick-resumed-2/server_setup_test.py.log",
+      "reason": "POSIX pwd module unavailable on Windows",
+      "baseline_evidence": "baseline-final-1/server_setup_test.py.log"
+    },
+    {
+      "test": "personas_rename_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 11,
+      "evidence": "quick-resumed-2/personas_rename_test.py.log"
+    },
+    {
+      "test": "gender_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 8,
+      "evidence": "quick-resumed-2/gender_test.py.log"
+    },
+    {
+      "test": "export_test.py",
+      "status": "BASELINE_FAILURE",
+      "strict_upstream_pass": false,
+      "exit_code": 1,
+      "positive_marker_lines": 11,
+      "evidence": "quick-resumed-2/export_test.py.log",
+      "reason": "no-browser fallback fixture differs on Windows",
+      "baseline_evidence": "baseline-final-1/export_test.py.log"
+    },
+    {
+      "test": "report_fresh_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 4,
+      "evidence": "quick-resumed-2/report_fresh_test.py.log"
+    },
+    {
+      "test": "speech_server_test.py",
+      "status": "NOT_RUN",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 1,
+      "evidence": "quick-resumed-2/speech_server_test.py.log",
+      "reason": "FastAPI unavailable; test emits a positive skip marker"
+    },
+    {
+      "test": "android_hands_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 18,
+      "evidence": "quick-resumed-2/android_hands_test.py.log"
+    },
+    {
+      "test": "android_log_test.py",
+      "status": "PASS",
+      "strict_upstream_pass": true,
+      "exit_code": 0,
+      "positive_marker_lines": 6,
+      "evidence": "quick-resumed-2/android_log_test.py.log"
+    }
+  ],
+  "extra_required_tests": [
+    {
+      "test": "self_check_subscription_test.py",
+      "status": "PASS",
+      "evidence": "required-extra-and-tasks-1/self_check_subscription_test.py.log"
+    },
+    {
+      "test": "language_mode_test.py",
+      "status": "PASS",
+      "evidence": "required-extra-and-tasks-1/language_mode_test.py.log"
+    },
+    {
+      "test": "hud_language_test.py",
+      "status": "PASS",
+      "evidence": "final-ui-and-guard-1/hud_language_test.py.log"
+    }
+  ],
+  "syntax": {
+    "python": "PASS",
+    "javascript_files": 32,
+    "javascript": "PASS"
+  },
+  "source_test_changed": "tests/phone_settings1023_test.py: preserve original asserts with explicit current human request, add missing/mismatched/stale/tool-result denial cases",
+  "not_validated": [
+    "Live authentication",
+    "Real model inference",
+    "Physical Android actions",
+    "Native Linux desktop",
+    "Live installation and rollback"
+  ]
+}

@@ -1,7 +1,7 @@
 # PATCH-013 — AI doctor for task context overflow
 
 This is a separate MS8AT patch kit, not a redistribution of Dewiar. Integration requires an authorized exact
-checkout of upstream Dewiar `0.40.0` at commit `0e5917abf71e6d92a67b013c6fe5031f22a8af74`.
+checkout of upstream Dewiar `0.40.1` at commit `616e70afada2ca3ebe95d894cb7d836592366aed`.
 
 ## RU — ТЗ
 
@@ -31,7 +31,9 @@ network, settings or file side effects. The adapter must allow one repair only a
 - `tests/public_contract_test.py` — zero-network contract checks.
 - Integration targets: `core/tasks.py`, `tests/task_doctor_flow_test.py`, overlay manifest.
 
-## Verification status
+## Historical verification (Dewiar 0.40.0 / MS8AT build 15)
+
+The following retained results describe build 15. Current Dewiar 0.40.1 acceptance is recorded separately.
 
 - PASS: standalone contract and SHA verification.
 - PASS: integrated synthetic flow: full request rejected, compact request accepted; second-overflow path stops.

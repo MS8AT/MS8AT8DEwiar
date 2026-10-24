@@ -1,7 +1,7 @@
 # PATCH-012 — safe model selection for the subscription brain
 
 This is a separate MS8AT patch kit, not a redistribution of Dewiar. Integration requires an authorized exact
-checkout of upstream Dewiar `0.40.0` at commit `0e5917abf71e6d92a67b013c6fe5031f22a8af74`.
+checkout of upstream Dewiar `0.40.1` at commit `616e70afada2ca3ebe95d894cb7d836592366aed`.
 
 ## RU — ТЗ
 
@@ -41,6 +41,6 @@ The guard is a pure predicate over safe profile metadata and has no network, acc
 - `python patches/PATCH-010/src/tools/patch_block.py inspect PATCH-012`
 - `python patches/PATCH-010/src/tools/patch_block.py test PATCH-012`
 - Integrated checkout: full subscription suite and overlay verification.
-- Installed build 14: account model list returns seven models, the saved model is present, `model_calls=0`, and the
-  fresh startup log has no generic tools-probe error for the subscription profile.
+- Historical verification on Dewiar 0.40.0 + MS8AT build 14: account model list returned seven models, the saved model was present, `model_calls=0`, and the
+  fresh startup log had no generic tools-probe error for the subscription profile.
 - Live inference and Human Memory MCP are `NOT_RUN` for this patch.

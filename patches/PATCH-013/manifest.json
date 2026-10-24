@@ -17,11 +17,11 @@
   "files": [
     {
       "path": "PROMPT.md",
-      "sha256": "35320af545aa04fbfa0ab706c69f208490369cc960d72f4aba7912c6776b9bf4"
+      "sha256": "e6c753edd28b5c4fae73373eb454ec8971f329a39ba6424907882ecc7af5bb2e"
     },
     {
       "path": "README.md",
-      "sha256": "d6dc5285d67a60c031eb1ccc12c8c92fef555a64b462ecb3acb6e654bb22c0fb"
+      "sha256": "76ab1d635e831dc772f7014f1f654aec8b9e47e0306368a32de6979402413d6f"
     },
     {
       "path": "src/core/task_doctor.py",

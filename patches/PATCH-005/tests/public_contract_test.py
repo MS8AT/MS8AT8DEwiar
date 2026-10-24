@@ -71,6 +71,24 @@ class PublicContractTests(unittest.TestCase):
         self.assertNotIn(parent.id, encoded); self.assertNotIn(child.id, encoded)
         self.assertTrue(out["read_only"])
 
+    def test_local_profile_projection_is_hashed_and_read_only_is_strict(self):
+        profile_id = "private-local-profile"
+        task = types.SimpleNamespace(id="task-local", status="paused", data={
+            "steps": 0, "local_profile_id": profile_id, "local_read_only": True,
+        })
+        host = types.SimpleNamespace(tasks=types.SimpleNamespace(tasks={task.id: task}), mcp=None)
+        out = observe.view(host, task)
+        self.assertEqual(out["local"], {
+            "enabled": True, "profile_ref": brain.tag(profile_id), "read_only": True,
+        })
+        self.assertNotIn(profile_id, json.dumps(out))
+        task.data["local_read_only"] = "true"
+        self.assertFalse(observe.view(host, task)["local"]["read_only"])
+        task.data.clear()
+        self.assertEqual(observe.view(host, task)["local"], {
+            "enabled": False, "profile_ref": None, "read_only": False,
+        })
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -15,7 +15,7 @@
   "candidate_commit": "2c9343a3ffe9081219fc9d2eb8ceec66a6fc7ee5",
   "publication_mode": "separate_patch_kit_without_upstream_redistribution",
   "files": [
-    {"path": "README.md", "sha256": "7bb14326eb9fe0b14177f9e58246e01eb94534e02050787371beb51f4688faa5"},
+    {"path": "README.md", "sha256": "59558d6b050312dce2ae82b974ba8c5555dbe42c75e393db3108240a6512c666"},
     {"path": "PROMPT.md", "sha256": "399ee510e4d41e972f45c45dc61e7bcc72b98270532cd21d552577888e4ec300"},
     {"path": "verify.py", "sha256": "88c8833391325f807637d9c1fdb38fa68f553519dde69ae7ccd2c07dc275c330"},
     {"path": "src/core/windows_task_commands.py", "sha256": "8b105d673872201bb23b3743d2c643079aa3fd4ce6b7318c539abd8fcb77224b"},
