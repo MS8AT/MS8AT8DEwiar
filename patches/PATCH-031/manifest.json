@@ -1,0 +1,67 @@
+{
+  "schema": 1,
+  "id": "PATCH-031",
+  "title": {
+    "ru": "Сохранение выбранного языка RU/ENG/CH",
+    "en": "Respect the selected RU/ENG/CH language",
+    "zh": "遵循所选 RU/ENG/CH 语言"
+  },
+  "publication_mode": "separate_patch_kit_without_upstream_redistribution",
+  "delivery_kind": "STANDALONE_MODULES_AND_INTEGRATION_SPEC",
+  "upstream": {
+    "version": "0.45.3",
+    "commit": "32fcd918f21fc606efc0ed37870ac8edb9d1a290"
+  },
+  "files": [
+    {
+      "path": "checks/language_policy_test.py",
+      "sha256": "a074ddd29e0e4305954b6db80e1e9f23662e51e475d17bebda2081ace302f328"
+    },
+    {
+      "path": "checks.json",
+      "sha256": "63cbe1f684fa433a5dec012a5c55eda53cf6be08da5e52a64c53a5177f58c00d"
+    },
+    {
+      "path": "module-files.patch",
+      "sha256": "489405d4e7e92d375d831fbb1ff1bc4b4729785401b31f2155c1f9ac617a4c84"
+    },
+    {
+      "path": "PROMPT.md",
+      "sha256": "8940ba7690622dd3dedb23f406dacd68a05826484f9cc862bf495f16d2f79667"
+    },
+    {
+      "path": "README.md",
+      "sha256": "118facf73a707219cfce995550e79699da8e73f099f81b5b98471c100d582775"
+    },
+    {
+      "path": "SPEC.md",
+      "sha256": "126f68ba4b7abd114ea028164290a03688e9e78186e2c7502b7d24954bfe87b3"
+    },
+    {
+      "path": "src/core/language_mode.py",
+      "sha256": "39bf138e0d0c80ebb77c7e503a5e71a48131378e6709572f1cef538bb6e9e01f"
+    },
+    {
+      "path": "tests/public_contract_test.py",
+      "sha256": "e21d36aa91718e44f99e928c2bedc4a1d52c166095dd51d28c85126d6b7f824c"
+    },
+    {
+      "path": "verify.py",
+      "sha256": "6965f6d9685315658e4d749b8b3c8fe3614ed2fa787e68105b1202296061c288"
+    }
+  ],
+  "integration_targets": [
+    "core/language_mode.py",
+    "core/llm.py",
+    "android/src/pro/dewiar/app/Speech.java",
+    "android/assets/www/app.js"
+  ],
+  "verification": {
+    "package_checks": "PASS",
+    "integration_evidence": "../../WORK_LOG_2026-10-25.md",
+    "installation": "NOT_RUN",
+    "model_calls": 0,
+    "standalone_behavior": "PASS",
+    "additive_apply_and_reverse": "PASS"
+  }
+}

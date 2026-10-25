@@ -1,0 +1,69 @@
+{
+  "schema": 1,
+  "id": "PATCH-023",
+  "title": {
+    "ru": "OpenAI/Codex: промпты и Responses",
+    "en": "OpenAI/Codex prompts and Responses",
+    "zh": "OpenAI/Codex 提示词与 Responses"
+  },
+  "publication_mode": "separate_patch_kit_without_upstream_redistribution",
+  "delivery_kind": "STANDALONE_MODULES_AND_INTEGRATION_SPEC",
+  "upstream": {
+    "version": "0.45.3",
+    "commit": "32fcd918f21fc606efc0ed37870ac8edb9d1a290"
+  },
+  "files": [
+    {
+      "path": "checks/openai_responses_adapter_test.py",
+      "sha256": "8e3a9171710069d12c289533e73597c2d7d3ca1bfcd548c3ca811b16eddc7d8e"
+    },
+    {
+      "path": "checks.json",
+      "sha256": "6f37636d92fd0fc1bc06eec7cf464178f6b9a81ef696e17ac828fc47d0e64b36"
+    },
+    {
+      "path": "module-files.patch",
+      "sha256": "95e32e8e11fb3c3bf30ab497c90e82b9355c7c17a89954d8733d5dba7adeed1c"
+    },
+    {
+      "path": "PROMPT.md",
+      "sha256": "66eedfc60592183a1e11ef0efdc6aabbafbb79c624dacd564b76713afac1a7df"
+    },
+    {
+      "path": "README.md",
+      "sha256": "afcb714174c137ac79457ea7fea5a20f9da2d2cff003cd71bfd110d4901cab53"
+    },
+    {
+      "path": "SPEC.md",
+      "sha256": "b8de66fc9aab0501d9d04ce9a7d8550aa2efbd48fdf0a781afc27bc72ca6c0c4"
+    },
+    {
+      "path": "src/core/subscription_runtime/openai_responses.py",
+      "sha256": "7daefbdfab5ce7138b5775c71d8f19943345414f4886df46d4f93f29b9122d1e"
+    },
+    {
+      "path": "src/integrations/ms8at/openai_prompt_profiles.json",
+      "sha256": "8ddbb7ec7df839fcc8063a50874f5f4cbe83c4cd92b16e26cf8e977b02393782"
+    },
+    {
+      "path": "tests/public_contract_test.py",
+      "sha256": "e21d36aa91718e44f99e928c2bedc4a1d52c166095dd51d28c85126d6b7f824c"
+    },
+    {
+      "path": "verify.py",
+      "sha256": "6965f6d9685315658e4d749b8b3c8fe3614ed2fa787e68105b1202296061c288"
+    }
+  ],
+  "integration_targets": [
+    "core/subscription_runtime/openai_responses.py",
+    "integrations/ms8at/openai_prompt_profiles.json"
+  ],
+  "verification": {
+    "package_checks": "PASS",
+    "integration_evidence": "../../WORK_LOG_2026-10-25.md",
+    "installation": "NOT_RUN",
+    "model_calls": 0,
+    "standalone_behavior": "PASS",
+    "additive_apply_and_reverse": "PASS"
+  }
+}

@@ -1,0 +1,9 @@
+# ANDROID-005 — integration specification
+
+**RU.** База: Dewiar 0.45.3 / Android 0.7.1. Подключить наши отдельные JS/Java/CSS модули к существующим app.js, index.html, Bridge и Speech. В явном RU/ENG/CH режиме язык распознавания фиксируется в начале записи. Русский fallback допустим только при выбранном RU; смена языка сбрасывает старый счётчик. Модели выбираются по назначению и правам. Задачи работают foreground без shell. Локальные заметки — не Human Memory MCP и не векторная память. SecurePrefs требует Android Keystore; нельзя удалять приложение и восстанавливать только preferences. Код Python-захвата PC в APK не перенесён. Отдельный Codex CLI не означает готовый APK-адаптер.
+
+**ENG.** Wire the authored modules into app.js, index.html, Bridge and Speech. Capture the selected speech locale at recording start; Russian fallback applies only to RU and its counter resets on locale change. Preserve explicit routing and permissions. Tasks are foreground and shell-free. Local notes are not Human Memory MCP or vector memory. SecurePrefs needs Android Keystore and preservation of the original installation. PC capture and APK-to-Codex integration are not included.
+
+**CH.** 将独立模块接入 app.js、index.html、Bridge 和 Speech。开始录音时固定所选语言；仅 RU 使用俄语回退，切换语言时清零旧计数。保留显式路由和权限。任务仅在前台运行且不调用 shell。本地笔记不等于 Human Memory MCP 或向量记忆。SecurePrefs 依赖原安装的 Android Keystore，不能仅还原 preferences。未接入 PC 录音和 APK 到 Codex 适配器。
+
+Targeted prior checks: routing 24, task 34, memory 18; UI mock 24; language fallback 10; browser language 22; Java policy 10; four voice regression suites. Exact receipt: WORK_LOG_2026-10-25.md. This public subset reruns the three standalone JS suites only. New APK build/install, native device, live ASR/inference/account: NOT_RUN. Historical native checks of Android 0.6.95 do not prove this new 0.7.1 candidate.

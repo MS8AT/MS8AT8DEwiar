@@ -1,0 +1,9 @@
+/* Лист конструктора использует те же card/btn/f/sheet, что весь интерфейс. */
+#b-constructor {font-size:12px;font-weight:700;flex-shrink:0}
+#sh-constructor pre {white-space:pre-wrap;overflow-wrap:anywhere;font-size:11px;max-height:260px;overflow:auto}
+#sh-constructor textarea {width:100%;min-height:70px;box-sizing:border-box}
+.ms8-check {display:block;margin:8px 0;font-size:13px}
+.ms8-model,.ms8-task {border-top:1px solid #8883;padding:10px 0}
+.ms8-roles {display:flex;flex-wrap:wrap;gap:10px}
+#sh-constructor .btn {margin:4px 4px 4px 0}
+@media (max-width:400px){#top{gap:2px}#top .ib{width:30px;min-width:30px}#top .who{min-width:0}}

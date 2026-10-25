@@ -1,5 +1,8 @@
 # Патчи и ТЗ · Patches and specifications · 补丁与规格
 
+**Актуальная поставка / Current delivery / 当前交付: [0.45.3: PATCH-020…031 + Android 005](../RELEASE_0.45.3.md).** Ниже — предыдущая база и сохранённая история.
+
+
 Каждый патч публикуется отдельно от Dewiar и содержит собственные файлы, ТЗ, промпт, хеши и тесты. Публикация
 не означает автоматическую установку. / Each patch is published separately from Dewiar with its own files,
 specification, prompt, hashes, and tests. Publication is not installation. / 每个补丁都与 Dewiar 分开发布，并包含独立文件、

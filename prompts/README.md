@@ -1,5 +1,8 @@
 # Промпты интеграции · Integration prompts · 集成提示词
 
+**Текущий промпт / Current prompt / 当前提示词: [Dewiar 0.45.3 — RU / ENG / CH](DEWIAR_0453.md).** Ниже сохранены предыдущие версии.
+
+
 Промпт здесь — публичное, проверяемое ТЗ для переноса патча на новую базу. Он не исполняется приложением и не
 даёт модели полномочий. / A prompt here is a public, reviewable specification for porting a patch to a new base. It
 is not executed by the app and grants no authority. / 此处的提示词是把补丁迁移到新基础版本的公开、可审查规格；应用不会

@@ -1,0 +1,144 @@
+{
+  "schema": 1,
+  "id": "PATCH-021",
+  "title": {
+    "ru": "Управление Android",
+    "en": "Android control adapter",
+    "zh": "Android 控制适配器"
+  },
+  "publication_mode": "separate_patch_kit_without_upstream_redistribution",
+  "delivery_kind": "STANDALONE_CONTROL_ADAPTER",
+  "upstream": {
+    "version": "0.45.3",
+    "commit": "32fcd918f21fc606efc0ed37870ac8edb9d1a290"
+  },
+  "files": [
+    {
+      "path": "INTEGRATION.md",
+      "sha256": "5f9cb577e0db7aaa2ea38f435af052dc585bcdab6ecd26a5198ac30ece21b995"
+    },
+    {
+      "path": "module-files.patch",
+      "sha256": "ad8887492543d1df477338c915644b3b0a64291d85c364adee05c7150b9bc178"
+    },
+    {
+      "path": "PROMPT.md",
+      "sha256": "a5c2b09e49229d0437d926e292861c51fec5dad2d52c2dd5cc974a6b01083684"
+    },
+    {
+      "path": "README.en.md",
+      "sha256": "aa43d0532450092038cea096b9a4903a2138935bea6874b72f65985b92b75215"
+    },
+    {
+      "path": "README.md",
+      "sha256": "e29390df75b8d99521400a2da1a16642262e6e4346f66517d669541a7e42fc33"
+    },
+    {
+      "path": "README.zh.md",
+      "sha256": "e0b9a20260943412dcdbe34af42cb8e6c7c297136935a1b44438cd5244fd499d"
+    },
+    {
+      "path": "SPEC.md",
+      "sha256": "ad5bff9bedda874333a784f51a711456bf6329b75fd46905e6228a41272f31e5"
+    },
+    {
+      "path": "src/android_control/Cli.ps1",
+      "sha256": "d9a0a51d921353c870a90c285c9d45d88eb2b158a77a50bf59d9e09106fac3de"
+    },
+    {
+      "path": "src/android_control/command_queue.py",
+      "sha256": "c377181e0202be24429fa6b5a4af5a9822908554f270e60e14a433e17c9d27a8"
+    },
+    {
+      "path": "src/android_control/configure.py",
+      "sha256": "e6ace330f9992cc1e1879394efff1ee176ca69018c947a2cde4d364967f8918f"
+    },
+    {
+      "path": "src/android_control/control-requirements.txt",
+      "sha256": "982fa0f7b2e4930f77a14fae37772aedd9dc8a85b6ebbe02f9909fe0c40cf795"
+    },
+    {
+      "path": "src/android_control/control.py",
+      "sha256": "a14a25a43cb0092b823770b04ccb6f0a0b4003c4aac22778efcf227a52e4f92d"
+    },
+    {
+      "path": "src/android_control/control_cli.py",
+      "sha256": "b18a2ce37a1939af17c1304409eb71ba576421d981e7e8c141a3b32d59438068"
+    },
+    {
+      "path": "src/android_control/deployment.py",
+      "sha256": "261d185d5a1385a135f8d493880bb73173fa65f59f89ce4557a1fa3dd1cd47a6"
+    },
+    {
+      "path": "src/android_control/Disable-Autostart.ps1",
+      "sha256": "163c923a6cafde9a13e5e0214f1259b56864b483aab2f670eefecf30cfd14672"
+    },
+    {
+      "path": "src/android_control/guest-wg.sh.in",
+      "sha256": "34bf47cd183f17857f2dae77dffd9229b8152b802ea7e652c94b97699a3fa9e2"
+    },
+    {
+      "path": "src/android_control/Menu.ps1",
+      "sha256": "7dc70b571050d655fb9a5aca445984e10b18206a88c36e492fbd2c192544d0c5"
+    },
+    {
+      "path": "src/android_control/Open.ps1",
+      "sha256": "1cd23153a18e290d6897fb70dcdd5500affe995ac820689c8b70b2b825330513"
+    },
+    {
+      "path": "src/android_control/Register-Autostart.ps1",
+      "sha256": "e8e4ef83a2ac5636665b13063adebc6f5175341ef1dc7ec1d2313980e7e60740"
+    },
+    {
+      "path": "src/android_control/SSH.ps1",
+      "sha256": "b1688816f9982639237b25294e21ad328c6119042085a3131dcbdec15dca0189"
+    },
+    {
+      "path": "src/android_control/Start-Control.ps1",
+      "sha256": "49264d5f584e382f023688b4f5d1f8eb49f37d546298be91d20bd36461fb62f5"
+    },
+    {
+      "path": "src/android_control/Start.ps1",
+      "sha256": "7a07d064a37db37db1fc6f725565404ab1bc526e8189d1d5b3e7fa8e494eae23"
+    },
+    {
+      "path": "src/android_control/Status.ps1",
+      "sha256": "3a34e1c975e8ba5e77bfdc0e804dc467c2440223e7b760bda45aa69d5436081f"
+    },
+    {
+      "path": "src/android_control/Stop.ps1",
+      "sha256": "ec93a6db4bbe56c400607e1562272fb253d62feb032d9bb642e735d657ab08c3"
+    },
+    {
+      "path": "src/android_control/Window.ps1",
+      "sha256": "2d9b0cecfa2bb22355234b579ec92254a4230d700e23546cfd9822906e27e0e8"
+    },
+    {
+      "path": "tests/certificate_test.py",
+      "sha256": "fd6d7d0fbc6688a970e4a4b94022b5ca668453ae9f74004f463babccb6e78901"
+    },
+    {
+      "path": "tests/control_queue_test.py",
+      "sha256": "139043009bbbcae748a93f56f56a99c145d8404b2c92fc000f37d4a66b1b68e7"
+    },
+    {
+      "path": "tests/deployment_test.py",
+      "sha256": "56112993805b573347cb9f86e1d40f04884e330149bba4b47dd013883a54e0fc"
+    },
+    {
+      "path": "verify.py",
+      "sha256": "6965f6d9685315658e4d749b8b3c8fe3614ed2fa787e68105b1202296061c288"
+    }
+  ],
+  "integration_targets": [
+    "existing Windows Android runtime"
+  ],
+  "verification": {
+    "package_checks": "PASS",
+    "integration_evidence": "../../WORK_LOG_2026-10-25.md",
+    "installation": "NOT_RUN",
+    "model_calls": 0,
+    "standalone_behavior": "PASS",
+    "additive_apply_and_reverse": "PASS"
+  }
+}

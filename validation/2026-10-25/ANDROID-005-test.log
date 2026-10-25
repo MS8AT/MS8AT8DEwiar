@@ -1,0 +1,87 @@
+PASS UMD browser export performs no network or timers
+PASS routing starts disabled and has no implicit current model
+PASS manual selection never falls back after provider disappears
+PASS provider enabled flag and per-purpose grant cannot be bypassed
+PASS tasks require tools even when caller passes tools false
+PASS auto requires explicit list for each purpose and cannot borrow chat consent
+PASS auto is stable and only uses tools-capable permitted candidates
+PASS unknown purposes, prototype keys and malformed ids are refused
+PASS registry rejects duplicates without replacing working providers
+PASS Codex and native Human Memory remain unavailable
+PASS purpose routes, explicit auto grants and toggles survive reload
+PASS corrupt or polluted storage resets to disabled without repair calls
+PASS provider secrets and raw error text never enter registry, events or storage
+PASS bounded journal and returned snapshots cannot mutate policy
+PASS heartbeat times out once as unknown and never retries
+PASS restart marks unfinished calls unknown, without creating new calls
+PASS diagnosis gives fixed suggestions with no automatic replay
+PASS doctor health is local, purpose-specific and does not dispatch or write
+PASS doctor distinguishes missing task tools and blocked storage
+PASS doctor toggle disables suggestions without changing routing or retrying
+PASS storage failures are visible and do not masquerade as saved state
+PASS failed route save blocks dispatch until an explicit successful save
+PASS failure saving call_start never returns a dispatch permit or leaves a running call
+PASS disabled heartbeat does not invent completion and call count is bounded
+ALL OK: 24 constructor cases; network=0; model_calls=0
+PASS defaults deny all content operations without reading storage
+PASS permission values and keys are strict and changes are atomic
+PASS local persistence contains only versioned approved note fields
+PASS task permission enables reads only, never writes
+PASS local search is lexical, case insensitive and supports Chinese substrings
+PASS note, query and result bounds reject oversized or ambiguous inputs
+PASS serialized concurrent additions do not lose notes or overwrite ids
+PASS queued writes capture approved input and inherited options cannot route exports
+PASS capacity rejects new notes and preserves existing data
+PASS corrupt and oversized storage is never replaced by empty data
+PASS storage exceptions and unconfirmed writes expose only stable error codes
+PASS revoking permission before a pending read completes prevents content export
+PASS revocation while loading a write prevents storage mutation
+PASS empty semantic and Human adapters remain unavailable and no local notes are exported
+PASS explicit adapter calls receive only the requested operation and limited parameters
+PASS adapter secret metadata, oversize responses and raw errors do not escape
+PASS detached or replaced adapters cannot finish stale content delivery
+PASS explicit adapter writes require confirmation and ambiguous completion never retries
+ALL OK: 18 Android memory checks; network=0; model_calls=0; local search=lexical
+✔ plan, bounded steps and finish execute without desktop tools (6.0067ms)
+✔ UMD also exposes the browser global without CommonJS (1.2879ms)
+✔ duplicate request ID is idempotent and conflicting content is rejected (0.525ms)
+✔ task IDs persist across reload and have separate installation namespaces (0.4105ms)
+✔ queued tasks never start when loaded (1.7865ms)
+✔ running on disk becomes interrupted, with no automatic retry (0.4461ms)
+✔ budget exhaustion pauses; start cannot silently reset or expand it (1.0294ms)
+✔ budget limits are explicit integers 3..20 (0.3262ms)
+✔ concurrent start of same task shares promise; another task stays queued (0.851ms)
+✔ stop aborts the signal and ignores a late model response (1.1465ms)
+✔ stop before first microtask prevents dispatch (0.2834ms)
+✔ late completion cannot overwrite an explicitly resumed task (0.7906ms)
+✔ nonempty native tool calls are rejected before local execution (0.4956ms)
+✔ unknown actions, extra arguments and invalid JSON terminate without retry (0.6059ms)
+✔ one JSON fence is accepted; trailing prose and second blocks are rejected (1.1291ms)
+✔ truncated model responses never execute an action (0.2425ms)
+✔ memory is disabled by default and does not call the adapter (0.3036ms)
+✔ authorized memory is bounded and marked as untrusted data (0.5895ms)
+✔ memory search has an explicit result cap (0.3647ms)
+✔ late memory completion after stop is neither persisted nor sent to model (0.5785ms)
+✔ raw adapter errors and task text never enter public metadata or subscriptions (0.3898ms)
+✔ invalid persisted IDs, duplicate IDs and non-metadata log content fail closed (0.5632ms)
+✔ storage failure before start prevents model dispatch (0.2718ms)
+✔ stopping from call_start observer prevents network dispatch (0.2794ms)
+✔ optional review uses check purpose before accepting finish, within the same budget (0.7108ms)
+✔ rejected review is terminal and does not publish the unaccepted result or retry (0.4974ms)
+✔ budget pauses with a saved draft; explicit expansion resumes check without repeating finish (1.2618ms)
+✔ stop during review aborts and ignores late approval; explicit resume checks the same draft (0.7176ms)
+✔ malformed review and native tools fail closed with no automatic retry (2.0385ms)
+✔ review transport failure preserves draft; manual retry cannot rerun the task (0.5452ms)
+✔ stopping when a draft is saved prevents dispatching its review (0.3798ms)
+✔ existing v1 tasks migrate with review disabled and no new model calls (0.5055ms)
+✔ review consent is explicit and participates in idempotent creation (0.2941ms)
+✔ invalid persisted review states cannot mark an unreviewed draft done (0.6384ms)
+ℹ tests 34
+ℹ suites 0
+ℹ pass 34
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 36.0042
+PASS: standalone checks; real models/devices/accounts NOT_RUN

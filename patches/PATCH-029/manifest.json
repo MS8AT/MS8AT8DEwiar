@@ -1,0 +1,64 @@
+{
+  "schema": 1,
+  "id": "PATCH-029",
+  "title": {
+    "ru": "Синтетическая волна и сравнение кодеков",
+    "en": "Synthetic waveform and codec comparison",
+    "zh": "合成波形与编解码比较"
+  },
+  "publication_mode": "separate_patch_kit_without_upstream_redistribution",
+  "delivery_kind": "STANDALONE_MODULES_AND_INTEGRATION_SPEC",
+  "upstream": {
+    "version": "0.45.3",
+    "commit": "32fcd918f21fc606efc0ed37870ac8edb9d1a290"
+  },
+  "files": [
+    {
+      "path": "checks/audio_pipeline_sim_test.py",
+      "sha256": "3b5dc6c84c2ac4afc162b253d0dc580b41326068c5eb276ab21651f964be93a5"
+    },
+    {
+      "path": "checks.json",
+      "sha256": "2dad9150895ef78504aa2a740f0259166c606aa0f8882c76221218a9760f2d9d"
+    },
+    {
+      "path": "module-files.patch",
+      "sha256": "dd9c91ff7000001f0822ea3c429aa4c8ff4e5a07902023a6449f40c8b3c1e32e"
+    },
+    {
+      "path": "PROMPT.md",
+      "sha256": "6efc2776c78bdce887299f3d4bc05121c48a7d5e0da26cc8ac3c6b1bd13626cc"
+    },
+    {
+      "path": "README.md",
+      "sha256": "6d2d984ccd5e08e11e5f6d6f867685aa5679a0eb99f1d92c637d68b6c1b215a3"
+    },
+    {
+      "path": "SPEC.md",
+      "sha256": "18db02e0308d61e08123a406c6d78a18559a3f4805b288b790086d4c26250f4c"
+    },
+    {
+      "path": "src/tools/audio_pipeline_sim.py",
+      "sha256": "fdf1dcb33f7ad652562453556005be8bfee4c8a46f59274d3e09c8f9dac27710"
+    },
+    {
+      "path": "tests/public_contract_test.py",
+      "sha256": "e21d36aa91718e44f99e928c2bedc4a1d52c166095dd51d28c85126d6b7f824c"
+    },
+    {
+      "path": "verify.py",
+      "sha256": "6965f6d9685315658e4d749b8b3c8fe3614ed2fa787e68105b1202296061c288"
+    }
+  ],
+  "integration_targets": [
+    "tools/audio_pipeline_sim.py"
+  ],
+  "verification": {
+    "package_checks": "PASS",
+    "integration_evidence": "../../WORK_LOG_2026-10-25.md",
+    "installation": "NOT_RUN",
+    "model_calls": 0,
+    "standalone_behavior": "PASS",
+    "additive_apply_and_reverse": "PASS"
+  }
+}

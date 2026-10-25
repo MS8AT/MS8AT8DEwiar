@@ -1,0 +1,97 @@
+"""Приём WAV из виджета и локальная/настроенная отправка выбранному распознавателю.
+
+Файл обрабатывается в памяти и никогда не превращается в команду: интерфейс получает только текст для просмотра.
+"""
+import io
+import wave
+
+import numpy as np
+
+MAX_FILE_BYTES = 10 * 1024 * 1024
+MAX_DURATION_SECONDS = 300
+TARGET_RATE = 16000
+CHUNK_SECONDS = 20
+OVERLAP_SECONDS = 0.25
+
+
+class AudioFileError(ValueError):
+    """Файл не поддерживается или не проходит ограничения безопасности."""
+
+
+def wav_to_pcm(data):
+    """Проверяет PCM WAV, сводит mono/stereo к 16 кГц mono и возвращает (pcm, duration)."""
+    if not isinstance(data, bytes) or not data:
+        raise AudioFileError("Выберите непустой WAV-файл")
+    if len(data) > MAX_FILE_BYTES:
+        raise AudioFileError("WAV больше 10 МБ")
+    try:
+        with wave.open(io.BytesIO(data), "rb") as wav:
+            channels, width, rate, frames = (wav.getnchannels(), wav.getsampwidth(),
+                                             wav.getframerate(), wav.getnframes())
+            if wav.getcomptype() != "NONE" or width != 2:
+                raise AudioFileError("Поддерживается только несжатый PCM WAV, 16 бит")
+            if channels not in (1, 2) or not 8000 <= rate <= 48000:
+                raise AudioFileError("WAV должен быть mono/stereo с частотой 8–48 кГц")
+            duration = frames / rate if rate else 0
+            if frames <= 0 or duration > MAX_DURATION_SECONDS:
+                raise AudioFileError("Запись должна длиться от доли секунды до 5 минут")
+            raw = wav.readframes(frames)
+            if len(raw) != frames * channels * width:
+                raise AudioFileError("WAV обрезан или повреждён")
+    except (wave.Error, EOFError, OSError) as exc:
+        raise AudioFileError("Не удалось прочитать WAV-файл") from exc
+
+    samples = np.frombuffer(raw, dtype="<i2")
+    if channels == 2:
+        samples = np.rint(samples.reshape(-1, 2).astype(np.float32).mean(axis=1)).clip(-32768, 32767).astype(np.int16)
+    elif samples.dtype != np.int16:
+        samples = samples.astype(np.int16)
+    if rate != TARGET_RATE:
+        count = max(1, round(len(samples) * TARGET_RATE / rate))
+        old_x = np.arange(len(samples), dtype=np.float64)
+        new_x = np.arange(count, dtype=np.float64) * rate / TARGET_RATE
+        samples = np.rint(np.interp(new_x, old_x, samples.astype(np.float64))).clip(-32768, 32767).astype(np.int16)
+    return samples.tobytes(), duration
+
+
+def transcribe_wav(host, data):
+    """Распознаёт ограниченный WAV кусками; возвращает только проверяемую расшифровку и интервалы."""
+    pcm, duration = wav_to_pcm(data)
+    stt = host.current_stt()
+    if stt is None:
+        raise AudioFileError("Распознаватель ещё загружается")
+    samples = np.frombuffer(pcm, dtype="<i2")
+    chunk = CHUNK_SECONDS * TARGET_RATE
+    overlap = int(OVERLAP_SECONDS * TARGET_RATE)
+    segments = []
+    start = 0
+    while start < len(samples):
+        end = min(len(samples), start + chunk)
+        if end <= start:
+            break
+        part = samples[start:end].tobytes()
+        # Не переключаем backend после отправки файла: пользователь согласился именно на
+        # выбранный в настройках распознаватель, а не на скрытую смену маршрута.
+        text = stt.transcribe(part).strip()
+        if text:
+            segments.append({"start": round(start / TARGET_RATE, 2), "end": round(end / TARGET_RATE, 2), "text": text})
+        if end == len(samples):
+            break
+        start = end - overlap
+    return {"text": _join_segments(segments), "segments": segments,
+            "duration": round(duration, 2), "backend": str(getattr(stt, "name", "распознаватель")),
+            "preview_only": True}
+
+
+def _join_segments(segments):
+    """Убирает повтор слов на границе перекрывающихся аудиофрагментов."""
+    result = []
+    for segment in segments:
+        words = segment["text"].split()
+        for size in range(min(len(result), len(words), 16), 0, -1):
+            if [w.casefold().strip(".,!?;:") for w in result[-size:]] == [
+                    w.casefold().strip(".,!?;:") for w in words[:size]]:
+                words = words[size:]
+                break
+        result.extend(words)
+    return " ".join(result)

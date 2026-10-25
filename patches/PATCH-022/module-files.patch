@@ -1,0 +1,97 @@
+diff --git a/core/task_scheduler.py b/core/task_scheduler.py
+new file mode 100644
+--- /dev/null
++++ b/core/task_scheduler.py
+@@ -0,0 +1,92 @@
++"""Безопасный выбор очереди задач. Стратегия только выбирает ID, работу запускает Manager."""
++
++from __future__ import annotations
++
++from dataclasses import dataclass
++import math
++
++
++CONTROLLED_CONTEXT = "controlled_offline_integration"
++
++
++@dataclass(frozen=True)
++class Candidate:
++    task_id: str
++    estimated_execution: float
++    estimated_review: float = 0.0
++    dependencies: tuple[str, ...] = ()
++
++
++@dataclass(frozen=True)
++class Decision:
++    task_id: str | None
++    strategy_id: str
++    reason_code: str
++    score: float | None = None
++    fallback: bool = False
++
++
++def _scores(candidates: tuple[Candidate, ...]) -> dict[str, float]:
++    """Оценка оставшегося критического пути в DAG; будущие исходы не учитываются."""
++    by_id = {item.task_id: item for item in candidates}
++    if len(by_id) != len(candidates):
++        raise ValueError("duplicate_task_id")
++    children = {task_id: [] for task_id in by_id}
++    for item in candidates:
++        if not isinstance(item.task_id, str) or not item.task_id or len(item.task_id) > 80:
++            raise ValueError("invalid_task_id")
++        if isinstance(item.estimated_execution, bool) or not isinstance(item.estimated_execution, (int, float)):
++            raise ValueError("invalid_execution_estimate")
++        if isinstance(item.estimated_review, bool) or not isinstance(item.estimated_review, (int, float)):
++            raise ValueError("invalid_review_estimate")
++        for value in (item.estimated_execution, item.estimated_review):
++            if not math.isfinite(value) or not 0 <= value <= 600:
++                raise ValueError("invalid_estimate")
++        if len(set(item.dependencies)) != len(item.dependencies):
++            raise ValueError("duplicate_dependency")
++        for dep in item.dependencies:
++            if dep not in by_id or dep == item.task_id:
++                raise ValueError("invalid_dependency")
++            children[dep].append(item.task_id)
++
++    scores: dict[str, float] = {}
++    visiting: set[str] = set()
++
++    def score(task_id: str) -> float:
++        if task_id in visiting:
++            raise ValueError("dependency_cycle")
++        if task_id not in scores:
++            visiting.add(task_id)
++            item = by_id[task_id]
++            scores[task_id] = item.estimated_execution + item.estimated_review + max(
++                (score(child) for child in children[task_id]), default=0.0,
++            )
++            visiting.remove(task_id)
++        return scores[task_id]
++
++    for task_id in by_id:
++        score(task_id)
++    return scores
++
++
++def choose_next(candidates, eligible_ids, strategy="fifo", context="general") -> Decision:
++    """Выбирает только среди уже допущенных IDs; ошибки c_good один раз падают на FIFO."""
++    items = tuple(candidates)
++    known = {item.task_id for item in items if isinstance(item.task_id, str)}
++    eligible = tuple(dict.fromkeys(task_id for task_id in eligible_ids
++                                   if isinstance(task_id, str) and task_id in known))
++    if not eligible:
++        return Decision(None, "fifo", "no_eligible_task")
++    if strategy == "fifo":
++        return Decision(eligible[0], "fifo", "fifo_order")
++    if strategy != "c_good":
++        return Decision(eligible[0], "fifo", "unknown_strategy_fallback", fallback=True)
++    if context != CONTROLLED_CONTEXT:
++        return Decision(eligible[0], "fifo", "context_not_approved_fallback", fallback=True)
++    try:
++        score_by_id = _scores(items)
++        # Python max keeps the first item on ties, preserving the Manager's FIFO order.
++        selected = max(eligible, key=lambda task_id: score_by_id[task_id])
++        return Decision(selected, "c_good", "longest_estimated_critical_path", score_by_id[selected])
++    except (TypeError, ValueError, OverflowError, RecursionError):
++        return Decision(eligible[0], "fifo", "invalid_estimate_or_graph_fallback", fallback=True)

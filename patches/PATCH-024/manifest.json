@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "id": "PATCH-024",
+  "title": {
+    "ru": "Выбор голоса OpenAI TTS",
+    "en": "OpenAI TTS voice selection",
+    "zh": "OpenAI TTS 语音选择"
+  },
+  "publication_mode": "separate_patch_kit_without_upstream_redistribution",
+  "delivery_kind": "INTEGRATION_SPEC_ONLY",
+  "upstream": {
+    "version": "0.45.3",
+    "commit": "32fcd918f21fc606efc0ed37870ac8edb9d1a290"
+  },
+  "files": [
+    {
+      "path": "checks.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": "PROMPT.md",
+      "sha256": "5173dd538a1511fd0bd3e132cbe73b4052509008512be813f572fd4c527a2af8"
+    },
+    {
+      "path": "README.md",
+      "sha256": "72647625326a0f544da1779a7e4a5a79cb224d271e5499833471bcd1e1ddb9f9"
+    },
+    {
+      "path": "SPEC.md",
+      "sha256": "63b5395b5029a8b1d57458451b43c6a81948d2419239ddf42ebebdf0005c16fb"
+    },
+    {
+      "path": "verify.py",
+      "sha256": "6965f6d9685315658e4d749b8b3c8fe3614ed2fa787e68105b1202296061c288"
+    }
+  ],
+  "integration_targets": [
+    "core/tts.py",
+    "ui/studio"
+  ],
+  "verification": {
+    "package_checks": "PASS",
+    "integration_evidence": "../../WORK_LOG_2026-10-25.md",
+    "installation": "NOT_RUN",
+    "model_calls": 0,
+    "standalone_behavior": "NOT_APPLICABLE_SPEC_ONLY",
+    "additive_apply_and_reverse": "NOT_APPLICABLE"
+  }
+}

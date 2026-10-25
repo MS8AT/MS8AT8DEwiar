@@ -1,0 +1,100 @@
+{
+  "schema": 1,
+  "id": "ANDROID-005",
+  "title": {
+    "ru": "Android-конструктор: модели, задачи, память и языки",
+    "en": "Android constructor: routing, tasks, memory and languages",
+    "zh": "Android 构建模块：模型、任务、记忆与语言"
+  },
+  "publication_mode": "separate_patch_kit_without_upstream_redistribution",
+  "delivery_kind": "STANDALONE_ANDROID_MODULES_AND_INTEGRATION_SPEC",
+  "upstream": {
+    "version": "0.45.3",
+    "commit": "32fcd918f21fc606efc0ed37870ac8edb9d1a290"
+  },
+  "files": [
+    {
+      "path": "checks/android_constructor.test.mjs",
+      "sha256": "d0b4ebc06d1f70489e89a74ff07e28270528d377948ce935bb9a7b1a11d2ab72"
+    },
+    {
+      "path": "checks/android_memory.test.mjs",
+      "sha256": "58649572c40863e6ee3248bff76419ffb85757260641f64bd975dd232461bb04"
+    },
+    {
+      "path": "checks/android_tasks.test.mjs",
+      "sha256": "874f4b0c8500e172922e49cc9661ac1541fd794925ab4e6108d1965f6de0b361"
+    },
+    {
+      "path": "checks.json",
+      "sha256": "ac72ccf554c6ff5336686413b61c90a6ca4e13d4119e60e4dc7c8112c0166a74"
+    },
+    {
+      "path": "module-files.patch",
+      "sha256": "77d8d2596e985ba0bea2337f8020e5d50d9122fc81eded61c9e0b747c6888752"
+    },
+    {
+      "path": "PROMPT.md",
+      "sha256": "b6934afad8aa49a3bdabead65e3b20af62cc43118b2c6ae64c81ceb1d74185bc"
+    },
+    {
+      "path": "README.md",
+      "sha256": "c198b08aa0e27510df48be1e7e5a139ea028e3bc78ad7dc4922b96a44c63bf1f"
+    },
+    {
+      "path": "SPEC.md",
+      "sha256": "596a10029c73cbc93da909604b8b778ad6f2610a65de87557e433f511dc882a3"
+    },
+    {
+      "path": "src/android/assets/www/ms8at-language.js",
+      "sha256": "d2d425b07da18a9a7f23662c658cf8b25a95a9181318c902db9f1fe7673e0674"
+    },
+    {
+      "path": "src/android/assets/www/ms8at_constructor.js",
+      "sha256": "938ccebb6630e1bac7e6487d3de7b22256c4e07d7f9845272d6d3e26392d18b2"
+    },
+    {
+      "path": "src/android/assets/www/ms8at_memory.js",
+      "sha256": "9961e29d6c0ccdcd3d1c5d61f787118a209e7750ee8472e5610c6410f697eef1"
+    },
+    {
+      "path": "src/android/assets/www/ms8at_phone.css",
+      "sha256": "2b9aec46a87b901118dde7582281d8da0ffabd7fca558e89bb6de1152ec956ea"
+    },
+    {
+      "path": "src/android/assets/www/ms8at_phone.js",
+      "sha256": "223128b0af1595d0e1ac87c1c77ed0127acba741fc58dfb178930d4e38e3a315"
+    },
+    {
+      "path": "src/android/assets/www/ms8at_tasks.js",
+      "sha256": "c71c0b7660c2058ea5722a8a96e4f02d3963fb29e43f5f499a1c6e473ebc31ca"
+    },
+    {
+      "path": "src/android/src/pro/dewiar/app/Language.java",
+      "sha256": "59f08bae275e3912db15a3d44c3f3430c6a664eeedaf6cde7bb2664f437a9b2b"
+    },
+    {
+      "path": "src/android/src/pro/dewiar/app/SecurePrefs.java",
+      "sha256": "909294011100a1b43c7c3216a703fe30c1ea0cd4fda9f84b15a81bb3be5b089e"
+    },
+    {
+      "path": "tests/public_contract_test.py",
+      "sha256": "e21d36aa91718e44f99e928c2bedc4a1d52c166095dd51d28c85126d6b7f824c"
+    },
+    {
+      "path": "verify.py",
+      "sha256": "6965f6d9685315658e4d749b8b3c8fe3614ed2fa787e68105b1202296061c288"
+    }
+  ],
+  "integration_targets": [
+    "Android 0.7.1 app/Bridge/Speech hooks"
+  ],
+  "verification": {
+    "package_checks": "PASS",
+    "integration_evidence": "../../WORK_LOG_2026-10-25.md",
+    "installation": "NOT_RUN",
+    "model_calls": 0,
+    "standalone_behavior": "PASS",
+    "additive_apply_and_reverse": "PASS"
+  }
+}

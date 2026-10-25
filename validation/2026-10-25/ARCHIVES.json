@@ -1,0 +1,54 @@
+[
+  {
+    "file": "dist/PATCH-020.zip",
+    "sha256": "524e4959195b27bf535efecd56df84c3710edb539e05c960627defbc237a2f31"
+  },
+  {
+    "file": "dist/PATCH-021.zip",
+    "sha256": "5c41d3147dd20ea882ea64955590745a0cf39b278b041807b06fe652ab873e3f"
+  },
+  {
+    "file": "dist/PATCH-022.zip",
+    "sha256": "8330e6e9bbf39e178e62b5314a17e7a776bea3ce3d2d9fa9eff64723d100fe6b"
+  },
+  {
+    "file": "dist/PATCH-023.zip",
+    "sha256": "9fec9524e2af8d9c06e1036519a47c7654ff4809d7bdd7ff4492edf11c0a22a5"
+  },
+  {
+    "file": "dist/PATCH-024.zip",
+    "sha256": "00abd555d321151b8aee111a92320cda585dba6cfc2a26359fd1d7376925eb24"
+  },
+  {
+    "file": "dist/PATCH-025.zip",
+    "sha256": "218c51a8a0ea314b4e758f4dd2a2296837f079a5ae74f1c61e2a26794247f39b"
+  },
+  {
+    "file": "dist/PATCH-026.zip",
+    "sha256": "1494e74ee87a53133341cd429512ca8e3c69f717d5111ac0171e8ae41b12c523"
+  },
+  {
+    "file": "dist/PATCH-027.zip",
+    "sha256": "1bbace3a0d68bcab38ad725dc8d8aa740372b993c8c2d6b20c1c0a1ce2e83517"
+  },
+  {
+    "file": "dist/PATCH-028.zip",
+    "sha256": "f28bd0ff3c6778833aa66a6503b91a89e6cb8080cf6727991e7695b7b88d01b7"
+  },
+  {
+    "file": "dist/PATCH-029.zip",
+    "sha256": "1da1e361a8536fcf4594c329f4a1c119bb34420af5e4d748ea159bddaf35abc1"
+  },
+  {
+    "file": "dist/PATCH-030.zip",
+    "sha256": "ebcefd1120bc4d9779a6c499787bd4841b1ad150ed53ba69d492f4079ff4f4d8"
+  },
+  {
+    "file": "dist/PATCH-031.zip",
+    "sha256": "09eac0d476bb2867c7e631dd90da0b4132f09afa5c3112139cdc96cb03172f1e"
+  },
+  {
+    "file": "dist/ANDROID-005.zip",
+    "sha256": "a2ea168936d5415dd8d63bf440092e4cf8fb99ef32cc67fa7b035e3a9e02e840"
+  }
+]

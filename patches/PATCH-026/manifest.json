@@ -1,0 +1,68 @@
+{
+  "schema": 1,
+  "id": "PATCH-026",
+  "title": {
+    "ru": "Импорт WAV и проверка расшифровки",
+    "en": "WAV import and transcript review",
+    "zh": "WAV 导入与转写检查"
+  },
+  "publication_mode": "separate_patch_kit_without_upstream_redistribution",
+  "delivery_kind": "STANDALONE_MODULES_AND_INTEGRATION_SPEC",
+  "upstream": {
+    "version": "0.45.3",
+    "commit": "32fcd918f21fc606efc0ed37870ac8edb9d1a290"
+  },
+  "files": [
+    {
+      "path": "checks/audio_ingest_test.py",
+      "sha256": "61288a200ca940b1a3434ec5d868d077090c2c2a2c3d5d7536e2ad5f1338bc0f"
+    },
+    {
+      "path": "checks.json",
+      "sha256": "31f0342faff57b75e6ee196488ef3a855664d0ef3cc1f4973dff35461c224a70"
+    },
+    {
+      "path": "integration_checks/app_wiring.py",
+      "sha256": "629290f9557b31e40b0399733056ec61dc3c667422cd6fee7766102caed947fe"
+    },
+    {
+      "path": "module-files.patch",
+      "sha256": "28b21e2501768a7a554c584aedd5562c08dffacb90d084c67328b22f6397a230"
+    },
+    {
+      "path": "PROMPT.md",
+      "sha256": "3e7c9a450ac7ca8bdaa563b4a585c3a5a039db5496ebcaa6ba7a039da601791f"
+    },
+    {
+      "path": "README.md",
+      "sha256": "a8a7404a43b4acd82e2f58d67514ab79d8fa8bf7b3dbafac09f674d40c632d17"
+    },
+    {
+      "path": "SPEC.md",
+      "sha256": "d1a20e5fc8dfc3c0a8c20810ea40c92b6f92aaead22390cea76f249491723f4c"
+    },
+    {
+      "path": "src/core/audio_ingest.py",
+      "sha256": "b015eb8eed49acb8a415de16e1e6928cc908ff89ca9fbad4e0c55ac64975f41a"
+    },
+    {
+      "path": "tests/public_contract_test.py",
+      "sha256": "e21d36aa91718e44f99e928c2bedc4a1d52c166095dd51d28c85126d6b7f824c"
+    },
+    {
+      "path": "verify.py",
+      "sha256": "6965f6d9685315658e4d749b8b3c8fe3614ed2fa787e68105b1202296061c288"
+    }
+  ],
+  "integration_targets": [
+    "core/audio_ingest.py"
+  ],
+  "verification": {
+    "package_checks": "PASS",
+    "integration_evidence": "../../WORK_LOG_2026-10-25.md",
+    "installation": "NOT_RUN",
+    "model_calls": 0,
+    "standalone_behavior": "PASS",
+    "additive_apply_and_reverse": "PASS"
+  }
+}

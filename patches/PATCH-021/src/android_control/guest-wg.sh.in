@@ -1,0 +1,56 @@
+#!/system/bin/sh
+# Private files live under a root-only directory. Never print the configuration.
+set -eu
+DIR=/data/misc/ms8at
+export PATH="$DIR/bin:/system/bin:/system/xbin:/product/bin"
+MODE=${1:-status}
+case "$MODE" in
+  up|down|guard)
+    ip route replace table 59999 10.0.2.0/24 dev eth0
+    ip rule show | grep -q 'to 10.0.2.0/24 lookup 59999' || ip rule add pref 9000 to 10.0.2.0/24 lookup 59999
+    # One atomic commit; a failed rebuild keeps the previous protection intact.
+    # Host-initiated ADB replies and bootstrap HTTP only, not host loopback services.
+    iptables-restore --noflush <<'RULES'
+*filter
+:MS8AT_WG_OUT - [0:0]
+-F MS8AT_WG_OUT
+-A MS8AT_WG_OUT -d 10.0.2.2 -p tcp --sport 5555 -m conntrack --ctstate ESTABLISHED -j RETURN
+-A MS8AT_WG_OUT -d 10.0.2.100 -p tcp --dport 80 -j RETURN
+-A MS8AT_WG_OUT -d 10.0.2.2 -p udp --sport 68 --dport 67 -j RETURN
+-A MS8AT_WG_OUT -d 255.255.255.255 -p udp --sport 68 --dport 67 -j RETURN
+-A MS8AT_WG_OUT -d @WG_ENDPOINT_IPV4@ -p udp --dport @WG_ENDPOINT_PORT@ -j RETURN
+-A MS8AT_WG_OUT -j REJECT
+COMMIT
+RULES
+    iptables -C OUTPUT -o eth0 -j MS8AT_WG_OUT 2>/dev/null || iptables -I OUTPUT -o eth0 -j MS8AT_WG_OUT
+    ip6tables -C OUTPUT -o eth0 -j REJECT 2>/dev/null || ip6tables -I OUTPUT -o eth0 -j REJECT
+    ;;
+esac
+case "$MODE" in
+  up)
+    if ! ip link show dewiarwg >/dev/null 2>&1; then
+      wg-quick up "$DIR/dewiarwg.conf"
+    fi
+    ;;
+  down)
+    if ip link show dewiarwg >/dev/null 2>&1; then
+      wg-quick down "$DIR/dewiarwg.conf"
+    fi
+    # The direct Internet block remains active when the tunnel is disabled.
+    echo MS8AT_VPN_DOWN
+    exit 0
+    ;;
+  guard) echo MS8AT_VPN_GUARD_READY; exit 0 ;;
+  status) ;;
+  *) echo 'Unsupported VPN action'; exit 2 ;;
+esac
+echo 'MS8AT_VPN_STATUS'
+if ! ip link show dewiarwg >/dev/null 2>&1; then
+    echo DOWN
+    [ "$MODE" != up ] || exit 1
+    exit 0
+fi
+echo UP
+wg show dewiarwg latest-handshakes
+wg show dewiarwg transfer
+ip address show dewiarwg

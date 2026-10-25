@@ -1,0 +1,64 @@
+{
+  "schema": 1,
+  "id": "PATCH-028",
+  "title": {
+    "ru": "Ограниченная очередь свежих кадров",
+    "en": "Bounded queue of fresh audio frames",
+    "zh": "有界的新音频帧队列"
+  },
+  "publication_mode": "separate_patch_kit_without_upstream_redistribution",
+  "delivery_kind": "STANDALONE_MODULES_AND_INTEGRATION_SPEC",
+  "upstream": {
+    "version": "0.45.3",
+    "commit": "32fcd918f21fc606efc0ed37870ac8edb9d1a290"
+  },
+  "files": [
+    {
+      "path": "checks/audio_capture_queue_test.py",
+      "sha256": "ac170a782ba5e4dd56423e3b93523a0a15cf4e0a4e41a7aacd2df95f3b295e11"
+    },
+    {
+      "path": "checks.json",
+      "sha256": "ec9363fdf381b96aebcde918a2856409d126b87f0abb6c89f708b80b48d1ebb4"
+    },
+    {
+      "path": "module-files.patch",
+      "sha256": "fa27b3805f7ed58103b29e4e0676b89868e775aa6e9a30079a30a89ac734ba53"
+    },
+    {
+      "path": "PROMPT.md",
+      "sha256": "d6149ece70d88292adb3a541e297907f546d9026318e23a942ad0bc49cd1eaa8"
+    },
+    {
+      "path": "README.md",
+      "sha256": "44332f5347f6cd31978d815e9146fc1222f0ffc687f02dab070a98e5be1cd36f"
+    },
+    {
+      "path": "SPEC.md",
+      "sha256": "01dacf07d6ff0f3b315525124565ccd4fdfdd937f8835ebbe1eb7fe0f45757f0"
+    },
+    {
+      "path": "src/core/audio_queue.py",
+      "sha256": "8bed4602f0c0431bdfb257e740d670479864e8dc0d80aa496d7c6f2a665d5516"
+    },
+    {
+      "path": "tests/public_contract_test.py",
+      "sha256": "e21d36aa91718e44f99e928c2bedc4a1d52c166095dd51d28c85126d6b7f824c"
+    },
+    {
+      "path": "verify.py",
+      "sha256": "6965f6d9685315658e4d749b8b3c8fe3614ed2fa787e68105b1202296061c288"
+    }
+  ],
+  "integration_targets": [
+    "core/audio_queue.py"
+  ],
+  "verification": {
+    "package_checks": "PASS",
+    "integration_evidence": "../../WORK_LOG_2026-10-25.md",
+    "installation": "NOT_RUN",
+    "model_calls": 0,
+    "standalone_behavior": "PASS",
+    "additive_apply_and_reverse": "PASS"
+  }
+}

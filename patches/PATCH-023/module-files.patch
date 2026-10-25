@@ -1,0 +1,189 @@
+diff --git a/core/subscription_runtime/openai_responses.py b/core/subscription_runtime/openai_responses.py
+new file mode 100644
+--- /dev/null
++++ b/core/subscription_runtime/openai_responses.py
+@@ -0,0 +1,112 @@
++"""Small OpenAI Responses adapter for the existing Chat Completions event contract."""
++import json
++from urllib.parse import urlsplit
++
++
++def eligible(profile, model, tools):
++    """Use Responses only for official OpenAI GPT-6 tool calls; keep every other route unchanged."""
++    if not tools or profile.get("kind") != "openai":
++        return False
++    try:
++        url = urlsplit(str(profile.get("base_url") or ""))
++    except ValueError:
++        return False
++    return (url.scheme == "https" and url.hostname == "api.openai.com"
++            and (url.path or "").rstrip("/") in ("", "/v1")
++            and str(model or "").lower().startswith("gpt-6"))
++
++
++def _content(value):
++    if isinstance(value, str):
++        return [{"type": "input_text", "text": value}]
++    if not isinstance(value, list):
++        return [{"type": "input_text", "text": str(value or "")}]
++    out = []
++    for part in value:
++        if not isinstance(part, dict):
++            continue
++        if part.get("type") == "text":
++            out.append({"type": "input_text", "text": str(part.get("text") or "")})
++        elif part.get("type") == "image_url":
++            image = part.get("image_url") or {}
++            if isinstance(image, dict) and image.get("url"):
++                out.append({"type": "input_image", "image_url": image["url"]})
++    return out
++
++
++def request_body(model, system, messages, tools, max_tokens):
++    """Translate the app's messages and function schemas to Responses API input."""
++    input_items = []
++    instructions = [str(system or "")]
++    for message in messages or []:
++        role = message.get("role")
++        if role in ("system", "developer"):
++            instructions.append(str(message.get("content") or ""))
++        elif role == "tool":
++            input_items.append({"type": "function_call_output", "call_id": str(message.get("tool_call_id") or ""),
++                                "output": str(message.get("content") or "")})
++        elif role == "assistant" and message.get("tool_calls"):
++            if message.get("content"):
++                input_items.append({"role": "assistant", "content": _content(message["content"])})
++            for call in message["tool_calls"]:
++                function = call.get("function") or {}
++                args = function.get("arguments") or "{}"
++                input_items.append({"type": "function_call", "call_id": str(call.get("id") or ""),
++                                    "name": str(function.get("name") or ""),
++                                    "arguments": args if isinstance(args, str) else json.dumps(args, ensure_ascii=False)})
++        elif role in ("user", "assistant"):
++            input_items.append({"role": role, "content": _content(message.get("content"))})
++    body = {"model": model, "instructions": "\n\n".join(x for x in instructions if x),
++            "input": input_items, "stream": True, "store": False,
++            "max_output_tokens": int(max_tokens)}
++    if tools:
++        body["tools"] = [{"type": "function", "name": str(tool.get("name") or ""),
++                          "description": str(tool.get("description") or ""),
++                          "parameters": tool.get("parameters") or {"type": "object", "properties": {}},
++                          "strict": False} for tool in tools]
++        body["tool_choice"] = "auto"
++    return body
++
++
++class EventAdapter:
++    """Normalize Responses SSE events for the existing OpenAI stream collector."""
++    def __init__(self):
++        self.calls = {}
++
++    def feed_line(self, line):
++        text = line.decode("utf-8", "replace") if isinstance(line, bytes) else str(line)
++        text = text.strip()
++        if not text.startswith("data:"):
++            return None
++        payload = text[5:].strip()
++        if not payload or payload == "[DONE]":
++            return None
++        event = json.loads(payload)
++        kind = event.get("type")
++        if kind == "error" or kind == "response.failed":
++            error = event.get("error") or (event.get("response") or {}).get("error") or {}
++            raise ValueError(str(error.get("message") if isinstance(error, dict) else error or "Responses API failed"))
++        if kind == "response.output_text.delta":
++            return {"choices": [{"delta": {"content": str(event.get("delta") or "")}, "finish_reason": None}]}
++        if kind == "response.output_item.added":
++            item = event.get("item") or {}
++            if item.get("type") != "function_call":
++                return None
++            index = event.get("output_index", 0)
++            call_id = item.get("call_id") or item.get("id") or ""
++            self.calls[index] = {"id": call_id, "arguments_seen": False}
++            return {"choices": [{"delta": {"tool_calls": [{"index": index, "id": call_id, "type": "function",
++                        "function": {"name": item.get("name") or "", "arguments": ""}}]}, "finish_reason": None}]}
++        if kind == "response.function_call_arguments.delta":
++            index = event.get("output_index", 0)
++            call = self.calls.setdefault(index, {"id": event.get("call_id") or "", "arguments_seen": False})
++            call["arguments_seen"] = True
++            return {"choices": [{"delta": {"tool_calls": [{"index": index, "id": call["id"], "type": "function",
++                        "function": {"arguments": str(event.get("delta") or "")}}]}, "finish_reason": None}]}
++        if kind == "response.function_call_arguments.done":
++            return None
++        if kind == "response.completed":
++            has_calls = any((item or {}).get("type") == "function_call"
++                            for item in ((event.get("response") or {}).get("output") or []))
++            return {"choices": [{"delta": {}, "finish_reason": "tool_calls" if has_calls else "stop"}]}
++        return None
+diff --git a/integrations/ms8at/openai_prompt_profiles.json b/integrations/ms8at/openai_prompt_profiles.json
+new file mode 100644
+--- /dev/null
++++ b/integrations/ms8at/openai_prompt_profiles.json
+@@ -0,0 +1,67 @@
++{
++  "schema": 1,
++  "status": "prompt-pack-specification",
++  "version": "PATCH-023",
++  "selection": {
++    "codex_app_server": "openai_codex",
++    "official_openai_api": "openai_api",
++    "other_or_unverified_provider": "provider_default",
++    "explicit_user_profile_wins": true,
++    "model_catalog": "query_selected_provider",
++    "require_verified_capabilities": true
++  },
++  "transport_rules": {
++    "credentials_are_transport_scoped": true,
++    "never_copy_auth_between_codex_and_openai_api": true,
++    "tools_require_endpoint_capability": true,
++    "gpt6_tool_calling_requires_responses_api_adapter": true,
++    "unsupported_tools_behavior": "fail_closed",
++    "no_automatic_provider_or_account_fallback": true
++  },
++  "token_policy": {
++    "common_safety_layer_once": true,
++    "one_purpose_layer_per_request": true,
++    "request_hidden_reasoning": false,
++    "send_only_relevant_context": true,
++    "output_caps_are_defaults_not_task_limits": true,
++    "reasoning_effort_source": "verified_model_capability"
++  },
++  "purposes": {
++    "chat": {
++      "default_output_tokens": 192,
++      "ru": "Ответь прямо на просьбу и на языке пользователя. Вызови инструмент только если пользователь просит действие и инструмент доступен. Если без уточнения нельзя — задай один конкретный вопрос. Не показывай внутренние рассуждения.",
++      "en": "Answer the request directly in the user's language. Use a tool only when an operation is requested and the tool is available. If clarification is essential, ask one focused question. Do not reveal internal reasoning.",
++      "zh": "用用户的语言直接回答。只有用户要求操作且工具可用时才调用工具。只有在确实需要澄清时才提出一个具体问题。不输出内部推理。"
++    },
++    "plan": {
++      "default_output_tokens": 320,
++      "ru": "Опиши проверяемый результат и 3–7 коротких шагов. Укажи только те зависимости, которые меняют порядок работы. Не повторяй цель.",
++      "en": "State a verifiable outcome and 3–7 short steps. Include only dependencies that change execution order. Do not restate the goal.",
++      "zh": "说明可验证的结果和 3–7 个简短步骤。只列出会改变执行顺序的依赖项。不要重复目标。"
++    },
++    "execute": {
++      "default_output_tokens": 512,
++      "ru": "Выполни следующий разрешённый шаг доступным инструментом, проверь его результат и запиши только новое состояние. Продолжай до результата или точного блокера. Не заявляй об успехе без подтверждения.",
++      "en": "Take the next permitted step with an available tool, verify its result, and record only new state. Continue until done or a specific blocker. Never claim success without evidence.",
++      "zh": "使用可用工具执行下一个获准步骤，验证结果并只记录新的状态。继续直到完成或遇到明确阻塞。没有证据不得声称成功。"
++    },
++    "code_review": {
++      "default_output_tokens": 384,
++      "ru": "Сначала перечисли подтверждённые дефекты с важностью, точным местом и последствием. Отделяй предположения от находок. Не пересказывай код.",
++      "en": "Lead with confirmed defects, severity, precise location, and impact. Separate assumptions from findings. Do not summarize code unnecessarily.",
++      "zh": "先列出已确认缺陷、严重度、准确位置和影响。将假设与发现分开。不要不必要地复述代码。"
++    },
++    "memory": {
++      "default_output_tokens": 160,
++      "ru": "Сохрани только устойчивый факт или явное предпочтение, нужное позже. Кратко; исключи секреты, полный текст переписки и временные детали.",
++      "en": "Store only a durable fact or explicit preference that will matter later. Be brief; exclude secrets, full transcripts, and temporary details.",
++      "zh": "只保存以后有用的长期事实或明确偏好。简短表达；排除秘密、完整对话和临时细节。"
++    },
++    "summary": {
++      "default_output_tokens": 256,
++      "ru": "Укажи только изменения после предыдущей сводки, решения, открытые вопросы и следующий шаг. Удали повторы, сохрани точные имена и значения.",
++      "en": "Include only changes since the previous summary, decisions, open questions, and next action. Remove repetition while preserving exact names and values.",
++      "zh": "只包含上次摘要之后的变化、决定、未解决问题和下一步。删除重复内容，同时保留准确名称和值。"
++    }
++  }
++}

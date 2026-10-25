@@ -1,5 +1,8 @@
 # MS8AT8DEwiar
 
+**Новый комплект / Latest kit / 最新套件: [Dewiar 0.45.3 — PC build36 + Android 005](RELEASE_0.45.3.md).** [Промпты RU/ENG/CH](prompts/DEWIAR_0453.md) · [Журнал и честный итог](WORK_LOG_2026-10-25.md). Ниже сохранена история предыдущих выпусков.
+
+
 [RU](#что-такое-dewiar--what-is-dewiar--什么是-dewiar) · [ENG](prompts/DEWIAR_0401.md#eng) · [CH](prompts/DEWIAR_0401.md#ch)
 
 ## Что такое Dewiar · What is Dewiar · 什么是 Dewiar

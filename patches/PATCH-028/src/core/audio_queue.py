@@ -1,0 +1,38 @@
+"""Ограниченная очередь кадров микрофона: при перегрузке сохраняет свежий звук."""
+import queue
+
+
+class LatestFrameQueue:
+    """Вход без ожидания свободного места; сохранён для совместимости PATCH-028."""
+
+    def __init__(self, max_frames=200):
+        if type(max_frames) is not int or not 1 <= max_frames <= 10000:
+            raise ValueError("max_frames должен быть целым числом от 1 до 10000")
+        self._queue = queue.Queue(maxsize=max_frames)
+        self.dropped_frames = 0
+
+    def put_latest(self, frame):
+        """Добавляет кадр без ожидания; при полной очереди удаляет самый старый."""
+        try:
+            self._queue.put_nowait(frame)
+            return True
+        except queue.Full:
+            pass
+        try:
+            self._queue.get_nowait()
+        except queue.Empty:
+            pass
+        else:
+            self.dropped_frames += 1
+        try:
+            self._queue.put_nowait(frame)
+        except queue.Full:          # редкая гонка с другим producer; никогда не ждём в callback
+            self.dropped_frames += 1
+            return False
+        return True
+
+    def get(self, timeout=None):
+        return self._queue.get(timeout=timeout)
+
+    def qsize(self):
+        return self._queue.qsize()

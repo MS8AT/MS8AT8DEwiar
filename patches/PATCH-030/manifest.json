@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "id": "PATCH-030",
+  "title": {
+    "ru": "Локальный звук и версии контекста",
+    "en": "Local audio and context revisions",
+    "zh": "本地音频与上下文版本"
+  },
+  "publication_mode": "separate_patch_kit_without_upstream_redistribution",
+  "delivery_kind": "STANDALONE_MODULES_AND_INTEGRATION_SPEC",
+  "upstream": {
+    "version": "0.45.3",
+    "commit": "32fcd918f21fc606efc0ed37870ac8edb9d1a290"
+  },
+  "files": [
+    {
+      "path": "checks/audio_pure_test.py",
+      "sha256": "72bd4a95be6f5e6a4021800c7b81561c84486bc399babab66bf51072073b3c8f"
+    },
+    {
+      "path": "checks.json",
+      "sha256": "6b4318c758dd634b2c639e4bf9a531b5f27c58666f89d7dd366c5669c0a458cb"
+    },
+    {
+      "path": "module-files.patch",
+      "sha256": "f690ba02c469ab4c9380a9ea99263aa655d25f8ffd40958899974217e0c457ec"
+    },
+    {
+      "path": "PROMPT.md",
+      "sha256": "2ca43679ae7ace4ed960121e0152806e2cf468678af295155a8a32e90e2f70ba"
+    },
+    {
+      "path": "README.md",
+      "sha256": "c167692c3df6fc1276ea65cf172d2a19e87c72fc4ca24bc8697b01e77d3affce"
+    },
+    {
+      "path": "SPEC.md",
+      "sha256": "87dfc6551984757b15039f0fc96a52dedf061e52ff1d1e035066627e8dc2ffa8"
+    },
+    {
+      "path": "src/core/audio_buffer.py",
+      "sha256": "b591df536ecef88d93f1dcc61ad3f041e0c4674fede19a31e7499319d8973458"
+    },
+    {
+      "path": "src/core/audio_context.py",
+      "sha256": "c39877eadb3cd04719e756e5d74406b835f945b5603001eeeb73b6ceb2409e89"
+    },
+    {
+      "path": "src/core/audio_local.py",
+      "sha256": "e5ad6130a606155b24ddacae1cf5ec84da817c9f4e3723398875db9a0604d1b4"
+    },
+    {
+      "path": "tests/public_contract_test.py",
+      "sha256": "e21d36aa91718e44f99e928c2bedc4a1d52c166095dd51d28c85126d6b7f824c"
+    },
+    {
+      "path": "verify.py",
+      "sha256": "6965f6d9685315658e4d749b8b3c8fe3614ed2fa787e68105b1202296061c288"
+    }
+  ],
+  "integration_targets": [
+    "core/audio_buffer.py",
+    "core/audio_context.py",
+    "core/audio_local.py"
+  ],
+  "verification": {
+    "package_checks": "PASS",
+    "integration_evidence": "../../WORK_LOG_2026-10-25.md",
+    "installation": "NOT_RUN",
+    "model_calls": 0,
+    "standalone_behavior": "PASS",
+    "additive_apply_and_reverse": "PASS"
+  }
+}

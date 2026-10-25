@@ -1,0 +1,1125 @@
+diff --git a/android_control/Cli.ps1 b/android_control/Cli.ps1
+new file mode 100644
+--- /dev/null
++++ b/android_control/Cli.ps1
+@@ -0,0 +1,12 @@
++param(
++    [ValidateSet('status','capabilities','logs','start','stop','open','screen','lock','autostart','vpn','vpn-status')][string]$Action = 'status',
++    [ValidateSet('800x500','960x600','1280x800')][string]$Size,
++    [ValidateSet('true','false')][string]$Enabled,
++    [string]$TargetHost = '127.0.0.1'
++)
++$pythonPath = (Get-Content -LiteralPath (Join-Path $PSScriptRoot 'python-path.txt') -Raw).Trim()
++$parameters = @('-X','utf8','-B',(Join-Path $PSScriptRoot 'control_cli.py'),$Action,'--host',$TargetHost)
++if($Size) { $parameters += @('--size',$Size) }
++if($Enabled) { $parameters += @('--enabled',$Enabled) }
++& $pythonPath @parameters
++exit $LASTEXITCODE
+diff --git a/android_control/command_queue.py b/android_control/command_queue.py
+new file mode 100644
+--- /dev/null
++++ b/android_control/command_queue.py
+@@ -0,0 +1,44 @@
++"""Small durable queue shared by the VM runner and the authenticated controller."""
++from pathlib import Path
++import json
++import os
++import re
++import tempfile
++
++COMMANDS = {'vpn_up': 'up', 'vpn_down': 'down', 'vpn_status': 'status'}
++
++
++def write_result(request, value):
++    request = Path(request)
++    fd, name = tempfile.mkstemp(prefix=request.stem + '.', suffix='.tmp', dir=request.parent)
++    try:
++        with os.fdopen(fd, 'w', encoding='utf-8') as stream:
++            json.dump(dict(value, id=request.stem), stream)
++            stream.flush()
++            os.fsync(stream.fileno())
++        os.replace(name, request.with_suffix('.result'))
++    finally:
++        if os.path.exists(name):
++            os.unlink(name)
++
++
++def pending_requests(directory):
++    """Bad requests get a failure result; they cannot stop or starve the VM."""
++    result = []
++    for path in Path(directory).glob('*.json'):
++        if not re.fullmatch(r'[a-f0-9]{32}', path.stem) or path.with_suffix('.result').exists():
++            continue
++        try:
++            if path.stat().st_size > 4096:
++                raise ValueError('request too large')
++            entry = json.loads(path.read_text(encoding='utf-8'))
++            if not isinstance(entry, dict) or entry.get('action') not in COMMANDS:
++                raise ValueError('unsupported action')
++            stamp = entry.get('created_ns', path.stat().st_mtime_ns)
++            if type(stamp) is not int or stamp < 0:
++                raise ValueError('invalid timestamp')
++            result.append((stamp, path.name, path, COMMANDS[entry['action']]))
++        except (ValueError, TypeError, OSError, RecursionError):
++            write_result(path, {'ok': False, 'error': 'INVALID_REQUEST', 'output': ''})
++    result.sort(key=lambda item: (item[0], item[1]))
++    return [(path, command) for _, _, path, command in result]
+diff --git a/android_control/configure.py b/android_control/configure.py
+new file mode 100644
+--- /dev/null
++++ b/android_control/configure.py
+@@ -0,0 +1,41 @@
++"""Create non-secret deployment files in a NEW directory; no installation or network."""
++from pathlib import Path
++import argparse
++import hashlib
++import json
++from deployment import render_guard, validate_deployment
++
++
++def stage(output, endpoint, port, bind_host, hosts):
++    config = validate_deployment({'bind_host': bind_host, 'certificate_hosts': hosts})
++    template = Path(__file__).with_name('guest-wg.sh.in').read_text(encoding='utf-8')
++    guard = render_guard(template, endpoint, port).encode('utf-8')
++    output = Path(output)
++    output.mkdir(parents=False, exist_ok=False)
++    (output / 'control-deployment.json').write_text(json.dumps(config, indent=2) + '\n', encoding='utf-8')
++    (output / 'guest-wg.sh').write_bytes(guard)
++    receipt = {'schema': 1, 'installed': False, 'network_calls': 0,
++               'files': {name: hashlib.sha256((output / name).read_bytes()).hexdigest()
++                         for name in ('control-deployment.json', 'guest-wg.sh')}}
++    (output / 'SHA256.json').write_text(json.dumps(receipt, indent=2) + '\n', encoding='utf-8')
++    return receipt
++
++
++def main():
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument('--output', type=Path, required=True)
++    parser.add_argument('--endpoint-ipv4', required=True)
++    parser.add_argument('--endpoint-port', type=int, required=True)
++    parser.add_argument('--bind-host', choices=['127.0.0.1', '0.0.0.0'], default='127.0.0.1')
++    parser.add_argument('--certificate-host', action='append', dest='hosts')
++    args = parser.parse_args()
++    try:
++        result = stage(args.output, args.endpoint_ipv4, args.endpoint_port, args.bind_host,
++                       args.hosts or ['localhost', '127.0.0.1'])
++    except (ValueError, OSError) as error:
++        parser.exit(1, 'REFUSED: ' + str(error) + '\n')
++    print(json.dumps(result, indent=2))
++
++
++if __name__ == '__main__':
++    main()
+diff --git a/android_control/control-requirements.txt b/android_control/control-requirements.txt
+new file mode 100644
+--- /dev/null
++++ b/android_control/control-requirements.txt
+@@ -0,0 +1,2 @@
++asyncssh==2.24.1
++cryptography==50.0.2
+diff --git a/android_control/control.py b/android_control/control.py
+new file mode 100644
+--- /dev/null
++++ b/android_control/control.py
+@@ -0,0 +1,414 @@
++"""Authenticated HTTPS control and SSH-to-Android bridge. No host shell over SSH."""
++from pathlib import Path
++import sys
++ROOT = Path(__file__).resolve().parent
++sys.path.insert(0, str(ROOT / 'vendor'))
++import asyncio
++import ctypes
++import hashlib
++import http.server
++import ipaddress
++import json
++import os
++import secrets
++import ssl
++import subprocess
++import tempfile
++import threading
++import time
++import uuid
++from datetime import datetime, timedelta, timezone
++import asyncssh
++from deployment import load_deployment
++from cryptography import x509
++from cryptography.hazmat.primitives import hashes, serialization
++from cryptography.hazmat.primitives.asymmetric import ec
++from cryptography.x509.oid import NameOID
++
++CREDENTIALS = ROOT / 'credentials'
++ADB = ROOT / 'platform-tools/adb.exe'
++API_PORT = 18769
++SSH_PORT = 2222
++SIZES = ('800x500', '960x600', '1280x800')
++LOG_LOCK = threading.Lock()
++ACTION_LOCK = threading.Lock()
++LAST_REQUEST_NS = 0
++
++
++def audit(event, **fields):
++    # Do not record tokens, keys, shell commands, request bodies or command output.
++    with LOG_LOCK, (ROOT / 'logs/control.jsonl').open('a', encoding='utf-8') as file:
++        file.write(json.dumps(dict(at=datetime.now(timezone.utc).isoformat(), event=event, **fields)) + '\n')
++
++
++def load_state():
++    value = json.loads((ROOT / 'state.json').read_text(encoding='utf-8'))
++    age = time.time() - datetime.fromisoformat(value['updated_at']).timestamp()
++    return {key: value.get(key) for key in ('status', 'phase', 'health', 'vm_running',
++        'android_boot_completed', 'app_process_alive', 'ram_mib', 'updated_at',
++        'vpn_boot_setup', 'vpn_interface_up')} | {'stale': age > 90}
++
++
++def recent_logs():
++    path = ROOT / 'logs/control.jsonl'
++    if not path.exists():
++        return []
++    with path.open('rb') as file:
++        file.seek(0, 2)
++        offset = max(0, file.tell() - 65536)
++        file.seek(offset)
++        if offset:
++            file.readline()
++        lines = file.read(65536).splitlines()[-100:]
++    allowed = {'at', 'event', 'action', 'request', 'outcome', 'exit', 'seconds', 'api_port', 'ssh_port', 'error'}
++    result = []
++    for line in lines:
++        try:
++            value = json.loads(line)
++            if isinstance(value, dict):
++                result.append({key: value[key] for key in allowed if key in value})
++        except (ValueError, RecursionError):
++            continue
++    return result
++
++
++def serial():
++    import re
++    value = json.loads((ROOT / 'state.json').read_text(encoding='utf-8'))
++    target = value.get('adb_serial', '')
++    if value.get('phase') != 'ready' or not value.get('vm_running') or not re.fullmatch(r'127\.0\.0\.1:\d+', target):
++        raise ValueError('Android is not ready')
++    return target
++
++
++def android(*args):
++    result = subprocess.run([str(ADB), '-s', serial(), 'shell', *args], capture_output=True,
++                            timeout=20, creationflags=subprocess.CREATE_NO_WINDOW)
++    if result.returncode:
++        raise RuntimeError('Android command failed')
++    return result.stdout.decode('utf-8', errors='replace').strip()
++
++
++def settings():
++    path = ROOT / 'control-settings.json'
++    return json.loads(path.read_text()) if path.exists() else {'size': '960x600', 'screen_lock': False}
++
++
++def save_settings(value):
++    path = ROOT / 'control-settings.tmp'
++    path.write_text(json.dumps(value, indent=2), encoding='utf-8')
++    path.replace(ROOT / 'control-settings.json')
++
++
++def publish_json(path, value):
++    """Readers see either no file or the complete UTF-8 JSON document."""
++    descriptor, temporary = tempfile.mkstemp(dir=path.parent, prefix='.' + path.stem + '-', suffix='.tmp')
++    try:
++        with os.fdopen(descriptor, 'w', encoding='utf-8') as file:
++            json.dump(value, file)
++            file.flush()
++            os.fsync(file.fileno())
++        os.replace(temporary, path)
++    finally:
++        Path(temporary).unlink(missing_ok=True)
++
++
++def script(name):
++    # Only fixed filenames from the action map reach this host command.
++    run = subprocess.run(['C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe',
++        '-NoProfile', '-ExecutionPolicy', 'Bypass', '-WindowStyle', 'Hidden', '-File', str(ROOT / name)],
++        cwd=ROOT, capture_output=True, timeout=25, creationflags=subprocess.CREATE_NO_WINDOW)
++    if run.returncode:
++        raise RuntimeError('Control script failed')
++
++
++def action(data):
++    global LAST_REQUEST_NS
++    name = data.get('action')
++    with ACTION_LOCK:
++        if name in ('start', 'stop', 'open'):
++            script({'start': 'Start.ps1', 'stop': 'Stop.ps1', 'open': 'Open.ps1'}[name])
++        elif name == 'screen':
++            size = data.get('size')
++            if size not in SIZES:
++                raise ValueError('Unsupported screen size')
++            android('wm', 'size', size)
++            save_settings(settings() | {'size': size})
++            script('Window.ps1')
++        elif name == 'lock':
++            enabled = data.get('enabled')
++            if type(enabled) is not bool:
++                raise ValueError('enabled must be boolean')
++            android('locksettings', 'set-disabled', 'false' if enabled else 'true')
++            android('settings', 'put', 'system', 'screen_off_timeout', '600000' if enabled else '2147483647')
++            android('svc', 'power', 'stayon', 'false' if enabled else 'true')
++            save_settings(settings() | {'screen_lock': enabled})
++        elif name == 'autostart':
++            enabled = data.get('enabled')
++            if type(enabled) is not bool:
++                raise ValueError('enabled must be boolean')
++            script('Register-Autostart.ps1' if enabled else 'Disable-Autostart.ps1')
++        elif name in ('vpn', 'vpn-status'):
++            enabled = data.get('enabled')
++            if name == 'vpn' and type(enabled) is not bool:
++                raise ValueError('enabled must be boolean')
++            ident = uuid.uuid4().hex
++            directory = ROOT / 'requests'
++            directory.mkdir(exist_ok=True)
++            operation = 'vpn_status' if name == 'vpn-status' else ('vpn_up' if enabled else 'vpn_down')
++            # The reader orders by created_ns, never by the random request UUID.
++            LAST_REQUEST_NS = max(time.time_ns(), LAST_REQUEST_NS + 1)
++            publish_json(directory / (ident + '.json'), {'action': operation, 'created_ns': LAST_REQUEST_NS})
++            if name == 'vpn':
++                save_settings(settings() | {'vpn_enabled': enabled})
++            audit('action_queued', action=name, request=ident)
++            return {'accepted': True, 'request_id': ident}
++        else:
++            raise ValueError('Unknown action')
++        audit('action', action=name, outcome='ok')
++        return {'ok': True, 'action': name, 'settings': settings()}
++
++
++def certificate_names():
++    result = []
++    for host in load_deployment(ROOT)['certificate_hosts']:
++        try:
++            result.append(x509.IPAddress(ipaddress.ip_address(host)))
++        except ValueError:
++            result.append(x509.DNSName(host))
++    return result
++
++
++def prepare_credentials():
++    # The directory is created with a current-user + SYSTEM-only Windows ACL by the installer.
++    if not CREDENTIALS.is_dir():
++        raise RuntimeError('Protected credentials directory is missing')
++    token_path = CREDENTIALS / 'api-token.txt'
++    if not token_path.exists():
++        token_path.write_text(secrets.token_urlsafe(32), encoding='ascii')
++    if not (CREDENTIALS / 'ssh-host').exists():
++        asyncssh.generate_private_key('ssh-ed25519').write_private_key(CREDENTIALS / 'ssh-host')
++    if not (CREDENTIALS / 'api-cert.pem').exists():
++        key = ec.generate_private_key(ec.SECP256R1())
++        name = x509.Name([x509.NameAttribute(NameOID.COMMON_NAME, 'MS8AT Android control')])
++        cert = (x509.CertificateBuilder().subject_name(name).issuer_name(name).public_key(key.public_key())
++                .serial_number(x509.random_serial_number()).not_valid_before(datetime.now(timezone.utc) - timedelta(minutes=5))
++                .not_valid_after(datetime.now(timezone.utc) + timedelta(days=365))
++                .add_extension(x509.SubjectAlternativeName(certificate_names()), False)
++                .sign(key, hashes.SHA256()))
++        (CREDENTIALS / 'api-key.pem').write_bytes(key.private_bytes(serialization.Encoding.PEM,
++            serialization.PrivateFormat.PKCS8, serialization.NoEncryption()))
++        (CREDENTIALS / 'api-cert.pem').write_bytes(cert.public_bytes(serialization.Encoding.PEM))
++    return token_path.read_text().strip()
++
++
++class HTTP(http.server.BaseHTTPRequestHandler):
++    server_version = 'MS8AT-Android/1'
++
++    def setup(self):
++        super().setup()
++        self.connection.settimeout(10)
++
++    def log_message(self, *args):
++        pass
++
++    def reply(self, code, value):
++        raw = json.dumps(value).encode()
++        self.send_response(code)
++        self.send_header('Content-Type', 'application/json')
++        self.send_header('Cache-Control', 'no-store')
++        if code == 401:
++            self.send_header('WWW-Authenticate', 'Bearer realm="MS8AT Android"')
++        self.send_header('Content-Length', str(len(raw)))
++        self.end_headers()
++        self.wfile.write(raw)
++
++    def authorized(self):
++        supplied = self.headers.get('Authorization', '')
++        if not secrets.compare_digest(supplied.encode('utf-8'), ('Bearer ' + self.server.token).encode('utf-8')):
++            self.reply(401, {'error': 'authentication required'})
++            return False
++        return True
++
++    def do_GET(self):
++        if not self.authorized():
++            return
++        if self.path == '/v1/capabilities':
++            self.reply(200, {'api': 1, 'actions': ['start', 'stop', 'open', 'screen', 'lock', 'autostart', 'vpn', 'vpn-status'],
++                'read': ['status', 'capabilities', 'logs'], 'sizes': list(SIZES),
++                'ssh': {'port': SSH_PORT, 'user': 'android', 'scope': 'Android shell only'}})
++            return
++        if self.path == '/v1/logs':
++            self.reply(200, {'events': recent_logs(), 'limit': 100})
++            return
++        if self.path.startswith('/v1/requests/'):
++            import re
++            ident = self.path.removeprefix('/v1/requests/')
++            if not re.fullmatch('[a-f0-9]{32}', ident):
++                self.reply(400, {'error': 'invalid request id'})
++                return
++            path = ROOT / 'requests' / (ident + '.result')
++            if path.is_file():
++                try:
++                    value = json.loads(path.read_text(encoding='utf-8'))
++                except (OSError, ValueError):
++                    self.reply(503, {'error': 'request result unavailable', 'request_id': ident})
++                    return
++                self.reply(200, value)
++            else:
++                self.reply(202, {'pending': True, 'request_id': ident})
++            return
++        if self.path != '/v1/status':
++            self.reply(404, {'error': 'not found'})
++            return
++        try:
++            self.reply(200, {'android': load_state(), 'settings': settings(), 'ssh_port': SSH_PORT})
++        except (OSError, ValueError, KeyError):
++            self.reply(503, {'error': 'status unavailable'})
++
++    def do_POST(self):
++        if not self.authorized():
++            return
++        if self.path != '/v1/action':
++            self.reply(404, {'error': 'not found'})
++            return
++        try:
++            length = int(self.headers.get('Content-Length', '0'))
++            if length < 2 or length > 4096 or self.headers.get('Content-Type', '').split(';')[0] != 'application/json':
++                raise ValueError('Expected small JSON request')
++            data = json.loads(self.rfile.read(length))
++            if not isinstance(data, dict):
++                raise ValueError('Expected JSON object')
++            self.reply(200, action(data))
++        except (ValueError, TypeError):
++            self.reply(400, {'error': 'invalid action or parameters'})
++        except (RuntimeError, OSError, subprocess.TimeoutExpired):
++            self.reply(503, {'error': 'action failed; inspect local status'})
++
++
++class LimitedHTTP(http.server.ThreadingHTTPServer):
++    daemon_threads = True
++    slots = threading.BoundedSemaphore(12)
++
++    def process_request(self, request, address):
++        if not self.slots.acquire(False):
++            request.close()
++            return
++        try:
++            super().process_request(request, address)
++        except Exception:
++            self.slots.release()
++            raise
++
++    def process_request_thread(self, request, address):
++        try:
++            request.settimeout(8)
++            with self.context.wrap_socket(request, server_side=True) as secure:
++                self.finish_request(secure, address)
++        except (OSError, ssl.SSLError):
++            request.close()
++        finally:
++            self.slots.release()
++
++
++class SSH(asyncssh.SSHServer):
++    def connection_made(self, connection):
++        self.connection = connection
++        self.attempts = 0
++
++    def begin_auth(self, username):
++        return True
++
++    def public_key_auth_supported(self):
++        return True
++
++    def validate_public_key(self, username, key):
++        expected = asyncssh.read_public_key(CREDENTIALS / 'android_ed25519.pub')
++        valid = username == 'android' and key == expected
++        if not valid:
++            self.attempts += 1
++            if self.attempts >= 3:
++                self.connection.abort()
++        return valid
++
++
++async def ssh_session(process):
++    started = time.monotonic()
++    child = None
++    try:
++        if process.subsystem or (process.command and len(process.command) > 16384):
++            raise ValueError('Only bounded Android shell sessions are supported')
++        target = serial()
++        args = [str(ADB), '-s', target, 'shell', '-T']
++        if process.command:
++            # adb sends this to Android's shell. shell=True is never used on Windows.
++            args += [process.command]
++        child = await asyncio.create_subprocess_exec(*args, stdin=asyncio.subprocess.PIPE,
++            stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE,
++            creationflags=subprocess.CREATE_NO_WINDOW)
++
++        async def incoming():
++            try:
++                while data := await process.stdin.read(8192):
++                    child.stdin.write(data)
++                    await child.stdin.drain()
++            except (BrokenPipeError, ConnectionResetError):
++                pass
++            finally:
++                child.stdin.close()
++
++        async def outgoing(source, destination):
++            while data := await source.read(8192):
++                destination.write(data)
++                await destination.drain()
++
++        reader = asyncio.create_task(incoming())
++        try:
++            await asyncio.wait_for(asyncio.gather(outgoing(child.stdout, process.stdout),
++                outgoing(child.stderr, process.stderr), child.wait()), timeout=900)
++        finally:
++            reader.cancel()
++        process.exit(child.returncode)
++        audit('ssh_session', exit=child.returncode, seconds=round(time.monotonic()-started, 2))
++    except (ValueError, OSError, asyncio.TimeoutError, asyncssh.Error):
++        process.stderr.write(b'Android command unavailable or timed out\n')
++        process.exit(1)
++        audit('ssh_session', outcome='failed')
++    finally:
++        if child and child.returncode is None:
++            child.kill()
++            await child.wait()
++
++
++async def main():
++    mutex = ctypes.windll.kernel32.CreateMutexW(None, False, 'Local\\MS8AT.DewiarAndroid.Control')
++    if not mutex:
++        raise ctypes.WinError()
++    if ctypes.windll.kernel32.GetLastError() == 183:
++        return
++    deployment = load_deployment(ROOT)
++    token = prepare_credentials()
++    (ROOT / 'logs').mkdir(exist_ok=True)
++    server = LimitedHTTP((deployment['bind_host'], API_PORT), HTTP)
++    server.token = token
++    context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
++    context.minimum_version = ssl.TLSVersion.TLSv1_2
++    context.load_cert_chain(CREDENTIALS / 'api-cert.pem', CREDENTIALS / 'api-key.pem')
++    server.context = context
++    async with await asyncssh.create_server(SSH, deployment['bind_host'], SSH_PORT,
++            server_host_keys=[CREDENTIALS / 'ssh-host'], process_factory=ssh_session,
++            encoding=None, login_timeout=15):
++        threading.Thread(target=server.serve_forever, daemon=True).start()
++        audit('control_started', api_port=API_PORT, ssh_port=SSH_PORT)
++        await asyncio.Future()
++
++
++if __name__ == '__main__':
++    try:
++        asyncio.run(main())
++    except Exception as error:
++        try:
++            audit('control_failed', error=type(error).__name__)
++        except OSError:
++            pass
++        raise
+diff --git a/android_control/control_cli.py b/android_control/control_cli.py
+new file mode 100644
+--- /dev/null
++++ b/android_control/control_cli.py
+@@ -0,0 +1,96 @@
++"""CLI for the authenticated local Android controller. Never prints its token."""
++from pathlib import Path
++import argparse
++import json
++import re
++import ssl
++import time
++import urllib.error
++import urllib.request
++
++ROOT = Path(__file__).resolve().parent
++POLL_SECONDS = 30
++
++
++def load_credentials():
++    token = (ROOT / 'credentials/api-token.txt').read_text().strip()
++    context = ssl.create_default_context(cafile=str(ROOT / 'credentials/api-cert.pem'))
++    return token, context
++
++
++def request_json(url, token, context, body=None, timeout=30):
++    request = urllib.request.Request(url, data=None if body is None else json.dumps(body).encode(),
++        headers={'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json'})
++    with urllib.request.urlopen(request, context=context, timeout=timeout) as response:
++        value = json.load(response)
++    if not isinstance(value, dict):
++        raise ValueError('Expected JSON object')
++    return value
++
++
++def execute(args, token, context):
++    body = {'action': args.action}
++    if args.size:
++        body['size'] = args.size
++    if args.enabled:
++        body['enabled'] = args.enabled == 'true'
++    base = f'https://{args.host}:18769/v1/'
++    read_only = args.action in ('status', 'capabilities', 'logs')
++    request_id = None
++    try:
++        result = request_json(base + (args.action if read_only else 'action'), token, context,
++                              None if read_only else body)
++        if result.get('accepted'):
++            candidate = result.get('request_id')
++            if not isinstance(candidate, str) or not re.fullmatch(r'[a-f0-9]{32}', candidate):
++                raise ValueError('Invalid request id')
++            request_id = candidate
++            deadline = time.monotonic() + POLL_SECONDS
++            while time.monotonic() < deadline:
++                time.sleep(min(1, max(0, deadline - time.monotonic())))
++                remaining = deadline - time.monotonic()
++                if remaining <= 0:
++                    break
++                result = request_json(base + 'requests/' + request_id, token, context,
++                                      timeout=min(5, remaining))
++                if not result.get('pending'):
++                    if type(result.get('ok')) is not bool:
++                        raise ValueError('Invalid action result')
++                    return result, 0 if result['ok'] else 1
++            return {'ok': False, 'error': 'request_timeout', 'request_id': request_id,
++                    'message': 'The request is still pending. Check its status before retrying.'}, 3
++        if not read_only and type(result.get('ok')) is not bool:
++            raise ValueError('Invalid action result')
++        return result, 1 if result.get('ok') is False or 'error' in result else 0
++    except urllib.error.HTTPError as error:
++        result = {'ok': False, 'error': 'http_error', 'status': error.code}
++    except (urllib.error.URLError, OSError, TimeoutError):
++        result = {'ok': False, 'error': 'connection_failed'}
++    except (ValueError, TypeError):
++        result = {'ok': False, 'error': 'invalid_response'}
++    if request_id:
++        result['request_id'] = request_id
++    return result, 1
++
++
++def main(argv=None):
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument('action', choices=['status', 'capabilities', 'logs', 'start', 'stop', 'open', 'screen', 'lock', 'autostart', 'vpn', 'vpn-status'])
++    parser.add_argument('--size', choices=['800x500', '960x600', '1280x800'])
++    parser.add_argument('--enabled', choices=['true', 'false'])
++    parser.add_argument('--host', default='127.0.0.1')
++    args = parser.parse_args(argv)
++    if not args.host or any(char in args.host for char in '/@:#?'):
++        parser.error('Expected hostname or IPv4 address')
++    try:
++        token, context = load_credentials()
++    except (OSError, ValueError):
++        result, code = {'ok': False, 'error': 'local_credentials_unavailable'}, 1
++    else:
++        result, code = execute(args, token, context)
++    print(json.dumps(result, ensure_ascii=False, indent=2))
++    return code
++
++
++if __name__ == '__main__':
++    raise SystemExit(main())
+diff --git a/android_control/deployment.py b/android_control/deployment.py
+new file mode 100644
+--- /dev/null
++++ b/android_control/deployment.py
+@@ -0,0 +1,60 @@
++"""Validate public endpoint metadata and render a WireGuard guard without secrets."""
++from pathlib import Path
++import ipaddress
++import json
++import re
++
++DEFAULT = {'bind_host': '127.0.0.1', 'certificate_hosts': ['localhost', '127.0.0.1']}
++
++
++def validate_deployment(value):
++    if not isinstance(value, dict) or set(value) != set(DEFAULT):
++        raise ValueError('Expected bind_host and certificate_hosts')
++    if value['bind_host'] not in ('127.0.0.1', '0.0.0.0'):
++        raise ValueError('Use an explicit loopback or all-IPv4 bind')
++    hosts = value['certificate_hosts']
++    if not isinstance(hosts, list) or not 1 <= len(hosts) <= 16:
++        raise ValueError('Expected 1 to 16 certificate hosts')
++    for host in hosts:
++        if not isinstance(host, str) or len(host) > 253:
++            raise ValueError('Invalid certificate host')
++        try:
++            address = ipaddress.ip_address(host)
++        except ValueError:
++            labels = host.split('.')
++            if not all(re.fullmatch(r'[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?', part) for part in labels):
++                raise ValueError('Invalid DNS host')
++            if re.fullmatch(r'[0-9.]+', host):
++                raise ValueError('Invalid IPv4 host')
++        else:
++            if address.version != 4 or address.is_unspecified or address.is_multicast:
++                raise ValueError('Expected a concrete IPv4 host')
++    if len(set(hosts)) != len(hosts):
++        raise ValueError('Repeated certificate host')
++    # The local CLI and tray menu always use this address, even with WAN access enabled.
++    if '127.0.0.1' not in hosts:
++        raise ValueError('Certificate hosts must include 127.0.0.1 for the local CLI')
++    return {'bind_host': value['bind_host'], 'certificate_hosts': list(hosts)}
++
++
++def load_deployment(root):
++    path = Path(root) / 'control-deployment.json'
++    if not path.exists():
++        return validate_deployment(DEFAULT)
++    if path.stat().st_size > 4096:
++        raise ValueError('Deployment metadata is too large')
++    return validate_deployment(json.loads(path.read_text(encoding='utf-8')))
++
++
++def render_guard(template, endpoint, port):
++    address = ipaddress.ip_address(endpoint)
++    if address.version != 4 or address.is_unspecified or address.is_multicast or address.is_loopback:
++        raise ValueError('Expected the WireGuard server IPv4 address')
++    if type(port) is not int or not 1 <= port <= 65535:
++        raise ValueError('Invalid WireGuard UDP port')
++    if template.count('@WG_ENDPOINT_IPV4@') != 1 or template.count('@WG_ENDPOINT_PORT@') != 1:
++        raise ValueError('Unexpected guard template')
++    result = template.replace('@WG_ENDPOINT_IPV4@', str(address)).replace('@WG_ENDPOINT_PORT@', str(port))
++    if '@WG_' in result:
++        raise ValueError('Unresolved guard marker')
++    return result
+diff --git a/android_control/Disable-Autostart.ps1 b/android_control/Disable-Autostart.ps1
+new file mode 100644
+--- /dev/null
++++ b/android_control/Disable-Autostart.ps1
+@@ -0,0 +1,9 @@
++$ErrorActionPreference = 'Stop'
++$shortcutPath = Join-Path ([Environment]::GetFolderPath('Startup')) 'MS8AT Dewiar Android.lnk'
++if (-not (Test-Path -LiteralPath $shortcutPath)) { Write-Output 'Autostart is already disabled.'; exit 0 }
++$shell = New-Object -ComObject WScript.Shell
++$shortcut = $shell.CreateShortcut($shortcutPath)
++$expected = '-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File "' + (Join-Path $PSScriptRoot 'Start.ps1') + '"'
++if ($shortcut.Arguments -ne $expected) { throw 'Shortcut belongs to another configuration.' }
++Remove-Item -LiteralPath $shortcutPath
++Write-Output 'Autostart disabled. The data disk and current VM are preserved.'
+diff --git a/android_control/guest-wg.sh.in b/android_control/guest-wg.sh.in
+new file mode 100644
+--- /dev/null
++++ b/android_control/guest-wg.sh.in
+@@ -0,0 +1,56 @@
++#!/system/bin/sh
++# Private files live under a root-only directory. Never print the configuration.
++set -eu
++DIR=/data/misc/ms8at
++export PATH="$DIR/bin:/system/bin:/system/xbin:/product/bin"
++MODE=${1:-status}
++case "$MODE" in
++  up|down|guard)
++    ip route replace table 59999 10.0.2.0/24 dev eth0
++    ip rule show | grep -q 'to 10.0.2.0/24 lookup 59999' || ip rule add pref 9000 to 10.0.2.0/24 lookup 59999
++    # One atomic commit; a failed rebuild keeps the previous protection intact.
++    # Host-initiated ADB replies and bootstrap HTTP only, not host loopback services.
++    iptables-restore --noflush <<'RULES'
++*filter
++:MS8AT_WG_OUT - [0:0]
++-F MS8AT_WG_OUT
++-A MS8AT_WG_OUT -d 10.0.2.2 -p tcp --sport 5555 -m conntrack --ctstate ESTABLISHED -j RETURN
++-A MS8AT_WG_OUT -d 10.0.2.100 -p tcp --dport 80 -j RETURN
++-A MS8AT_WG_OUT -d 10.0.2.2 -p udp --sport 68 --dport 67 -j RETURN
++-A MS8AT_WG_OUT -d 255.255.255.255 -p udp --sport 68 --dport 67 -j RETURN
++-A MS8AT_WG_OUT -d @WG_ENDPOINT_IPV4@ -p udp --dport @WG_ENDPOINT_PORT@ -j RETURN
++-A MS8AT_WG_OUT -j REJECT
++COMMIT
++RULES
++    iptables -C OUTPUT -o eth0 -j MS8AT_WG_OUT 2>/dev/null || iptables -I OUTPUT -o eth0 -j MS8AT_WG_OUT
++    ip6tables -C OUTPUT -o eth0 -j REJECT 2>/dev/null || ip6tables -I OUTPUT -o eth0 -j REJECT
++    ;;
++esac
++case "$MODE" in
++  up)
++    if ! ip link show dewiarwg >/dev/null 2>&1; then
++      wg-quick up "$DIR/dewiarwg.conf"
++    fi
++    ;;
++  down)
++    if ip link show dewiarwg >/dev/null 2>&1; then
++      wg-quick down "$DIR/dewiarwg.conf"
++    fi
++    # The direct Internet block remains active when the tunnel is disabled.
++    echo MS8AT_VPN_DOWN
++    exit 0
++    ;;
++  guard) echo MS8AT_VPN_GUARD_READY; exit 0 ;;
++  status) ;;
++  *) echo 'Unsupported VPN action'; exit 2 ;;
++esac
++echo 'MS8AT_VPN_STATUS'
++if ! ip link show dewiarwg >/dev/null 2>&1; then
++    echo DOWN
++    [ "$MODE" != up ] || exit 1
++    exit 0
++fi
++echo UP
++wg show dewiarwg latest-handshakes
++wg show dewiarwg transfer
++ip address show dewiarwg
+diff --git a/android_control/Menu.ps1 b/android_control/Menu.ps1
+new file mode 100644
+--- /dev/null
++++ b/android_control/Menu.ps1
+@@ -0,0 +1,117 @@
++﻿$ErrorActionPreference = 'Stop'
++$created = $false
++$mutex = New-Object System.Threading.Mutex($true, 'Local\MS8AT.DewiarAndroid.Menu', [ref]$created)
++if(-not $created) { $mutex.Dispose(); exit 0 }
++Add-Type -AssemblyName System.Windows.Forms
++Add-Type -AssemblyName System.Drawing
++$script:root = $PSScriptRoot
++$icon = New-Object System.Windows.Forms.NotifyIcon
++$icon.Icon = [System.Drawing.SystemIcons]::Application
++$icon.Text = 'MS8AT Android - Dewiar'
++$menu = New-Object System.Windows.Forms.ContextMenuStrip
++$script:command = $null
++
++function Invoke-Control([string[]]$arguments) {
++    if ($script:command) {
++        $icon.ShowBalloonTip(4000, 'MS8AT Android', 'Предыдущая команда ещё выполняется.', [System.Windows.Forms.ToolTipIcon]::Info)
++        return
++    }
++    $process = New-Object System.Diagnostics.Process
++    try {
++        $process.StartInfo.FileName = (Get-Content -LiteralPath (Join-Path $script:root 'python-path.txt') -Raw).Trim()
++        $process.StartInfo.Arguments = '-X utf8 -B "' + (Join-Path $script:root 'control_cli.py') + '" ' + ($arguments -join ' ')
++        $process.StartInfo.WorkingDirectory = $script:root
++        $process.StartInfo.UseShellExecute = $false
++        $process.StartInfo.CreateNoWindow = $true
++        $process.StartInfo.RedirectStandardOutput = $true
++        $process.StartInfo.RedirectStandardError = $true
++        $process.StartInfo.StandardOutputEncoding = [System.Text.Encoding]::UTF8
++        $process.StartInfo.StandardErrorEncoding = [System.Text.Encoding]::UTF8
++        [void]$process.Start()
++        $script:command = [pscustomobject]@{
++            Process = $process
++            Output = New-ControlReader $process.StandardOutput
++            Error = New-ControlReader $process.StandardError
++        }
++    }
++    catch {
++        $process.Dispose()
++        $icon.ShowBalloonTip(6000, 'MS8AT Android', 'Не удалось запустить команду. Проверьте установку CLI.', [System.Windows.Forms.ToolTipIcon]::Error)
++    }
++}
++function New-ControlReader($reader) {
++    $buffer = New-Object char[] 1024
++    [pscustomobject]@{ Reader=$reader; Buffer=$buffer; Task=$reader.ReadAsync($buffer, 0, $buffer.Length); Text=(New-Object System.Text.StringBuilder); Done=$false }
++}
++function Read-ControlOutput($stream) {
++    # Drain both pipes asynchronously; retain at most 4096 characters per pipe.
++    for ($i=0; $i -lt 4 -and -not $stream.Done -and $stream.Task.IsCompleted; $i++) {
++        if ($stream.Task.IsFaulted -or $stream.Task.IsCanceled) { $stream.Done=$true; break }
++        $count = $stream.Task.Result
++        if ($count -eq 0) { $stream.Done=$true; break }
++        $keep = [Math]::Min($count, 4096 - $stream.Text.Length)
++        if ($keep -gt 0) { [void]$stream.Text.Append($stream.Buffer, 0, $keep) }
++        $stream.Task = $stream.Reader.ReadAsync($stream.Buffer, 0, $stream.Buffer.Length)
++    }
++}
++function Add-Choice([string]$label, [string[]]$arguments) {
++    $item = New-Object System.Windows.Forms.ToolStripMenuItem($label)
++    $item.Tag = $arguments
++    $item.Add_Click({ param($sender,$event) Invoke-Control $sender.Tag })
++    [void]$menu.Items.Add($item)
++}
++Add-Choice 'Открыть агента / Open' @('open')
++Add-Choice 'Запустить Android / Start' @('start')
++[void]$menu.Items.Add((New-Object System.Windows.Forms.ToolStripSeparator))
++Add-Choice 'Размер: 800 x 500' @('screen','--size','800x500')
++Add-Choice 'Размер: 960 x 600' @('screen','--size','960x600')
++Add-Choice 'Размер: 1280 x 800' @('screen','--size','1280x800')
++Add-Choice 'Отключить блокировку Android' @('lock','--enabled','false')
++Add-Choice 'Включить блокировку Android' @('lock','--enabled','true')
++Add-Choice 'Включить WireGuard Android' @('vpn','--enabled','true')
++Add-Choice 'Отключить интернет Android' @('vpn','--enabled','false')
++[void]$menu.Items.Add((New-Object System.Windows.Forms.ToolStripSeparator))
++Add-Choice 'Включить автозапуск Windows' @('autostart','--enabled','true')
++Add-Choice 'Отключить автозапуск Windows' @('autostart','--enabled','false')
++Add-Choice 'Сохранить и остановить Android' @('stop')
++$quit = New-Object System.Windows.Forms.ToolStripMenuItem('Закрыть только меню')
++$quit.Add_Click({ [System.Windows.Forms.Application]::ExitThread() })
++[void]$menu.Items.Add($quit)
++$icon.ContextMenuStrip = $menu
++$icon.Add_DoubleClick({ Invoke-Control @('open') })
++$icon.Visible = $true
++$timer = New-Object System.Windows.Forms.Timer
++$timer.Interval = 250
++$timer.Add_Tick({
++    if (-not $script:command) { return }
++    $current = $script:command
++    Read-ControlOutput $current.Output
++    Read-ControlOutput $current.Error
++    if (-not $current.Process.HasExited -or -not $current.Output.Done -or -not $current.Error.Done) { return }
++    $code = $current.Process.ExitCode
++    $message = 'Команда выполнена.'
++    $kind = [System.Windows.Forms.ToolTipIcon]::Info
++    if ($code -eq 3) {
++        $message = 'Команда ещё выполняется. Проверьте состояние Android; не повторяйте запуск.'
++        $kind = [System.Windows.Forms.ToolTipIcon]::Warning
++    }
++    elseif ($code -ne 0) {
++        $message = 'Команда не выполнена. Проверьте состояние контроллера Android.'
++        $kind = [System.Windows.Forms.ToolTipIcon]::Error
++        try {
++            $result = $current.Output.Text.ToString() | ConvertFrom-Json
++            # Only show a short machine code. Never display raw output or stderr.
++            if ($result.error -is [string] -and $result.error -cmatch '^[a-z][a-z0-9_]{0,63}$') { $message += ' Код: ' + $result.error }
++        } catch { }
++    }
++    $current.Process.Dispose()
++    $script:command = $null
++    $icon.ShowBalloonTip(6000, 'MS8AT Android', $message, $kind)
++})
++$timer.Start()
++try { [System.Windows.Forms.Application]::Run() }
++finally {
++    $timer.Stop(); $timer.Dispose()
++    if ($script:command) { $script:command.Process.Dispose() }
++    $icon.Dispose(); $menu.Dispose(); $mutex.ReleaseMutex(); $mutex.Dispose()
++}
+diff --git a/android_control/Open.ps1 b/android_control/Open.ps1
+new file mode 100644
+--- /dev/null
++++ b/android_control/Open.ps1
+@@ -0,0 +1,34 @@
++$ErrorActionPreference = 'Stop'
++$statePath = Join-Path $PSScriptRoot 'state.json'
++$state = if (Test-Path -LiteralPath $statePath) { Get-Content -LiteralPath $statePath -Raw | ConvertFrom-Json } else { $null }
++$vm = if ($state) { Get-Process -Id $state.pid -ErrorAction SilentlyContinue } else { $null }
++$expectedPath = Join-Path $PSScriptRoot 'qemu\qemu-system-x86_64.exe'
++if (-not $vm -or $vm.Path -ne $expectedPath) {
++    & (Join-Path $PSScriptRoot 'Start.ps1') | Out-Null
++    exit 0
++}
++
++# Use QEMU's native screen: this Android build has no working MediaCodec capture.
++Add-Type -TypeDefinition @'
++using System;
++using System.Runtime.InteropServices;
++public static class AndroidWindow {
++    [DllImport("user32.dll")] public static extern bool ShowWindow(IntPtr window, int command);
++    [DllImport("user32.dll")] public static extern bool SetForegroundWindow(IntPtr window);
++}
++'@
++$vm.Refresh()
++if ($vm.MainWindowHandle -ne [IntPtr]::Zero) {
++    [AndroidWindow]::ShowWindow($vm.MainWindowHandle, 9) | Out-Null
++    [AndroidWindow]::SetForegroundWindow($vm.MainWindowHandle) | Out-Null
++}
++if ($state.phase -ne 'ready') { exit 0 }
++$adbPath = Join-Path $PSScriptRoot 'platform-tools\adb.exe'
++$serial = [string]$state.adb_serial
++if ($serial -notmatch '^127\.0\.0\.1:\d+$') { throw 'Expected an explicit local test device.' }
++& $adbPath connect $serial | Out-Null
++if ($LASTEXITCODE -ne 0) { throw 'ADB connection failed.' }
++$deviceState = & $adbPath -s $serial get-state
++if ($LASTEXITCODE -ne 0 -or $deviceState.Trim() -ne 'device') { throw 'The selected Android VM is not ready for control.' }
++& $adbPath -s $serial shell am start --user 0 -W -n pro.dewiar.app/.MainActivity | Out-Null
++if ($LASTEXITCODE -ne 0) { throw 'Dewiar could not be opened.' }
+diff --git a/android_control/Register-Autostart.ps1 b/android_control/Register-Autostart.ps1
+new file mode 100644
+--- /dev/null
++++ b/android_control/Register-Autostart.ps1
+@@ -0,0 +1,39 @@
++$ErrorActionPreference = 'Stop'
++$runtimeRoot = $PSScriptRoot
++$startupDir = [Environment]::GetFolderPath('Startup')
++$shortcutPath = Join-Path $startupDir 'MS8AT Dewiar Android.lnk'
++$shell = New-Object -ComObject WScript.Shell
++$shortcut = $shell.CreateShortcut($shortcutPath)
++$powershell = Join-Path $env:SystemRoot 'System32\WindowsPowerShell\v1.0\powershell.exe'
++$arguments = '-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File "' + (Join-Path $runtimeRoot 'Start.ps1') + '"'
++if ((Test-Path -LiteralPath $shortcutPath) -and ($shortcut.TargetPath -ne $powershell -or $shortcut.Arguments -ne $arguments)) { throw 'An unrelated shortcut already has this name.' }
++$shortcut.TargetPath = $powershell
++$shortcut.Arguments = $arguments
++$shortcut.WorkingDirectory = $runtimeRoot
++$shortcut.WindowStyle = 7
++$shortcut.Description = 'Start the verified local 8 GiB Android test VM after Windows sign-in.'
++$shortcut.Save()
++$readback = $shell.CreateShortcut($shortcutPath)
++if ($readback.TargetPath -ne $powershell -or $readback.Arguments -ne $arguments) { throw 'Startup shortcut readback failed.' }
++$desktopPath = Join-Path ([Environment]::GetFolderPath('Desktop')) 'MS8AT Android - Dewiar.lnk'
++if (-not (Test-Path -LiteralPath $desktopPath)) {
++    $openShortcut = $shell.CreateShortcut($desktopPath)
++    $openShortcut.TargetPath = $powershell
++    $openShortcut.Arguments = '-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File "' + (Join-Path $runtimeRoot 'Open.ps1') + '"'
++    $openShortcut.WorkingDirectory = $runtimeRoot
++    $openShortcut.Save()
++}
++Add-Type -TypeDefinition 'using System; using System.Runtime.InteropServices; public static class PackageState { [DllImport("kernel32.dll", CharSet=CharSet.Unicode)] public static extern int GetCurrentPackageFullName(ref uint length, System.Text.StringBuilder name); }'
++$stopPath = Join-Path ([Environment]::GetFolderPath('Desktop')) 'MS8AT Android - Stop.lnk'
++$stopArguments = '-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File "' + (Join-Path $runtimeRoot 'Stop.ps1') + '"'
++$stopShortcut = $shell.CreateShortcut($stopPath)
++if ((Test-Path -LiteralPath $stopPath) -and ($stopShortcut.TargetPath -ne $powershell -or $stopShortcut.Arguments -ne $stopArguments)) { throw 'An unrelated stop shortcut already has this name.' }
++$stopShortcut.TargetPath = $powershell
++$stopShortcut.Arguments = $stopArguments
++$stopShortcut.WorkingDirectory = $runtimeRoot
++$stopShortcut.Description = 'Save Android data and shut down this local VM.'
++$stopShortcut.Save()
++$length = [uint32]0
++$packageResult = [PackageState]::GetCurrentPackageFullName([ref]$length, $null)
++$receipt = [ordered]@{registeredAt=[DateTimeOffset]::Now.ToString('o');startup=$shortcutPath;desktop=$desktopPath;target=$readback.TargetPath;arguments=$readback.Arguments;packageApiResult=$packageResult;runtimeRoot=$runtimeRoot;user=[Environment]::UserName}
++$receipt | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $runtimeRoot 'autostart-receipt.json') -Encoding UTF8
+diff --git a/android_control/SSH.ps1 b/android_control/SSH.ps1
+new file mode 100644
+--- /dev/null
++++ b/android_control/SSH.ps1
+@@ -0,0 +1,18 @@
++param(
++    [ValidatePattern('^[A-Za-z0-9][A-Za-z0-9.-]*$')][string]$TargetHost = '127.0.0.1',
++    [string]$Command
++)
++$ErrorActionPreference = 'Stop'
++$allowedHosts = @('localhost', '127.0.0.1')
++$deploymentPath = Join-Path $PSScriptRoot 'control-deployment.json'
++if (Test-Path -LiteralPath $deploymentPath) {
++    $allowedHosts = @((Get-Content -LiteralPath $deploymentPath -Raw | ConvertFrom-Json).certificate_hosts)
++}
++if ($TargetHost -notin $allowedHosts) { throw 'Host is not in the local deployment allowlist.' }
++$ssh = (Get-Command ssh.exe -ErrorAction Stop).Source
++$parameters = @('-p','2222','-l','android','-o','BatchMode=yes','-o','IdentitiesOnly=yes',
++    '-o','StrictHostKeyChecking=yes','-o',('UserKnownHostsFile='+(Join-Path $PSScriptRoot 'credentials\known_hosts')),
++    '-i',(Join-Path $PSScriptRoot 'credentials\android_ed25519'),$TargetHost)
++if($Command) { $parameters += $Command }
++& $ssh @parameters
++exit $LASTEXITCODE
+diff --git a/android_control/Start-Control.ps1 b/android_control/Start-Control.ps1
+new file mode 100644
+--- /dev/null
++++ b/android_control/Start-Control.ps1
+@@ -0,0 +1,3 @@
++$ErrorActionPreference = 'Stop'
++$pythonPath = (Get-Content -LiteralPath (Join-Path $PSScriptRoot 'python-path.txt') -Raw).Trim()
++Start-Process -FilePath $pythonPath -ArgumentList @('-X','utf8','-B',('"'+(Join-Path $PSScriptRoot 'control.py')+'"')) -WorkingDirectory $PSScriptRoot -WindowStyle Hidden | Out-Null
+diff --git a/android_control/Start.ps1 b/android_control/Start.ps1
+new file mode 100644
+--- /dev/null
++++ b/android_control/Start.ps1
+@@ -0,0 +1,31 @@
++$ErrorActionPreference = 'Stop'
++$runtimeRoot = $PSScriptRoot
++$pythonPath = (Get-Content -LiteralPath (Join-Path $runtimeRoot 'python-path.txt') -Raw).Trim()
++if (-not (Test-Path -LiteralPath $pythonPath -PathType Leaf)) { throw 'Python runtime is missing.' }
++$entryPath = Join-Path $runtimeRoot 'runtime.py'
++$statePath = Join-Path $runtimeRoot 'state.json'
++if (Test-Path -LiteralPath $statePath) {
++    $state = Get-Content -LiteralPath $statePath -Raw | ConvertFrom-Json
++    $vm = if ([int]$state.pid -gt 0) { Get-Process -Id ([int]$state.pid) -ErrorAction SilentlyContinue } else { $null }
++    if ($vm -and -not $vm.Path) {
++        Write-Error 'unverified_vm: Cannot verify the old VM executable. Nothing was started.' -ErrorAction Continue
++        exit 2
++    }
++    if ($vm -and $vm.Path -eq (Join-Path $runtimeRoot 'qemu\qemu-system-x86_64.exe')) {
++        $runner = if ([int]$state.runner_pid -gt 0) { Get-CimInstance Win32_Process -Filter ('ProcessId = ' + [int]$state.runner_pid) } else { $null }
++        # Match the executable and complete launcher command, as in Stop.ps1.
++        $pythonPattern = [regex]::Escape($pythonPath)
++        $entryPattern = [regex]::Escape($entryPath)
++        $expectedCommand = '^\s*(?:"' + $pythonPattern + '"|' + $pythonPattern + ')\s+-X\s+utf8\s+-B\s+(?:"' + $entryPattern + '"|' + $entryPattern + ')\s*$'
++        $ownRunner = $runner -and $runner.ExecutablePath -eq $pythonPath -and $runner.CommandLine -match $expectedCommand
++        if (-not $ownRunner) {
++            Write-Error 'orphan_vm: Android is still running without its verified controller. Nothing was started.' -ErrorAction Continue
++            exit 2
++        }
++    }
++}
++& (Join-Path $runtimeRoot 'Start-Control.ps1')
++$powershell = Join-Path $env:SystemRoot 'System32\WindowsPowerShell\v1.0\powershell.exe'
++Start-Process -FilePath $powershell -ArgumentList @('-NoProfile','-STA','-ExecutionPolicy','Bypass','-WindowStyle','Hidden','-File',('"'+(Join-Path $runtimeRoot 'Menu.ps1')+'"')) -WorkingDirectory $runtimeRoot -WindowStyle Hidden | Out-Null
++$process = Start-Process -FilePath $pythonPath -ArgumentList @('-X', 'utf8', '-B', ('"' + $entryPath + '"')) -WorkingDirectory $runtimeRoot -WindowStyle Hidden -PassThru
++[pscustomobject]@{LauncherPid=$process.Id;StatusFile=(Join-Path $runtimeRoot 'state.json')}
+diff --git a/android_control/Status.ps1 b/android_control/Status.ps1
+new file mode 100644
+--- /dev/null
++++ b/android_control/Status.ps1
+@@ -0,0 +1,9 @@
++$ErrorActionPreference = 'Stop'
++$statePath = Join-Path $PSScriptRoot 'state.json'
++if (-not (Test-Path -LiteralPath $statePath)) { @{status='NOT_STARTED'} | ConvertTo-Json; exit 0 }
++$state = Get-Content -LiteralPath $statePath -Raw | ConvertFrom-Json
++$vm = Get-Process -Id $state.pid -ErrorAction SilentlyContinue
++$runner = Get-Process -Id $state.runner_pid -ErrorAction SilentlyContinue
++$pythonPath = (Get-Content -LiteralPath (Join-Path $PSScriptRoot 'python-path.txt') -Raw).Trim()
++$running = [bool]($vm -and $vm.Path -eq (Join-Path $PSScriptRoot 'qemu\qemu-system-x86_64.exe') -and $runner -and $runner.Path -eq $pythonPath)
++[pscustomobject]@{status=$(if ($running) {$state.status} else {'STOPPED'});phase=$(if ($running) {$state.phase} else {'stopped'});ramMiB=$state.ram_mib;androidBoot=($running -and $state.android_boot_completed);appAlive=($running -and $state.app_process_alive);health=$(if ($running) {$state.health} else {'STOPPED'});vmRunning=$running;vmPid=$state.pid;logs=$state.run_dir;updated=$state.updated_at} | ConvertTo-Json
+diff --git a/android_control/Stop.ps1 b/android_control/Stop.ps1
+new file mode 100644
+--- /dev/null
++++ b/android_control/Stop.ps1
+@@ -0,0 +1,23 @@
++$ErrorActionPreference = 'Stop'
++$statePath = Join-Path $PSScriptRoot 'state.json'
++if (-not (Test-Path -LiteralPath $statePath)) { Write-Output 'Not started'; exit 0 }
++$state = Get-Content -LiteralPath $statePath -Raw | ConvertFrom-Json
++$pythonPath = (Get-Content -LiteralPath (Join-Path $PSScriptRoot 'python-path.txt') -Raw).Trim()
++$entryPath = Join-Path $PSScriptRoot 'runtime.py'
++$runner = Get-CimInstance Win32_Process -Filter ('ProcessId = ' + [int]$state.runner_pid)
++# Match this launcher's complete command, not merely a reused Python PID.
++$pythonPattern = [regex]::Escape($pythonPath)
++$entryPattern = [regex]::Escape($entryPath)
++$expectedCommand = '^\s*(?:"' + $pythonPattern + '"|' + $pythonPattern + ')\s+-X\s+utf8\s+-B\s+(?:"' + $entryPattern + '"|' + $entryPattern + ')\s*$'
++$ownRunner = $runner -and $runner.ExecutablePath -eq $pythonPath -and $runner.CommandLine -match $expectedCommand
++if (-not $ownRunner) {
++    $vm = Get-Process -Id ([int]$state.pid) -ErrorAction SilentlyContinue
++    if ($vm -and $vm.Path -eq (Join-Path $PSScriptRoot 'qemu\qemu-system-x86_64.exe')) {
++        Write-Error 'orphan_vm: Android is still running, but its verified controller is unavailable. No process was terminated.' -ErrorAction Continue
++        exit 2
++    }
++    Write-Output 'Not running'
++    exit 0
++}
++[System.IO.File]::WriteAllText((Join-Path $PSScriptRoot 'stop.request'), [DateTimeOffset]::Now.ToString('o'))
++Write-Output 'Graceful shutdown requested. Check Status.ps1.'
+diff --git a/android_control/Window.ps1 b/android_control/Window.ps1
+new file mode 100644
+--- /dev/null
++++ b/android_control/Window.ps1
+@@ -0,0 +1,27 @@
++$ErrorActionPreference = 'Stop'
++Add-Type -AssemblyName System.Windows.Forms
++Add-Type -TypeDefinition @'
++using System;
++using System.Runtime.InteropServices;
++public static class AndroidPlacement {
++    [DllImport("user32.dll")] public static extern bool SetWindowPos(IntPtr hwnd, IntPtr after, int x, int y, int width, int height, uint flags);
++}
++'@
++$state = Get-Content -LiteralPath (Join-Path $PSScriptRoot 'state.json') -Raw | ConvertFrom-Json
++$size = '960x600'
++$configPath = Join-Path $PSScriptRoot 'control-settings.json'
++if(Test-Path -LiteralPath $configPath) { $size = (Get-Content -LiteralPath $configPath -Raw | ConvertFrom-Json).size }
++if($size -notin @('800x500','960x600','1280x800')) { throw 'Unsupported window size' }
++$dimensions = $size.Split('x')
++$area = [System.Windows.Forms.Screen]::PrimaryScreen.WorkingArea
++$width = [Math]::Min([int]$dimensions[0], $area.Width - 40)
++$height = [Math]::Min([int]$dimensions[1] + 32, $area.Height - 40)
++for($attempt=0; $attempt -lt 40; $attempt++) {
++    $vm = Get-Process -Id $state.pid -ErrorAction SilentlyContinue
++    if(-not $vm -or $vm.Path -ne (Join-Path $PSScriptRoot 'qemu\qemu-system-x86_64.exe')) { exit 0 }
++    if($vm.MainWindowHandle -ne [IntPtr]::Zero) {
++        [AndroidPlacement]::SetWindowPos($vm.MainWindowHandle, [IntPtr]::Zero, ($area.Right-$width-20), ($area.Top+20), $width, $height, 0x14) | Out-Null
++        exit 0
++    }
++    Start-Sleep -Milliseconds 200
++}

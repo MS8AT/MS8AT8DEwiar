@@ -1,0 +1,96 @@
+{
+  "status": "PASS",
+  "findings": [],
+  "reviewed_public_constants": [
+    {
+      "file": "patches/PATCH-021/INTEGRATION.md",
+      "line": 42,
+      "category": "private_ipv4",
+      "reason": "Documented QEMU user-network constants, not operator LAN endpoints"
+    },
+    {
+      "file": "patches/PATCH-021/INTEGRATION.md",
+      "line": 42,
+      "category": "private_ipv4",
+      "reason": "Documented QEMU user-network constants, not operator LAN endpoints"
+    },
+    {
+      "file": "patches/PATCH-021/INTEGRATION.md",
+      "line": 42,
+      "category": "private_ipv4",
+      "reason": "Documented QEMU user-network constants, not operator LAN endpoints"
+    },
+    {
+      "file": "patches/PATCH-021/module-files.patch",
+      "line": 732,
+      "category": "private_ipv4",
+      "reason": "Documented QEMU user-network constants, not operator LAN endpoints"
+    },
+    {
+      "file": "patches/PATCH-021/module-files.patch",
+      "line": 733,
+      "category": "private_ipv4",
+      "reason": "Documented QEMU user-network constants, not operator LAN endpoints"
+    },
+    {
+      "file": "patches/PATCH-021/module-files.patch",
+      "line": 733,
+      "category": "private_ipv4",
+      "reason": "Documented QEMU user-network constants, not operator LAN endpoints"
+    },
+    {
+      "file": "patches/PATCH-021/module-files.patch",
+      "line": 740,
+      "category": "private_ipv4",
+      "reason": "Documented QEMU user-network constants, not operator LAN endpoints"
+    },
+    {
+      "file": "patches/PATCH-021/module-files.patch",
+      "line": 741,
+      "category": "private_ipv4",
+      "reason": "Documented QEMU user-network constants, not operator LAN endpoints"
+    },
+    {
+      "file": "patches/PATCH-021/module-files.patch",
+      "line": 742,
+      "category": "private_ipv4",
+      "reason": "Documented QEMU user-network constants, not operator LAN endpoints"
+    },
+    {
+      "file": "patches/PATCH-021/src/android_control/guest-wg.sh.in",
+      "line": 9,
+      "category": "private_ipv4",
+      "reason": "Documented QEMU user-network constants, not operator LAN endpoints"
+    },
+    {
+      "file": "patches/PATCH-021/src/android_control/guest-wg.sh.in",
+      "line": 10,
+      "category": "private_ipv4",
+      "reason": "Documented QEMU user-network constants, not operator LAN endpoints"
+    },
+    {
+      "file": "patches/PATCH-021/src/android_control/guest-wg.sh.in",
+      "line": 10,
+      "category": "private_ipv4",
+      "reason": "Documented QEMU user-network constants, not operator LAN endpoints"
+    },
+    {
+      "file": "patches/PATCH-021/src/android_control/guest-wg.sh.in",
+      "line": 17,
+      "category": "private_ipv4",
+      "reason": "Documented QEMU user-network constants, not operator LAN endpoints"
+    },
+    {
+      "file": "patches/PATCH-021/src/android_control/guest-wg.sh.in",
+      "line": 18,
+      "category": "private_ipv4",
+      "reason": "Documented QEMU user-network constants, not operator LAN endpoints"
+    },
+    {
+      "file": "patches/PATCH-021/src/android_control/guest-wg.sh.in",
+      "line": 19,
+      "category": "private_ipv4",
+      "reason": "Documented QEMU user-network constants, not operator LAN endpoints"
+    }
+  ]
+}

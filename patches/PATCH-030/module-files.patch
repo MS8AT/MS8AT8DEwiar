@@ -1,0 +1,317 @@
+diff --git a/core/audio_buffer.py b/core/audio_buffer.py
+new file mode 100644
+--- /dev/null
++++ b/core/audio_buffer.py
+@@ -0,0 +1,146 @@
++"""Кадры микрофона/WAV: короткая очередь и отдельная история в памяти.
++
++В callback только копирование PCM, метки и ограниченные deque под коротким замком.
++Здесь нет модели, диска, сети или ожидания свободного места. Это не hard realtime.
++"""
++from collections import deque
++from dataclasses import dataclass
++import math
++import queue
++import threading
++import time
++import uuid
++
++RATE, FRAME = 16000, 512
++SOURCES = {"pc_mic", "wav", "synthetic"}
++
++
++def validate_options(history_seconds=10, queue_ms=480, history_enabled=False):
++    if type(history_seconds) is not int or not 1 <= history_seconds <= 30:
++        raise ValueError("История звука: от 1 до 30 секунд")
++    if type(queue_ms) is not int or not 32 <= queue_ms <= 2000:
++        raise ValueError("Очередь звука: от 32 до 2000 мс")
++    if type(history_enabled) is not bool:
++        raise ValueError("История звука: включена или выключена")
++
++
++@dataclass(frozen=True)
++class AudioFrame:
++    pcm: bytes
++    sequence: int
++    start_sample: int
++    captured_at: float
++    source: str
++    stream_id: str
++
++    @property
++    def samples(self):
++        return len(self.pcm) // 2
++
++
++class AudioBuffer:
++    """Один producer, несколько последовательных consumers; snapshot не съедает очередь."""
++
++    def __init__(self, source="pc_mic", history_seconds=10, queue_ms=480,
++                 history_enabled=False, clock=time.monotonic):
++        validate_options(history_seconds, queue_ms, history_enabled)
++        if source not in SOURCES:
++            raise ValueError("Неизвестный источник звука")
++        self.source, self.clock = source, clock
++        self.stream_id = uuid.uuid4().hex
++        self.capacity_samples = history_seconds * RATE
++        self.queue_capacity = max(1, queue_ms * RATE // (1000 * FRAME))
++        self.history_enabled = history_enabled
++        self._condition = threading.Condition()
++        self._queue, self._history = deque(), deque()
++        self._history_samples = 0
++        self._sequence = self._samples = 0
++        self.dropped_frames = self.dropped_samples = 0
++        self._closed = False
++        self._short_frame = False
++
++    def push(self, pcm):
++        if not isinstance(pcm, bytes) or not pcm or len(pcm) % 2 or len(pcm) > FRAME * 2:
++            raise ValueError("Кадр: PCM16 mono, от 1 до 512 samples")
++        now = self.clock()
++        if not math.isfinite(now):
++            raise ValueError("Некорректное время кадра")
++        with self._condition:
++            if self._closed:
++                return None
++            if self._short_frame:
++                raise ValueError("После последнего неполного кадра нужен новый поток")
++            frame = AudioFrame(pcm, self._sequence, self._samples, now, self.source, self.stream_id)
++            self._sequence += 1
++            self._samples += frame.samples
++            self._short_frame = frame.samples < FRAME
++            if len(self._queue) == self.queue_capacity:
++                old = self._queue.popleft()
++                self.dropped_frames += 1
++                self.dropped_samples += old.samples
++            self._queue.append(frame)
++            if self.history_enabled:
++                self._history.append(frame)
++                self._history_samples += frame.samples
++                # Сохраняем граничный кадр целиком; обрезаем его только при snapshot.
++                while self._history and self._history_samples - self._history[0].samples >= self.capacity_samples:
++                    self._history_samples -= self._history.popleft().samples
++            self._condition.notify()
++            return frame
++
++    def get(self, timeout=2):
++        with self._condition:
++            if not self._condition.wait_for(lambda: self._queue or self._closed, timeout):
++                raise queue.Empty
++            if not self._queue:
++                raise queue.Empty
++            return self._queue.popleft()
++
++    def enable_history(self, enabled):
++        if type(enabled) is not bool:
++            raise ValueError("История звука: да/нет")
++        with self._condition:
++            if enabled != self.history_enabled or not enabled:
++                self._history.clear()
++                self._history_samples = 0
++            self.history_enabled = enabled and not self._closed
++
++    def snapshot(self, seconds=10):
++        if type(seconds) not in (int, float) or not math.isfinite(seconds) or not 0 < seconds <= self.capacity_samples / RATE:
++            raise ValueError("Длительность за пределами истории")
++        count = int(seconds * RATE)
++        if count < 1:
++            raise ValueError("История должна содержать хотя бы один sample")
++        with self._condition:
++            if not self.history_enabled or self._closed:
++                raise ValueError("История звука выключена")
++            frames = tuple(self._history)
++            end = self._samples
++        if not frames:
++            raise ValueError("История звука пока пуста")
++        data = b"".join(frame.pcm for frame in frames)[-count * 2:]
++        return data, {"source": self.source, "stream_id": self.stream_id,
++                      "start_sample": end - len(data) // 2, "end_sample": end,
++                      "sample_rate": RATE, "channels": 1, "duration_s": len(data) / (2 * RATE)}
++
++    def status(self):
++        with self._condition:
++            oldest = self._queue[0].captured_at if self._queue else None
++            return {"state": "closed" if self._closed else "open", "source": self.source,
++                    "sample_rate": RATE, "frame_samples": FRAME,
++                    "queue_frames": len(self._queue), "queue_limit_ms": self.queue_capacity * FRAME * 1000 / RATE,
++                    "queue_age_ms": max(0, (self.clock() - oldest) * 1000) if oldest is not None else 0,
++                    "captured_frames": self._sequence, "captured_samples": self._samples,
++                    "dropped_frames": self.dropped_frames, "dropped_ms": self.dropped_samples * 1000 / RATE,
++                    "history_enabled": self.history_enabled,
++                    "history_samples": min(self.capacity_samples, self._history_samples),
++                    "history_capacity_s": self.capacity_samples / RATE}
++
++    def close(self):
++        with self._condition:
++            self._closed = True
++            self.history_enabled = False
++            self._queue.clear()
++            self._history.clear()
++            self._history_samples = 0
++            self._condition.notify_all()
+diff --git a/core/audio_context.py b/core/audio_context.py
+new file mode 100644
+--- /dev/null
++++ b/core/audio_context.py
+@@ -0,0 +1,83 @@
++"""Версии текста для предварительного recall. Сам модуль не вызывает модель или память.
++
++Внешний исполнитель получает запрос с ticket; ответ принимается только пока
++совпадают session/revision/query и срок. Черновики живут в RAM и не выполняют команды.
++"""
++from dataclasses import dataclass
++import math
++import time
++import uuid
++
++
++@dataclass(frozen=True)
++class RecallTicket:
++    session: str
++    revision: int
++    query: str
++    issued_at: float
++
++
++class ContextPreparation:
++    def __init__(self, clock=time.monotonic, stable_ms=500, ttl_ms=3000, max_chars=6000):
++        if type(stable_ms) is not int or not 100 <= stable_ms <= 5000:
++            raise ValueError("stable_ms: 100–5000")
++        if type(ttl_ms) is not int or not stable_ms <= ttl_ms <= 30000:
++            raise ValueError("ttl_ms: stable_ms–30000")
++        if type(max_chars) is not int or not 200 <= max_chars <= 12000:
++            raise ValueError("max_chars: 200–12000")
++        self.clock, self.stable_s, self.ttl_s, self.max_chars = clock, stable_ms / 1000, ttl_ms / 1000, max_chars
++        self.session = uuid.uuid4().hex
++        self.revision, self.text, self.final = 0, "", False
++        self.changed_at = clock()
++        self.pending = None
++        self.prepared = None
++        self.requested_revision = -1
++        self.cancelled = self.stale_results = 0
++
++    def update(self, text, final=False):
++        if not isinstance(text, str) or len(text) > self.max_chars or type(final) is not bool:
++            raise ValueError("Некорректная версия текста")
++        if text == self.text and final and not self.final:
++            self.final = True  # прежний recall применим: подтверждены ровно те же слова
++            return self.revision
++        if text != self.text or final != self.final:
++            if self.pending or self.prepared:
++                self.cancelled += 1
++            self.revision += 1
++            self.text, self.final, self.changed_at = text, final, self.clock()
++            self.pending = self.prepared = None
++        return self.revision
++
++    def request(self):
++        now = self.clock()
++        if (not math.isfinite(now) or len(self.text.split()) < 3 or self.pending or self.prepared
++                or self.requested_revision == self.revision):
++            return None
++        if not self.final and now - self.changed_at < self.stable_s:
++            return None
++        self.pending = RecallTicket(self.session, self.revision, self.text, now)
++        self.requested_revision = self.revision
++        return self.pending
++
++    def accept(self, ticket, fragments):
++        if not isinstance(ticket, RecallTicket) or ticket != self.pending or self.clock() - ticket.issued_at > self.ttl_s:
++            self.stale_results += 1
++            if ticket == self.pending:
++                self.pending = None
++            return False
++        if not isinstance(fragments, list) or len(fragments) > 5 or any(not isinstance(s, str) for s in fragments):
++            raise ValueError("Recall: не более пяти текстовых фрагментов")
++        text = "\n".join(fragments)
++        if len(text) > self.max_chars:
++            raise ValueError("Recall превысил бюджет символов")
++        self.prepared, self.pending = (ticket, text), None
++        return True
++
++    def context(self):
++        # Нефинальный текст можно использовать лишь как запрос к read-only recall.
++        if not self.final:
++            return {"ready": False, "revision": self.revision, "memory": ""}
++        if self.prepared and self.clock() - self.prepared[0].issued_at > self.ttl_s:
++            self.prepared = None
++        return {"ready": True, "revision": self.revision, "transcript": self.text,
++                "memory": self.prepared[1] if self.prepared else "", "memory_write": False}
+diff --git a/core/audio_local.py b/core/audio_local.py
+new file mode 100644
+--- /dev/null
++++ b/core/audio_local.py
+@@ -0,0 +1,73 @@
++"""Локальный WAV и метаданные буфера. Модель, сеть и распознавание не вызываются."""
++import base64
++import io
++import math
++import os
++from pathlib import Path
++import tempfile
++import wave
++
++from audio_buffer import RATE
++
++
++def wav_bytes(pcm):
++    if not isinstance(pcm, bytes) or len(pcm) % 2 or not 0 < len(pcm) <= RATE * 2 * 300:
++        raise ValueError("Нужен PCM16 mono не длиннее пяти минут")
++    out = io.BytesIO()
++    with wave.open(out, "wb") as w:
++        w.setnchannels(1)
++        w.setsampwidth(2)
++        w.setframerate(RATE)
++        w.writeframes(pcm)
++    return out.getvalue()
++
++
++def save_wav(path, pcm):
++    """Готовый файл появляется атомарно; существующий файл никогда не заменяется."""
++    path = Path(path)
++    data = wav_bytes(pcm)
++    if path.suffix.lower() != ".wav" or not path.parent.is_dir():
++        raise ValueError("Выберите существующую папку и имя .wav")
++    temp_path = None
++    try:
++        with tempfile.NamedTemporaryFile(dir=path.parent, suffix=".part", delete=False) as f:
++            temp_path = Path(f.name)
++            f.write(data)
++            f.flush()
++            os.fsync(f.fileno())
++        os.link(temp_path, path)  # не перезаписывает даже при гонке с другим писателем
++    finally:
++        if temp_path is not None:
++            temp_path.unlink(missing_ok=True)
++    return {"bytes": len(data), "duration_s": len(pcm) / (RATE * 2)}
++
++
++def status(host):
++    capture = getattr(host, "capture", None)
++    buffer = getattr(capture, "buffer", None)
++    if buffer is None:
++        return {"state": "unavailable", "history_enabled": False}
++    raw = buffer.status()
++    out = {"state": raw.get("state") if raw.get("state") in {"open", "closed"} else "unknown",
++           "source": raw.get("source") if raw.get("source") in {"pc_mic", "wav", "synthetic"} else "unknown",
++           "history_enabled": raw.get("history_enabled") is True and not bool(getattr(host, "muted", False))}
++    for key in ("sample_rate", "frame_samples", "queue_frames", "queue_limit_ms", "queue_age_ms",
++                "captured_frames", "captured_samples", "dropped_frames", "dropped_ms", "history_samples", "history_capacity_s"):
++        value = raw.get(key)
++        out[key] = value if type(value) in (int, float) and math.isfinite(value) and 0 <= value <= 10**12 else None
++    return out
++
++
++def command(host, cmd, args):
++    if not isinstance(args, dict):
++        raise ValueError("Нужны параметры аудио")
++    if cmd == "audio_buffer_status" and not args:
++        return status(host)
++    if cmd != "audio_history_export" or set(args) != {"confirm", "seconds"} or args["confirm"] is not True:
++        raise ValueError("Сначала подтвердите сохранение истории звука")
++    capture = getattr(host, "capture", None)
++    if getattr(host, "muted", False) or getattr(capture, "buffer", None) is None:
++        raise ValueError("История звука недоступна")
++    pcm, metadata = capture.buffer.snapshot(args["seconds"])
++    return {"filename": "dewiar-audio-history.wav", "wav_b64": base64.b64encode(wav_bytes(pcm)).decode("ascii"),
++            "preview_only": True, **metadata}

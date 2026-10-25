@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "upstream": {
+    "version": "0.45.3",
+    "android": "0.7.1",
+    "commit": "32fcd918f21fc606efc0ed37870ac8edb9d1a290"
+  },
+  "pc_candidate_build": 36,
+  "android_candidate": "ANDROID-005",
+  "status": "PARTIAL",
+  "public_format": "standalone_modules_and_integration_prompts",
+  "automatic_install": false,
+  "upstream_source_tree_included": false,
+  "new_blocks": [
+    "PATCH-020",
+    "PATCH-021",
+    "PATCH-022",
+    "PATCH-023",
+    "PATCH-024",
+    "PATCH-025",
+    "PATCH-026",
+    "PATCH-027",
+    "PATCH-028",
+    "PATCH-029",
+    "PATCH-030",
+    "PATCH-031"
+  ],
+  "android_bundle": "android/ANDROID-005",
+  "tested": {
+    "package_integrity": 13,
+    "standalone_behavior_suites": 10,
+    "additive_patches_apply_and_reverse": 10
+  },
+  "not_run": [
+    "new APK build",
+    "installation",
+    "physical audio",
+    "live ASR",
+    "live inference",
+    "live account login",
+    "live Human Memory MCP"
+  ]
+}

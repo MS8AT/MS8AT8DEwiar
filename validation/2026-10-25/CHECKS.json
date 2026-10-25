@@ -1,0 +1,259 @@
+[
+  {
+    "check": "PATCH-020-inspect",
+    "status": "PASS",
+    "exit_code": 0,
+    "seconds": 0.14,
+    "log": "PATCH-020-inspect.log"
+  },
+  {
+    "check": "PATCH-020-test",
+    "status": "PASS",
+    "exit_code": 0,
+    "seconds": 0.51,
+    "log": "PATCH-020-test.log"
+  },
+  {
+    "check": "PATCH-021-inspect",
+    "status": "PASS",
+    "exit_code": 0,
+    "seconds": 0.14,
+    "log": "PATCH-021-inspect.log"
+  },
+  {
+    "check": "PATCH-021-test",
+    "status": "PASS",
+    "exit_code": 0,
+    "seconds": 2.05,
+    "log": "PATCH-021-test.log"
+  },
+  {
+    "check": "PATCH-022-inspect",
+    "status": "PASS",
+    "exit_code": 0,
+    "seconds": 0.12,
+    "log": "PATCH-022-inspect.log"
+  },
+  {
+    "check": "PATCH-022-test",
+    "status": "PASS",
+    "exit_code": 0,
+    "seconds": 0.42,
+    "log": "PATCH-022-test.log"
+  },
+  {
+    "check": "PATCH-023-inspect",
+    "status": "PASS",
+    "exit_code": 0,
+    "seconds": 0.12,
+    "log": "PATCH-023-inspect.log"
+  },
+  {
+    "check": "PATCH-023-test",
+    "status": "PASS",
+    "exit_code": 0,
+    "seconds": 0.47,
+    "log": "PATCH-023-test.log"
+  },
+  {
+    "check": "PATCH-024-inspect",
+    "status": "PASS",
+    "exit_code": 0,
+    "seconds": 0.14,
+    "log": "PATCH-024-inspect.log"
+  },
+  {
+    "check": "PATCH-024-test",
+    "status": "PASS",
+    "exit_code": 0,
+    "seconds": 0.2,
+    "log": "PATCH-024-test.log"
+  },
+  {
+    "check": "PATCH-025-inspect",
+    "status": "PASS",
+    "exit_code": 0,
+    "seconds": 0.12,
+    "log": "PATCH-025-inspect.log"
+  },
+  {
+    "check": "PATCH-025-test",
+    "status": "PASS",
+    "exit_code": 0,
+    "seconds": 0.22,
+    "log": "PATCH-025-test.log"
+  },
+  {
+    "check": "PATCH-026-inspect",
+    "status": "PASS",
+    "exit_code": 0,
+    "seconds": 0.16,
+    "log": "PATCH-026-inspect.log"
+  },
+  {
+    "check": "PATCH-026-test",
+    "status": "PASS",
+    "exit_code": 0,
+    "seconds": 0.56,
+    "log": "PATCH-026-test.log"
+  },
+  {
+    "check": "PATCH-027-inspect",
+    "status": "PASS",
+    "exit_code": 0,
+    "seconds": 0.14,
+    "log": "PATCH-027-inspect.log"
+  },
+  {
+    "check": "PATCH-027-test",
+    "status": "PASS",
+    "exit_code": 0,
+    "seconds": 0.24,
+    "log": "PATCH-027-test.log"
+  },
+  {
+    "check": "PATCH-028-inspect",
+    "status": "PASS",
+    "exit_code": 0,
+    "seconds": 0.12,
+    "log": "PATCH-028-inspect.log"
+  },
+  {
+    "check": "PATCH-028-test",
+    "status": "PASS",
+    "exit_code": 0,
+    "seconds": 0.41,
+    "log": "PATCH-028-test.log"
+  },
+  {
+    "check": "PATCH-029-inspect",
+    "status": "PASS",
+    "exit_code": 0,
+    "seconds": 0.12,
+    "log": "PATCH-029-inspect.log"
+  },
+  {
+    "check": "PATCH-029-test",
+    "status": "PASS",
+    "exit_code": 0,
+    "seconds": 0.56,
+    "log": "PATCH-029-test.log"
+  },
+  {
+    "check": "PATCH-030-inspect",
+    "status": "PASS",
+    "exit_code": 0,
+    "seconds": 0.14,
+    "log": "PATCH-030-inspect.log"
+  },
+  {
+    "check": "PATCH-030-test",
+    "status": "PASS",
+    "exit_code": 0,
+    "seconds": 0.55,
+    "log": "PATCH-030-test.log"
+  },
+  {
+    "check": "PATCH-031-inspect",
+    "status": "PASS",
+    "exit_code": 0,
+    "seconds": 0.12,
+    "log": "PATCH-031-inspect.log"
+  },
+  {
+    "check": "PATCH-031-test",
+    "status": "PASS",
+    "exit_code": 0,
+    "seconds": 0.39,
+    "log": "PATCH-031-test.log"
+  },
+  {
+    "check": "ANDROID-005-inspect",
+    "status": "PASS",
+    "exit_code": 0,
+    "seconds": 0.09,
+    "log": "ANDROID-005-inspect.log"
+  },
+  {
+    "check": "ANDROID-005-test",
+    "status": "PASS",
+    "exit_code": 0,
+    "seconds": 0.52,
+    "log": "ANDROID-005-test.log"
+  },
+  {
+    "check": "PATCH-020-additive-patch",
+    "status": "PASS",
+    "byte_exact_files": 1,
+    "reverse": "PASS"
+  },
+  {
+    "check": "PATCH-021-additive-patch",
+    "status": "PASS",
+    "byte_exact_files": 18,
+    "reverse": "PASS"
+  },
+  {
+    "check": "PATCH-022-additive-patch",
+    "status": "PASS",
+    "byte_exact_files": 1,
+    "reverse": "PASS"
+  },
+  {
+    "check": "PATCH-023-additive-patch",
+    "status": "PASS",
+    "byte_exact_files": 2,
+    "reverse": "PASS"
+  },
+  {
+    "check": "PATCH-024-additive-patch",
+    "status": "NOT_APPLICABLE",
+    "reason": "specification only"
+  },
+  {
+    "check": "PATCH-025-additive-patch",
+    "status": "NOT_APPLICABLE",
+    "reason": "specification only"
+  },
+  {
+    "check": "PATCH-026-additive-patch",
+    "status": "PASS",
+    "byte_exact_files": 1,
+    "reverse": "PASS"
+  },
+  {
+    "check": "PATCH-027-additive-patch",
+    "status": "NOT_APPLICABLE",
+    "reason": "specification only"
+  },
+  {
+    "check": "PATCH-028-additive-patch",
+    "status": "PASS",
+    "byte_exact_files": 1,
+    "reverse": "PASS"
+  },
+  {
+    "check": "PATCH-029-additive-patch",
+    "status": "PASS",
+    "byte_exact_files": 1,
+    "reverse": "PASS"
+  },
+  {
+    "check": "PATCH-030-additive-patch",
+    "status": "PASS",
+    "byte_exact_files": 3,
+    "reverse": "PASS"
+  },
+  {
+    "check": "PATCH-031-additive-patch",
+    "status": "PASS",
+    "byte_exact_files": 1,
+    "reverse": "PASS"
+  },
+  {
+    "check": "ANDROID-005-additive-patch",
+    "status": "PASS",
+    "byte_exact_files": 8,
+    "reverse": "PASS"
+  }
+]
