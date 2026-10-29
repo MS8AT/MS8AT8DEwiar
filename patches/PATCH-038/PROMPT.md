@@ -1,29 +1,31 @@
 # PATCH-038 integration prompt — Dewiar 0.67.0
 
-Target only a clean checkout at commit
-`80f1870074dbde643855b2b0ff1c40d7496dcb4c`. First verify and test this
-block, then add `src/core/semantic_voice_transcript.py` as a new file. Do not
-replace any existing upstream file.
+Target the clean commit `80f1870074dbde643855b2b0ff1c40d7496dcb4c`.
+Verify and test the block before adding the authored module; do not replace
+existing upstream files. Decision contract revision 2 is a breaking change
+for callers that previously assumed effective_transcript was always a string.
 
-In `core/engine_audio.py`, keep the STT output as `raw_transcript` after
-language selection and before `handle_text` / `handle_held`. Always emit the
-raw text in the existing `hearing` event. Semantic repair is opt-in: only an
-explicitly configured adapter may receive `build_semantic_repair_prompt(raw,
-conversation_context)` and return the documented JSON candidate. It must set
-`safe_for_auto_apply` only if it found no changed name or other protected
-entity; a missing flag fails closed. Do not call a cloud model by default and
-do not retain audio.
+After STT language selection, preserve the exact string in raw_transcript.
+Emit it as a labelled original in the hearing event. An explicitly configured
+adapter may receive build_semantic_repair_prompt(raw, conversation_context)
+and return only the documented JSON. A model safety flag is untrusted input,
+not permission to alter names, exact identifiers or execute actions.
 
-Pass every candidate through `transcript_envelope`. When it returns
-`accepted_with_notice`, display raw and normalized variants separately and
-announce `user_notice` before dispatching `effective_transcript`. When it
-returns `clarification_required`, show the raw text and ask
-`clarification_prompt`; do not dispatch a task, action, payment, deletion,
-tool call, or model request from that candidate. Preserve the normal path when
-no adapter is configured.
+Pass the result through transcript_envelope. Always render raw and proposed
+normalized variants separately and display user_notice for every change.
+Only dispatch when can_dispatch is true AND needs_clarification is false AND
+effective_transcript is a nonempty string. On clarification or malformed
+candidate, effective_transcript is null: ask clarification_prompt and stop the
+action path. Never substitute raw_transcript as a fallback command. The new
+explicit answer from the person goes through the ordinary permission gates.
 
-Update the `hearing` event consumer in `ui/studio/connect.js` only to render
-the two labelled variants and notice; it must not overwrite the raw line.
-Add focused core and UI regression tests plus the relevant quick-test entry.
-Run them in isolated state. Do not install Dewiar, start microphone capture,
-send data to an account, or use real model inference as part of this change.
+Any lexical change requires clarification, including apparent typos or an
+unknown name. Automatic changes are limited to case/whitespace, high
+confidence, explicit safety flag, no protected token. This deterministic
+policy cannot certify arbitrary names; do not claim it can.
+
+Wire the core path in engine_audio.py and the labelled hearing consumer in
+ui/studio/connect.js only in an isolated candidate. Add regression cases for
+blocked dispatch, changed names, empty/malformed model output and exact raw
+preservation. Run core/UI checks with temporary state. Network/model/device
+installation and live acceptance are separate operations.

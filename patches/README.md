@@ -2,6 +2,9 @@
 
 **Актуальный самостоятельный блок / Current standalone block / 当前独立模块: [PATCH-038 для Dewiar 0.67.0](PATCH-038/README.md).** Он не заменяет исторический полный комплект и не устанавливает приложение.
 
+[PATCH-039 — WorkBook MCP и навык AI](PATCH-039/README.md): карта, инструкции,
+статусы и типизированные task controls. [Протокол и результаты](../WORKBOOK_INTEGRATION.md).
+
 **Предыдущая поставка / Previous delivery / 先前交付: [0.45.3: PATCH-020…031 + Android 005](../RELEASE_0.45.3.md).** Ниже — предыдущая база и сохранённая история.
 
 

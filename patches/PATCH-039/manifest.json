@@ -1,0 +1,52 @@
+{
+  "schema": 1,
+  "id": "PATCH-039",
+  "title": {
+    "ru": "Dewiar: совместимость с WorkBook и управление Manager",
+    "en": "Dewiar WorkBook discovery and Manager controls",
+    "zh": "Dewiar WorkBook 发现与任务管理"
+  },
+  "publication_mode": "separate_patch_kit_without_upstream_redistribution",
+  "files": [
+    {
+      "path": "PROMPT.md",
+      "sha256": "1bd81ee0f5845dbc09a7858e8d99e74f853fef58134e83b5162f292355580ffb"
+    },
+    {
+      "path": "README.md",
+      "sha256": "61cc218e45346423f38c0baf931c43dacaff95c219a708a01fe9dc487c51f347"
+    },
+    {
+      "path": "SKILL.md",
+      "sha256": "fcc254fb694b2bf448fc0ab5f9c982a71e06f97c87ad50fc67713ec5e40f6a69"
+    },
+    {
+      "path": "src/core/workbook_contour_mcp.py",
+      "sha256": "6881e32c14dde3f2b8ddc72ac478208331fff415ca1e03bc58a5bcef87dff4e9"
+    },
+    {
+      "path": "tests/public_contract_test.py",
+      "sha256": "5ea7d8f900217c723462fe1ffbe23a12cf5fe07ff97035d6cb464aef30760a0b"
+    },
+    {
+      "path": "verify.py",
+      "sha256": "cb622cf5d159d9576d10d99fa4b8797a752b42dc6cbbb34e63566025ca345b43"
+    }
+  ],
+  "integration_targets": [
+    "Dewiar mcp.servers.workbook",
+    "Dewiar custom skills/workbook-control",
+    "WorkBook tools/workbook_modules.py",
+    "WorkBook c_AI_TASK_MANAGER"
+  ],
+  "verification": {
+    "offline_contract": "PASS",
+    "live_task_mutations": "NOT_RUN",
+    "model_calls": 0
+  },
+  "delivery_kind": "STANDALONE_MCP_AND_CUSTOM_SKILL",
+  "compatibility": {
+    "dewiar_protocol": "0.45.3 and 0.67.0 have identical MCP/skills clients",
+    "manager": "exact CLI and core SHA256 pins supplied at registration"
+  }
+}

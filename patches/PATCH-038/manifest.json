@@ -15,23 +15,23 @@
   "files": [
     {
       "path": "module-files.patch",
-      "sha256": "d76e06bf56c065f8839a926756a25f45e0670f886582d0127fd151070e941fc4"
+      "sha256": "3bf5917f4022eaf6ef7358b379d213493cd3b05fae895a3aa07176087aaa0ae1"
     },
     {
       "path": "PROMPT.md",
-      "sha256": "1f0fd60453fe9272711524c41c1c798e1d31713fcd817bf9ab935ff4b3810d8c"
+      "sha256": "52d6b951e28383ad519101e267ff84a7bc3c970e0b461f76a48b5bf66ad7a0a0"
     },
     {
       "path": "README.md",
-      "sha256": "9834dc3d106bd7574f59bf4005cc9d4d5ea3722e3405db250fdd9a32d1c2b6a9"
+      "sha256": "8089694ae623d1d11e5e608a29948e2bb70fedad883ee8c58b6fa83624e78ca8"
     },
     {
       "path": "src/core/semantic_voice_transcript.py",
-      "sha256": "4d30944b34be0e9ff8b3b55a064fa2ca28954ba5e002b9d75214ecef211139ee"
+      "sha256": "ae2d2221e5cf9229e96d8f5e0c9e6888b910f6c1b3386197a885428193f65739"
     },
     {
       "path": "tests/public_contract_test.py",
-      "sha256": "8e8707a5053c41f24c0edb6b1afcb612e1d99270d9fdb9d7cc6bde5c84d80f56"
+      "sha256": "7dbfad6ce0b0fa798c53f49d4fbc142e2af008ccdf99c559ccbca1a518aabd89"
     },
     {
       "path": "verify.py",
@@ -45,12 +45,14 @@
   ],
   "verification": {
     "package_checks": "PASS",
-    "standalone_contract": "PASS",
+    "standalone_contract": "PASS_17_TESTS",
     "additive_apply_and_reverse": "PASS",
     "model_calls": 0,
     "network_calls": 0,
     "audio_devices": 0,
     "installation": "NOT_RUN",
-    "ui_integration": "NOT_RUN"
-  }
+    "ui_integration": "NOT_RUN",
+    "additive_apply_check": "PASS"
+  },
+  "contract_revision": 2
 }

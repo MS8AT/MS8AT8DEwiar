@@ -1,6 +1,6 @@
 # MS8AT8DEwiar
 
-**Новый самостоятельный блок / Latest standalone block / 最新独立模块: [PATCH-038 для Dewiar 0.67.0](patches/PATCH-038/README.md).** Он сохраняет raw-расшифровку речи, прозрачно помечает смысловую правку и требует уточнения для рискованных данных; это не установщик и не полный выпуск Dewiar.
+**Обновление интеграции / Integration update / 集成更新:** [PATCH-038 revision 2](patches/PATCH-038/README.md) сохраняет точную raw-расшифровку и блокирует неоднозначный dispatch; [PATCH-039](patches/PATCH-039/README.md) подключает каталог, инструкции и Manager через MCP. [Совместимость и проверки](WORKBOOK_INTEGRATION.md). Поддержка MCP/skills проверена на клиентах Dewiar 0.45.3 и 0.67.0.
 
 **Предыдущий комплект / Previous kit / 先前套件: [Dewiar 0.45.3 — PC build36 + Android 005](RELEASE_0.45.3.md).** [Промпты RU/ENG/CH](prompts/DEWIAR_0453.md) · [Журнал и честный итог](WORK_LOG_2026-10-25.md). Ниже сохранена история предыдущих выпусков.
 
