@@ -1,6 +1,8 @@
 # MS8AT8DEwiar
 
-**Новый комплект / Latest kit / 最新套件: [Dewiar 0.45.3 — PC build36 + Android 005](RELEASE_0.45.3.md).** [Промпты RU/ENG/CH](prompts/DEWIAR_0453.md) · [Журнал и честный итог](WORK_LOG_2026-10-25.md). Ниже сохранена история предыдущих выпусков.
+**Новый самостоятельный блок / Latest standalone block / 最新独立模块: [PATCH-038 для Dewiar 0.67.0](patches/PATCH-038/README.md).** Он сохраняет raw-расшифровку речи, прозрачно помечает смысловую правку и требует уточнения для рискованных данных; это не установщик и не полный выпуск Dewiar.
+
+**Предыдущий комплект / Previous kit / 先前套件: [Dewiar 0.45.3 — PC build36 + Android 005](RELEASE_0.45.3.md).** [Промпты RU/ENG/CH](prompts/DEWIAR_0453.md) · [Журнал и честный итог](WORK_LOG_2026-10-25.md). Ниже сохранена история предыдущих выпусков.
 
 
 [RU](#что-такое-dewiar--what-is-dewiar--什么是-dewiar) · [ENG](prompts/DEWIAR_0401.md#eng) · [CH](prompts/DEWIAR_0401.md#ch)

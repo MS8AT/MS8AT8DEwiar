@@ -1,6 +1,8 @@
 # Патчи и ТЗ · Patches and specifications · 补丁与规格
 
-**Актуальная поставка / Current delivery / 当前交付: [0.45.3: PATCH-020…031 + Android 005](../RELEASE_0.45.3.md).** Ниже — предыдущая база и сохранённая история.
+**Актуальный самостоятельный блок / Current standalone block / 当前独立模块: [PATCH-038 для Dewiar 0.67.0](PATCH-038/README.md).** Он не заменяет исторический полный комплект и не устанавливает приложение.
+
+**Предыдущая поставка / Previous delivery / 先前交付: [0.45.3: PATCH-020…031 + Android 005](../RELEASE_0.45.3.md).** Ниже — предыдущая база и сохранённая история.
 
 
 Каждый патч публикуется отдельно от Dewiar и содержит собственные файлы, ТЗ, промпт, хеши и тесты. Публикация
@@ -29,6 +31,7 @@ commit `616e70afada2ca3ebe95d894cb7d836592366aed`.
 | PATCH-007 | Язык ответа и голоса RU/ENG/CH / Response and voice language / 回答和语音语言 | [ТЗ](PATCH-007/README.md) · [prompt](PATCH-007/PROMPT.md) · [manifest](PATCH-007/manifest.json) |
 | PATCH-005 | Human Memory, дерево Codex-задач и API/лог / Human Memory, Codex task tree and API/log / Human Memory、Codex 子任务树与 API/日志 | [ТЗ](PATCH-005/README.md) · [prompt](PATCH-005/PROMPT.md) · [manifest](PATCH-005/manifest.json) |
 | PATCH-004 | Подтверждаемое продление квоты задач Codex / Confirmed Codex task quota grant / 经确认的 Codex 任务配额扩展 | [ТЗ и промпт](PATCH-004/README.md) · [manifest](PATCH-004/manifest.json) |
+| PATCH-038 | Прозрачная смысловая обработка голосовой расшифровки / Transparent semantic voice transcript handling / 透明的语音转写语义处理 | [ТЗ](PATCH-038/README.md) · [prompt](PATCH-038/PROMPT.md) · [manifest](PATCH-038/manifest.json) · [ZIP](../dist/PATCH-038.zip) |
 
 ## История баз / Base history / 历史基础版本
 
